@@ -85,7 +85,8 @@ public class HardwarePushbot
         rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
         // Set all motors to zero power
-        leftDrive.setPower(0);
+        leftDrive.setPower(1);
+        //this is temporary
         rightDrive.setPower(0);
         leftArm.setPower(0);
 
