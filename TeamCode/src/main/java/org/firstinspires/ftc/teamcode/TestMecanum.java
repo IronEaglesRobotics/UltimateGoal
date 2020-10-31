@@ -53,10 +53,10 @@ public class TestMecanum extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back");
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -79,6 +79,14 @@ public class TestMecanum extends LinearOpMode {
             double rightFrontPower;
 
             // Test motor direction based on gamepad stick
+            // double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            // double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+            // double rightX = gamepad1.right_stick_x;
+            // leftBackPower = r * Math.sin(robotAngle) + rightX;
+            // leftFrontPower = r * Math.cos(robotAngle) + rightX;
+            // rightBackPower = r * Math.cos(robotAngle) - rightX;
+            // rightFrontPower = r * Math.sin(robotAngle) - rightX;
+
             double drive = -gamepad1.left_stick_y;
             leftBackPower    = Range.clip(drive, -1.0, 1.0) ;
             leftFrontPower   = Range.clip(drive, -1.0, 1.0) ;
