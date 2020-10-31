@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -60,49 +61,30 @@ public class TestMecanum extends LinearOpMode {
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
+        MecanumDrive drive = new MecanumDrive(leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive);
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            // Setup a variable for each drive wheel to save power level for telemetry
-            double leftBackPower;
-            double leftFrontPower;
-            double rightBackPower;
-            double rightFrontPower;
-
-            // Test motor direction based on gamepad stick
-            // double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-            // double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-            // double rightX = gamepad1.right_stick_x;
-            // leftBackPower = r * Math.sin(robotAngle) + rightX;
-            // leftFrontPower = r * Math.cos(robotAngle) + rightX;
-            // rightBackPower = r * Math.cos(robotAngle) - rightX;
-            // rightFrontPower = r * Math.sin(robotAngle) - rightX;
-
-            double drive = -gamepad1.left_stick_y;
-            leftBackPower    = Range.clip(drive, -1.0, 1.0) ;
-            leftFrontPower   = Range.clip(drive, -1.0, 1.0) ;
-            rightBackPower    = Range.clip(drive, -1.0, 1.0) ;
-            rightFrontPower   = Range.clip(drive, -1.0, 1.0) ;
-
-            // Send calculated power to wheels
-            leftBackDrive.setPower(leftBackPower);
-            leftFrontDrive.setPower(leftFrontPower);
-            rightBackDrive.setPower(rightBackPower);
-            rightFrontDrive.setPower(rightFrontPower);
+            drive.setInput(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left back (%.2f), left front (%.2f)", leftBackPower, leftFrontPower);
-            telemetry.addData("Motors", "right back (%.2f), right front (%.2f)", rightBackPower, rightFrontPower);
+            telemetry.addData("", drive.motorTelemetry());
             telemetry.update();
         }
     }
