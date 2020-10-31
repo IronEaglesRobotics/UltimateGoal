@@ -36,8 +36,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="Mecanum Test", group="Testing")
-public class TestMecanum extends LinearOpMode {
+@TeleOp(name="Sandbox", group="Testing")
+public class Sandbox extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -72,10 +72,13 @@ public class TestMecanum extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)
+        MecanumDrive drive = new MecanumDrive(leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive);
+        StarterStackDetector stackDetector = new StarterStackDetector(this.hardwareMap);
+
         waitForStart();
         runtime.reset();
 
-        MecanumDrive drive = new MecanumDrive(leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive);
+
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -85,6 +88,7 @@ public class TestMecanum extends LinearOpMode {
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("", drive.motorTelemetry());
+            telemetry.addData("", stackDetector.checkStack());
             telemetry.update();
         }
     }
