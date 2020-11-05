@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -38,82 +39,41 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="Sandbox", group="Testing")
-public class Sandbox extends LinearOpMode {
+public class Sandbox extends OpMode {
 
     // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftBackDrive = null;
-    private DcMotor leftFrontDrive = null;
-    private DcMotor rightBackDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor wobbler = null;
-    private Servo claw = null;
+    private Robot robot;
+    private boolean buttonPressed;
+
+    public int msStuckDetectInit     = 10000;
 
     @Override
-    public void runOpMode() {
+    public void init() {
+        robot = new Robot(hardwareMap);
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+    }
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back");
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front");
-        wobbler = hardwareMap.get(DcMotor.class, "wobbler");
-        claw = hardwareMap.get(Servo.class, "claw");
+    @Override
+    public void loop() {
+        robot.drive.setInput(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        wobbler.setDirection(DcMotor.Direction.FORWARD);
-
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        wobbler.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        // Wait for the game to start (driver presses PLAY)
-        MecanumDrive drive = new MecanumDrive(leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive);
-        StarterStackDetector stackDetector = new StarterStackDetector(this.hardwareMap);
-
-        waitForStart();
-        runtime.reset();
-
-        boolean clawClosed = true;
-
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
-
-            drive.setInput(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
-
-            if (gamepad1.right_bumper) {
-                wobbler.setPower(0.5);
-            } else if (gamepad1.left_bumper) {
-                wobbler.setPower(-0.5);
-            } else {
-                wobbler.setPower(0);
-            }
-
-            if (gamepad1.a && clawClosed) {
-                claw.setPosition(0);
-                clawClosed = false;
-            } else if (gamepad1.a) {
-                claw.setPosition(1);
-                clawClosed = true;
-            }
-
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("", drive.motorTelemetry());
-            telemetry.addData("", wobbler.getPower());
-            telemetry.addData("", stackDetector.checkStack());
-            telemetry.update();
+        if (gamepad1.right_bumper) {
+            robot.setArm(Robot.ARM_POWER);
+        } else if (gamepad1.left_bumper) {
+            robot.setArm(-Robot.ARM_POWER);
+        } else {
+            robot.setArm(0);
         }
+
+        if (gamepad1.a && !buttonPressed) {
+            robot.setClaw(!robot.getClaw());
+        }
+        buttonPressed = gamepad1.a;
+
+        // Show the elapsed game time and wheel power.
+        telemetry.addData("", robot.getTelemetry());
+        telemetry.update();
     }
 }
