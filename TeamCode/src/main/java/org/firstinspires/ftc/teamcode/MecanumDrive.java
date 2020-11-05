@@ -4,10 +4,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 
-import static com.qualcomm.robotcore.hardware.DcMotor.*;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode;
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 
 public class MecanumDrive implements DriveBase {
-
     private final double wheelDiameter = 4.0;
     private final double wheelCircumference = Math.PI * wheelDiameter;
     private final double ticksPerRev;
@@ -16,8 +16,7 @@ public class MecanumDrive implements DriveBase {
     private DcMotor backLeft;
     private DcMotor backRight;
 
-    public MecanumDrive(DcMotor frontLeft, DcMotor frontRight, DcMotor backLeft, DcMotor backRight){
-
+    public MecanumDrive(DcMotor frontLeft, DcMotor frontRight, DcMotor backLeft, DcMotor backRight) {
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
         this.backLeft = backLeft;
@@ -29,7 +28,6 @@ public class MecanumDrive implements DriveBase {
 
         this.setRunMode(RunMode.RUN_USING_ENCODER);
         this.setBrakeMode(ZeroPowerBehavior.BRAKE);
-
     }
 
     public boolean isBusy() {
@@ -97,9 +95,7 @@ public class MecanumDrive implements DriveBase {
         return ("fl:" + frontLeft.getPower() + "fr:" + frontRight.getPower() + "bl:" + backLeft.getPower() + "br:" + backRight.getPower());
     }
 
-    public void moveToPoint() {
-
-    }
+    public void moveToPoint() {}
 
     @Override
     public void setRunMode(RunMode runMode) {
@@ -153,6 +149,5 @@ public class MecanumDrive implements DriveBase {
 
         frontLeft.setPower(flPower);    frontRight.setPower(frPower);
         backLeft.setPower(blPower);     backRight.setPower(brPower);
-
     }
 }

@@ -10,5 +10,4 @@ public interface DriveBase {
     void setInput(double x, double y, double z);
     void setRunMode(DcMotor.RunMode runMode);
     void setBrakeMode(DcMotor.ZeroPowerBehavior brakeMode);
-
 }
