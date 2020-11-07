@@ -4,6 +4,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode;
+
+
 public class Robot {
     public MecanumDrive drive;
     private StarterStackDetector stackDetector;
@@ -27,18 +30,22 @@ public class Robot {
         claw = hardwareMap.get(Servo.class, "claw");
         claw.scaleRange(CLAW_MIN, CLAW_MAX);
 
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         wobbler.setDirection(DcMotor.Direction.FORWARD);
 
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         wobbler.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wobbler.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         drive = new MecanumDrive(leftFrontDrive, rightFrontDrive, leftBackDrive, rightBackDrive);
@@ -55,6 +62,22 @@ public class Robot {
 
     public void setArm(double power) {
         wobbler.setPower(power);
+    }
+
+    public void setArmPosition(int degrees, double power) {
+        // ticks for a 40: 1120
+        // ticks for a 60: 1680
+        int ticks = (int)((degrees/360) * 1120);
+        wobbler.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        wobbler.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        wobbler.setTargetPosition(ticks);
+
+        wobbler.setPower(power);
+    }
+
+    public boolean isWobblerBusy() {
+        return wobbler.getMode() != RunMode.RUN_TO_POSITION || wobbler.isBusy();
     }
 
     public Telemetry getTelemetry() {

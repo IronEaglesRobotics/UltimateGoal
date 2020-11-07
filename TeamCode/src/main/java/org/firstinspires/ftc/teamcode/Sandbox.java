@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "Sandbox")
 public class Sandbox extends OpMode {
-    public int msStuckDetectInit = 10000;
+    public int msStuckDetectInit = 15000;
 
     private Robot robot;
     private boolean buttonPressed;
