@@ -42,6 +42,12 @@ public class StarterStackDetector {
         return StarterStack.NONE;
     }
 
+    public void setZoom(int zoom) {
+        if (tfod != null) {
+            this.tfod.setZoom(zoom, 1);
+        }
+    }
+
     public enum StarterStack {
         NONE, SINGLE, QUAD
     }
