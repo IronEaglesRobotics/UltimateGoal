@@ -2,12 +2,41 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name = "RedAuto")
 public class RedAuto extends LinearOpMode {
     private Robot robot;
 
+    public void move(int inches, double power) {
+        robot.drive.setTargetForwardPositionRelative(inches, power);
+        while(robot.drive.isBusy()) {
+            sleep(1);
+        }
+    }
+
+    public void strafe(int inches, double power) {
+        robot.drive.setTargetStrafePositionRelative(inches, power);
+        while(robot.drive.isBusy()) {
+            sleep(1);
+        }
+    }
+
+    public void placeGoal() {
+        robot.setArmPosition(120, 0.5);
+        while(robot.isWobblerBusy()) {
+            sleep(1);
+        }
+
+        robot.setClaw(true);
+        sleep(1000);
+
+        move(-2, 0.5);
+
+        robot.setArmPosition(-120, 0.5);
+        while(robot.isWobblerBusy()) {
+            sleep(1);
+        }
+    }
     @Override
     public void runOpMode() {
         robot = new Robot(hardwareMap);
@@ -24,93 +53,32 @@ public class RedAuto extends LinearOpMode {
             idle();
         }
 
+        move(6,0.5);
+        strafe(10,0.5);
+
         switch(robot.checkStack()) {
             case NONE:
-                robot.drive.setForwardTargetPositionRelative(6, 0.5);
-                while(robot.drive.isBusy()) {
-                    sleep(1);
-                }
-
-                robot.drive.setTargetStrafePositionRelative(24, 0.5);
-                while(robot.drive.isBusy()) {
-                    sleep(1);
-                }
-
-                robot.drive.setForwardTargetPositionRelative(48, 0.5);
-                while(robot.drive.isBusy()) {
-                    sleep(1);
-                }
-
-                robot.setArmPosition(120, 0.5);
-                while(robot.isWobblerBusy()) {
-                    sleep(1);
-                }
-
-                robot.setClaw(true);
-                sleep(1000);
-
-                robot.drive.setForwardTargetPositionRelative(-6, 0.5);
-                while(robot.drive.isBusy()) {
-                    sleep(1);
-                }
+                strafe(22, 0.5);
+                move(48, 0.5);
+                placeGoal();
+                //move(-6, 0.5);
+                //strafe(-24, 0.5);
                 break;
             case SINGLE:
-                robot.drive.setForwardTargetPositionRelative(80, 0.5);
-                while(robot.drive.isBusy()) {
-                    sleep(1);
-                }
-
-                robot.drive.setTargetStrafePositionRelative(-6, 0.5);
-                while(robot.drive.isBusy()) {
-                    sleep(1);
-                }
-
-                robot.setArmPosition(120, 0.5);
-                while(robot.isWobblerBusy()) {
-                    sleep(1);
-                }
-
-                robot.setClaw(true);
-                sleep(1000);
-
-                robot.drive.setForwardTargetPositionRelative(-6, 0.5);
-                while(robot.drive.isBusy()) {
-                    sleep(1);
-                }
+                strafe(8, 0.5);
+                move(80, 0.5);
+                placeGoal();
+                move(-24, 0.5);
                 break;
             case QUAD:
-                robot.drive.setForwardTargetPositionRelative(6, 0.5);
-                while(robot.drive.isBusy()) {
-                    sleep(1);
-                }
-
-                robot.drive.setTargetStrafePositionRelative(24, 0.5);
-                while(robot.drive.isBusy()) {
-                    sleep(1);
-                }
-
-                robot.drive.setForwardTargetPositionRelative(96, 0.5);
-                while(robot.drive.isBusy()) {
-                    sleep(1);
-                }
-
-                robot.setArmPosition(120, 0.5);
-                while(robot.isWobblerBusy()) {
-                    sleep(1);
-                }
-
-                robot.setClaw(true);
-                sleep(1000);
-
-                robot.drive.setForwardTargetPositionRelative(-6, 0.5);
-                while(robot.drive.isBusy()) {
-                    sleep(1);
-                }
+                strafe(8, 0.5);
+                move(96, 0.5);
+                placeGoal();
+                move(-48, 0.5);
+                strafe(-24, 0.5);
         }
 
         telemetry.addData("Status", "finished");
         telemetry.update();
-        // stop all motors at the end
-        // robot.drive.setPower(0);
     }
 }

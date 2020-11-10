@@ -16,7 +16,6 @@ public class Sandbox extends OpMode {
         robot.setTfodZoom(3);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        robot.setWheel(0.1);
     }
 
     @Override
@@ -35,16 +34,6 @@ public class Sandbox extends OpMode {
             robot.setClaw(!robot.getClaw());
         }
         buttonPressed = gamepad1.a;
-
-        //if (gamepad1.x) {
-        //    robot.setWheel(0.1);
-        //}
-        //if (gamepad1.y) {
-        //    robot.setWheel(0.01);
-        //}
-        if (gamepad1.b) {
-            robot.setWheel(0);
-        }
 
         robot.setWheel(gamepad1.right_trigger);
 
