@@ -23,22 +23,22 @@ public class Sandbox extends OpMode {
         robot.drive.setInput(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         if (gamepad1.right_bumper) {
-            robot.setArm(Robot.ARM_POWER);
+            robot.arm.setArm(0.5);
         } else if (gamepad1.left_bumper) {
-            robot.setArm(-Robot.ARM_POWER);
+            robot.arm.setArm(-0.5);
         } else {
-            robot.setArm(0);
+            robot.arm.setArm(0);
         }
 
         if (gamepad1.a && !buttonPressed) {
-            robot.setClaw(!robot.getClaw());
+            robot.arm.setClaw(!robot.arm.getClaw());
         }
         buttonPressed = gamepad1.a;
 
         robot.setWheel(gamepad1.right_trigger);
 
         // show telemetry
-        telemetry.addData("", robot.getTelemetry());
+        telemetry.addData("Status", robot.getTelemetry());
         telemetry.addData("Wheel Power", robot.getWheelPower());
         telemetry.update();
     }

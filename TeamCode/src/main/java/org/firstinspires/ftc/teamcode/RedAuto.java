@@ -22,21 +22,22 @@ public class RedAuto extends LinearOpMode {
     }
 
     public void placeGoal() {
-        robot.setArmPosition(120, 0.5);
-        while(robot.isWobblerBusy()) {
+        robot.arm.setTargetArmPosition(120, 0.5);
+        while(robot.arm.isBusy()) {
             sleep(1);
         }
 
-        robot.setClaw(true);
+        robot.arm.setClaw(true);
         sleep(1000);
 
         move(-2, 0.5);
 
-        robot.setArmPosition(-120, 0.5);
-        while(robot.isWobblerBusy()) {
+        robot.arm.setTargetArmPosition(-120, 0.5);
+        while(robot.arm.isBusy()) {
             sleep(1);
         }
     }
+
     @Override
     public void runOpMode() {
         robot = new Robot(hardwareMap);
@@ -45,7 +46,7 @@ public class RedAuto extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        robot.setClaw(false);
+        robot.arm.setClaw(false);
 
         while (!(isStarted() || isStopRequested())) {
             telemetry.addData("Status", "waiting to start");
@@ -61,8 +62,8 @@ public class RedAuto extends LinearOpMode {
                 strafe(22, 0.5);
                 move(48, 0.5);
                 placeGoal();
-                //move(-6, 0.5);
-                //strafe(-24, 0.5);
+                move(-6, 0.5);
+                strafe(-24, 0.5);
                 break;
             case SINGLE:
                 strafe(8, 0.5);

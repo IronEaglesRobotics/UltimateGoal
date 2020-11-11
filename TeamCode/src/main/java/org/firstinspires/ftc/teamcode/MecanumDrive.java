@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 
@@ -11,18 +12,21 @@ public class MecanumDrive {
     private final double wheelDiameter = 4.0;
     private final double wheelCircumference = Math.PI * wheelDiameter;
     private final double ticksPerRev;
-    private DcMotor frontLeft;
-    private DcMotor frontRight;
-    private DcMotor backLeft;
-    private DcMotor backRight;
+    private final DcMotor frontLeft;
+    private final DcMotor frontRight;
+    private final DcMotor backLeft;
+    private final DcMotor backRight;
 
-    public MecanumDrive(DcMotor frontLeft, DcMotor frontRight, DcMotor backLeft, DcMotor backRight) {
-        this.frontLeft = frontLeft;
-        this.frontRight = frontRight;
-        this.backLeft = backLeft;
-        this.backRight = backRight;
+    public MecanumDrive(HardwareMap hardwareMap) {
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
+        backRight = hardwareMap.get(DcMotor.class, "backRight");
 
-        MecanumDrive drive = this;
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
 
         this.ticksPerRev = this.frontLeft.getMotorType().getTicksPerRev();
 
@@ -61,11 +65,11 @@ public class MecanumDrive {
         this.backLeft.setTargetPosition(-ticks);
         this.backRight.setTargetPosition(ticks);
 
-        this.setStrafePower(power);
+        this.setPower(power);
     }
 
     public void setTargetTurnPositionRelative(int degrees, double power) {
-        int ticks = (int)((degrees/360.0) * 560);
+        int ticks = (int)((degrees / 360.0) * 560);
         this.setRunMode(RunMode.STOP_AND_RESET_ENCODER);
         this.setRunMode(RunMode.RUN_TO_POSITION);
 
@@ -96,10 +100,6 @@ public class MecanumDrive {
         this.frontRight.setPower(-power);
         this.backLeft.setPower(power);
         this.backRight.setPower(-power);
-    }
-
-    public String motorTelemetry() {
-        return ("fl:" + frontLeft.getPower() + "fr:" + frontRight.getPower() + "bl:" + backLeft.getPower() + "br:" + backRight.getPower());
     }
 
     public void setRunMode(RunMode runMode) {
@@ -150,5 +150,9 @@ public class MecanumDrive {
 
         frontLeft.setPower(flPower);    frontRight.setPower(frPower);
         backLeft.setPower(blPower);     backRight.setPower(brPower);
+    }
+
+    public String getTelemetry() {
+        return ("fl:" + frontLeft.getPower() + " fr:" + frontRight.getPower() + " bl:" + backLeft.getPower() + " br:" + backRight.getPower());
     }
 }

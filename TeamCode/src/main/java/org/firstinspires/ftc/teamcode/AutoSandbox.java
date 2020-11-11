@@ -27,7 +27,5 @@ public class AutoSandbox extends LinearOpMode {
 
         telemetry.addData("Status", "Finished");
         telemetry.update();
-        // stop all motors at the end
-        // robot.drive.setPower(0);
     }
 }
