@@ -9,21 +9,28 @@ public class RedAuto extends LinearOpMode {
 
     public void move(int inches, double power) {
         robot.drive.setTargetForwardPositionRelative(inches, power);
-        while(robot.drive.isBusy()) {
+        while(robot.drive.isBusy() && opModeIsActive()) {
             sleep(1);
         }
     }
 
     public void strafe(int inches, double power) {
         robot.drive.setTargetStrafePositionRelative(inches, power);
-        while(robot.drive.isBusy()) {
+        while(robot.drive.isBusy() && opModeIsActive()) {
+            sleep(1);
+        }
+    }
+
+    public void turn(int degrees, double power) {
+        robot.drive.setTargetTurnPositionRelative(degrees, power);
+        while(robot.drive.isBusy() && opModeIsActive()) {
             sleep(1);
         }
     }
 
     public void placeGoal() {
         robot.arm.setTargetArmPosition(120, 0.5);
-        while(robot.arm.isBusy()) {
+        while(robot.arm.isBusy() && opModeIsActive()) {
             sleep(1);
         }
 
@@ -33,7 +40,7 @@ public class RedAuto extends LinearOpMode {
         move(-2, 0.5);
 
         robot.arm.setTargetArmPosition(-120, 0.5);
-        while(robot.arm.isBusy()) {
+        while(robot.arm.isBusy() && opModeIsActive()) {
             sleep(1);
         }
     }

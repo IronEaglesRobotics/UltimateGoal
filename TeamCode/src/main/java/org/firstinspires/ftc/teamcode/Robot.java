@@ -37,7 +37,7 @@ public class Robot {
         Telemetry t = new Robot.Telemetry();
         t.setDriveStatus(drive.getTelemetry());
         t.setArmStatus(arm.getTelemetry());
-        t.setRingStatus(stackDetector.checkStack());
+        t.setRingStatus("Ring: "+stackDetector.checkStack());
         return t;
     }
 
@@ -52,7 +52,7 @@ public class Robot {
     public class Telemetry {
         private String driveStatus;
         private String armStatus;
-        private StarterStackDetector.StarterStack ringStatus;
+        private String ringStatus;
 
         public void setDriveStatus(String driveStatus) {
             this.driveStatus = driveStatus;
@@ -62,12 +62,13 @@ public class Robot {
             this.armStatus = armStatus;
         }
 
-        public void setRingStatus(StarterStackDetector.StarterStack ringStatus) {
+        public void setRingStatus(String ringStatus) {
             this.ringStatus = ringStatus;
         }
 
+        @Override
         public String toString() {
-            return String.format("\nDrive: %s\nArm: %s\nRing: %s", driveStatus, armStatus, ringStatus);
+            return String.format("\n%s\n%s\n%s", driveStatus, armStatus, ringStatus);
         }
     }
 }

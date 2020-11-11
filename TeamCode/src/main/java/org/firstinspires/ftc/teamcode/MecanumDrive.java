@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 
+import java.util.Locale;
+
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 
@@ -69,7 +71,7 @@ public class MecanumDrive {
     }
 
     public void setTargetTurnPositionRelative(int degrees, double power) {
-        int ticks = (int)((degrees / 360.0) * 560);
+        int ticks = (int)((degrees / 360.0) * 3000);
         this.setRunMode(RunMode.STOP_AND_RESET_ENCODER);
         this.setRunMode(RunMode.RUN_TO_POSITION);
 
@@ -86,20 +88,6 @@ public class MecanumDrive {
         this.frontRight.setPower(power);
         this.backLeft.setPower(power);
         this.backRight.setPower(power);
-    }
-
-    public void setStrafePower(double power) {
-        this.frontLeft.setPower(power);
-        this.frontRight.setPower(-power);
-        this.backLeft.setPower(-power);
-        this.backRight.setPower(power);
-    }
-
-    public void setTurnPower(double power) {
-        this.frontLeft.setPower(power);
-        this.frontRight.setPower(-power);
-        this.backLeft.setPower(power);
-        this.backRight.setPower(-power);
     }
 
     public void setRunMode(RunMode runMode) {
@@ -153,6 +141,8 @@ public class MecanumDrive {
     }
 
     public String getTelemetry() {
-        return ("fl:" + frontLeft.getPower() + " fr:" + frontRight.getPower() + " bl:" + backLeft.getPower() + " br:" + backRight.getPower());
+//        return String.format("\nDrive: %s\nArm: %s\nRing: %s", driveStatus, armStatus, ringStatus);
+//        return ("fl: "+frontLeft.getPower()+"\nfr: "+frontRight.getPower()+"\nbl: "+backLeft.getPower()+"\nbr: "+backRight.getPower());
+        return String.format(Locale.US, "Drive: fl: %.2f fr: %.2f bl: %.2f br: %.2f", frontLeft.getPower(), frontRight.getPower(), backLeft.getPower(), backRight.getPower());
     }
 }

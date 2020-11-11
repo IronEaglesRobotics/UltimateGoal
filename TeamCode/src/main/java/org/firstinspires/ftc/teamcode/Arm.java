@@ -52,7 +52,7 @@ public class Arm {
     }
 
     public String getTelemetry() {
-        return ("arm:" + wobbler.getPower() + " claw:" + claw.getPosition());
+        return ("Arm: " + wobbler.getPower() + "\nClaw: " + claw.getPosition());
     }
 }
 
