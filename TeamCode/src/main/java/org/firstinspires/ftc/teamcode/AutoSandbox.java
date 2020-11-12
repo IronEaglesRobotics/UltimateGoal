@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -22,10 +22,21 @@ public class AutoSandbox extends LinearOpMode {
     }
 
     public void turn(int degrees, double power) {
-        robot.drive.setTargetTurnPositionRelative(degrees, power);
-        while(robot.drive.isBusy() && opModeIsActive()) {
-            sleep(1);
+        final float fudge = 7;
+        if (degrees > 0) {
+            while (robot.getGyroHeading360() < degrees-fudge) {
+                robot.drive.setInput(0, 0, -power);
+            }
+        } else {
+            while (robot.getGyroHeading360() > 360-degrees+fudge) {
+                robot.drive.setInput(0, 0, power);
+            }
         }
+        robot.drive.setPower(0);
+        this.sleep(2000);
+        telemetry.addData("", robot.getGyroHeading360());
+        telemetry.update();
+        this.sleep(10000);
     }
 
     public void placeGoal() {
@@ -58,10 +69,7 @@ public class AutoSandbox extends LinearOpMode {
             idle();
         }
 
-        turn(360, 0.5);
-        move(10, 0.5);
-        placeGoal();
-        turn(-360, 0.5);
+        turn(90, 0.5);
 
         telemetry.addData("Status", "Finished");
         telemetry.update();

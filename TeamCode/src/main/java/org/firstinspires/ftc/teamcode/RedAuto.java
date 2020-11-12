@@ -22,10 +22,21 @@ public class RedAuto extends LinearOpMode {
     }
 
     public void turn(int degrees, double power) {
-        robot.drive.setTargetTurnPositionRelative(degrees, power);
-        while(robot.drive.isBusy() && opModeIsActive()) {
-            sleep(1);
+        final float fudge = 7;
+        if (degrees > 0) {
+            while (robot.getGyroHeading360() < degrees-fudge) {
+                robot.drive.setInput(0, 0, -power);
+            }
+        } else {
+            while (robot.getGyroHeading360() > 360-degrees+fudge) {
+                robot.drive.setInput(0, 0, power);
+            }
         }
+        robot.drive.setPower(0);
+        this.sleep(2000);
+        telemetry.addData("", robot.getGyroHeading360());
+        telemetry.update();
+        this.sleep(10000);
     }
 
     public void placeGoal() {
@@ -73,8 +84,9 @@ public class RedAuto extends LinearOpMode {
                 strafe(-24, 0.5);
                 break;
             case SINGLE:
-                strafe(8, 0.5);
-                move(80, 0.5);
+                strafe(22, 0.5);
+                move(70, 0.5);
+                strafe(-24, 0.5);
                 placeGoal();
                 move(-24, 0.5);
                 break;

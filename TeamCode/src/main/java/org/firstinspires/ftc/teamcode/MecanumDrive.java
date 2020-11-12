@@ -70,19 +70,6 @@ public class MecanumDrive {
         this.setPower(power);
     }
 
-    public void setTargetTurnPositionRelative(int degrees, double power) {
-        int ticks = (int)((degrees / 360.0) * 3000);
-        this.setRunMode(RunMode.STOP_AND_RESET_ENCODER);
-        this.setRunMode(RunMode.RUN_TO_POSITION);
-
-        this.frontLeft.setTargetPosition(ticks);
-        this.frontRight.setTargetPosition(-ticks);
-        this.backLeft.setTargetPosition(ticks);
-        this.backRight.setTargetPosition(-ticks);
-
-        this.setPower(power);
-    }
-
     public void setPower(double power) {
         this.frontLeft.setPower(power);
         this.frontRight.setPower(power);
