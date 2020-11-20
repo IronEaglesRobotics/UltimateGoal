@@ -4,14 +4,24 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfInt;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Moments;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @TeleOp
 public class WebcamExample extends LinearOpMode
@@ -42,7 +52,8 @@ public class WebcamExample extends LinearOpMode
          * of a frame from the camera. Note that switching pipelines on-the-fly
          * (while a streaming session is in flight) *IS* supported.
          */
-        webcam.setPipeline(new SamplePipeline());
+        SamplePipeline pipeline = new SamplePipeline();
+        webcam.setPipeline(pipeline);
 
         /*
          * Open the connection to the camera device. New in v1.4.0 is the ability
@@ -97,6 +108,7 @@ public class WebcamExample extends LinearOpMode
             telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
             telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
             telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
+            telemetry.addData("Center", pipeline.getCenter());
             telemetry.update();
 
             /*
@@ -156,47 +168,102 @@ public class WebcamExample extends LinearOpMode
     class SamplePipeline extends OpenCvPipeline
     {
         boolean viewportPaused;
+        Mat blurred = new Mat();
+        Mat hsv = new Mat();
+        Mat red_mask_1 = new Mat();
+        Mat red_mask_2 = new Mat();
+        Mat red_mask = new Mat();
 
-        /*
-         * NOTE: if you wish to use additional Mat objects in your processing pipeline, it is
-         * highly recommended to declare them here as instance variables and re-use them for
-         * each invocation of processFrame(), rather than declaring them as new local variables
-         * each time through processFrame(). This removes the danger of causing a memory leak
-         * by forgetting to call mat.release(), and it also reduces memory pressure by not
-         * constantly allocating and freeing large chunks of memory.
-         */
+        private Point center;
+
+        final Scalar RED = new Scalar(255, 0, 0);
+        final Scalar GREEN = new Scalar(0, 255, 0);
+        final Scalar BLUE = new Scalar(0, 0, 255);
+        final Scalar WHITE = new Scalar(255, 255, 255);
+        final int MIN_AREA = 100;
 
         @Override
         public Mat processFrame(Mat input)
         {
-            /*
-             * IMPORTANT NOTE: the input Mat that is passed in as a parameter to this method
-             * will only dereference to the same image for the duration of this particular
-             * invocation of this method. That is, if for some reason you'd like to save a copy
-             * of this particular frame for later use, you will need to either clone it or copy
-             * it to another Mat.
-             */
+            Imgproc.GaussianBlur(input, blurred, new Size(11, 11), 0);
+            Imgproc.cvtColor(blurred, hsv, Imgproc.COLOR_RGB2HSV);
+            Core.inRange(hsv, new Scalar(0, 90, 90), new Scalar(2, 255, 255), red_mask_1);
+            Core.inRange(hsv, new Scalar(165, 90, 90), new Scalar(180, 255, 255), red_mask_2);
+            Core.add(red_mask_1, red_mask_2, red_mask);
+            Mat structuringElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size((2 * 2), (2 * 2)));
+            Imgproc.erode(red_mask, red_mask, structuringElement, new Point(1,1), 2);
+            Imgproc.dilate(red_mask, red_mask, structuringElement, new Point(1,1), 2);
 
-            /*
-             * Draw a simple box around the middle 1/2 of the entire frame
-             */
-            Imgproc.rectangle(
-                    input,
-                    new Point(
-                            input.cols()/4,
-                            input.rows()/4),
-                    new Point(
-                            input.cols()*(3f/4f),
-                            input.rows()*(3f/4f)),
-                    new Scalar(0, 255, 0), 4);
+            List<MatOfPoint> contours = new ArrayList<>();
+            Imgproc.findContours(red_mask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+            MatOfPoint largestContour = getLargestContour(contours);
+            if (largestContour == null) {
+                return input;
+            }
 
-            /**
-             * NOTE: to see how to get data from your pipeline to your OpMode as well as how
-             * to change which stage of the pipeline is rendered to the viewport when it is
-             * tapped, please see {@link PipelineStageSwitchingExample}
-             */
+            double area = Imgproc.contourArea(largestContour);
+            if (area < MIN_AREA) {
+                return input;
+            }
+
+            this.center = getCenterOfContour(largestContour);
+
+
+            drawConvexHull(input, largestContour, GREEN);
+            drawPoint(input, this.center, BLUE);
 
             return input;
+        }
+
+        private void drawPoint(Mat img, Point point, Scalar color) {
+            Imgproc.circle(img, point, 3, color,  -1);
+        }
+
+        private Point getCenterOfContour(MatOfPoint contour) {
+            Moments moments = Imgproc.moments(contour);
+            return new Point(moments.m10 / moments.m00, moments.m01/ moments.m00);
+        }
+
+        private void drawContour(Mat img, MatOfPoint contour, Scalar color) {
+            Imgproc.drawContours(img, Collections.singletonList(contour), 0, color, 2);
+        }
+
+        private void drawConvexHull(Mat img, MatOfPoint contour, Scalar color) {
+            MatOfInt hull =  new MatOfInt();
+            Imgproc.convexHull(contour, hull);
+            Imgproc.drawContours(img, Collections.singletonList(convertIndexesToPoints(contour, hull)), 0, color, 2);
+        }
+
+        private  MatOfPoint convertIndexesToPoints(MatOfPoint contour, MatOfInt indexes) {
+            int[] arrIndex = indexes.toArray();
+            Point[] arrContour = contour.toArray();
+            Point[] arrPoints = new Point[arrIndex.length];
+
+            for (int i=0;i<arrIndex.length;i++) {
+                arrPoints[i] = arrContour[arrIndex[i]];
+            }
+
+            MatOfPoint hull = new MatOfPoint();
+            hull.fromArray(arrPoints);
+            return hull;
+        }
+
+        private MatOfPoint getLargestContour(List<MatOfPoint> contours) {
+            if (contours.size() == 0) {
+                return null;
+            }
+
+            int largestContourIndex = 0;
+            double largestContourArea = 0;
+            for (int i = 0; i < contours.size(); i++) {
+                double area = Imgproc.contourArea(contours.get(i));
+                if (area > largestContourArea) {
+                    largestContourArea = area;
+                    largestContourIndex = i;
+                }
+            }
+
+            return contours.get(largestContourIndex);
         }
 
         @Override
@@ -224,6 +291,10 @@ public class WebcamExample extends LinearOpMode
             {
                 webcam.resumeViewport();
             }
+        }
+
+        public Point getCenter() {
+            return center;
         }
     }
 }
