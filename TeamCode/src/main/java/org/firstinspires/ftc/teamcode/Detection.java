@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -16,8 +17,8 @@ public class Detection {
     public static final Point INVALID_POINT = new Point(-1, -1);
     public static final double INVALID_AREA = -1;
 
-    private double minAreaPx;
-    private Size maxSizePx;
+    private final double minAreaPx;
+    private final Size maxSizePx;
 
     private double areaPx =  INVALID_AREA;
     private Point centerPx = INVALID_POINT;

@@ -27,7 +27,7 @@ class CVPipeline extends OpenCvPipeline
 
     final Mat STRUCTURING_ELEMENT = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size((2 * 2) + 1, (2 * 2) + 1));
     final Point ANCHOR = new Point((STRUCTURING_ELEMENT.cols() / 2f), STRUCTURING_ELEMENT.rows() / 2f);
-    final double MIN_AREA = 0.05;
+    final double MIN_AREA = 0.01;
     final Scalar RED_LOWER_1 = new Scalar(0, 90, 90);
     final Scalar RED_UPPER_1 = new Scalar(2, 255, 255);
     final Scalar RED_LOWER_2 = new Scalar(165, 90, 90);
