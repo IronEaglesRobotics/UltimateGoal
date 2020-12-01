@@ -14,7 +14,7 @@ import static org.firstinspires.ftc.teamcode.CVHelpers.drawPoint;
 import static org.firstinspires.ftc.teamcode.CVHelpers.getCenterOfContour;
 
 public class Detection {
-    public static final Point INVALID_POINT = new Point(-1, -1);
+    public static final Point INVALID_POINT = new Point(Double.MIN_VALUE, Double.MIN_VALUE);
     public static final double INVALID_AREA = -1;
 
     private final double minAreaPx;

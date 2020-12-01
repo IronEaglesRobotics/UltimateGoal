@@ -29,7 +29,7 @@ class CVPipeline extends OpenCvPipeline
     final Point ANCHOR = new Point((STRUCTURING_ELEMENT.cols() / 2f), STRUCTURING_ELEMENT.rows() / 2f);
     final double MIN_AREA = 0.01;
     final Scalar RED_LOWER_1 = new Scalar(0, 90, 90);
-    final Scalar RED_UPPER_1 = new Scalar(2, 255, 255);
+    final Scalar RED_UPPER_1 = new Scalar(15, 255, 255);
     final Scalar RED_LOWER_2 = new Scalar(165, 90, 90);
     final Scalar RED_UPPER_2 = new Scalar(180, 255, 255);
     final Scalar BLUE_LOWER = new Scalar(75, 85, 100);
