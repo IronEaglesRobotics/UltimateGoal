@@ -9,6 +9,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+//Where the OpenCV code is executed (for now)?
 @TeleOp
 public class CVSandbox extends LinearOpMode
 {

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+//Execution code for the CV and whatever else.
 @Autonomous(name = "RedAuto")
 public class RedAuto extends LinearOpMode {
     private Robot robot;

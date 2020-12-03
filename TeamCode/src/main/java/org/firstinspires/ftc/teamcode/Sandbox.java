@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+//Where testing code is executed? Maybe?
 @TeleOp(name = "Sandbox")
 public class Sandbox extends OpMode {
     public int msStuckDetectInit = 15000;
@@ -33,6 +34,7 @@ public class Sandbox extends OpMode {
         if (gamepad1.a && !buttonPressed) {
             robot.arm.setClaw(!robot.arm.getClaw());
         }
+
         buttonPressed = gamepad1.a;
 
         robot.setWheel(gamepad1.right_trigger);
