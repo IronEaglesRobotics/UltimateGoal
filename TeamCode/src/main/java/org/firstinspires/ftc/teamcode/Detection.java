@@ -13,6 +13,7 @@ import static org.firstinspires.ftc.teamcode.CVHelpers.drawConvexHull;
 import static org.firstinspires.ftc.teamcode.CVHelpers.drawPoint;
 import static org.firstinspires.ftc.teamcode.CVHelpers.getCenterOfContour;
 
+//Note: how does this differ from CVHelpers? If someone could explain that in a comment here that would be great.
 public class Detection {
     public static final Point INVALID_POINT = new Point(Double.MIN_VALUE, Double.MIN_VALUE);
     public static final double INVALID_AREA = -1;
@@ -24,6 +25,7 @@ public class Detection {
     private Point centerPx = INVALID_POINT;
     private MatOfPoint contour;
 
+    //==Constructor==//
     Detection(Size maxSize, double minAreaFactor) {
         this.maxSizePx = maxSize;
         this.minAreaPx = maxSize.area() * minAreaFactor;

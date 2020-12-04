@@ -4,7 +4,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-//The code for grabbing the wobble goals in the autonomous section. (?)
+/*Terms:
+* - HardwareMap ... A list of all the parts on a robot. Like a phonebook for motors and servos.
+* -
+*/
+
+//For wobble goal grabbing.
 public class Arm {
     private final double ticksPerRev;
     private final DcMotor wobbler;

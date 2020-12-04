@@ -3,6 +3,7 @@
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+//Executes the autonomous code.
 @Autonomous(name = "AutoSandbox")
 public class AutoSandbox extends LinearOpMode {
     private Robot robot;

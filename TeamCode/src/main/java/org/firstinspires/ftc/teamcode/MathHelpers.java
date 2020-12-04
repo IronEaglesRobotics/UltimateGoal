@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Point;
 
-//List of functions that can be used to make simple math operations easier. Not even worth commenting fully as of now.
+//Self explanatory. Put all math helper functions here.
 public class MathHelpers {
 
     public static double getDistanceBetweenTwoPoints (Point start, Point end) {

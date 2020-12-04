@@ -16,6 +16,16 @@ import static org.firstinspires.ftc.teamcode.CVHelpers.BLUE;
 import static org.firstinspires.ftc.teamcode.CVHelpers.RED;
 import static org.firstinspires.ftc.teamcode.CVHelpers.getLargestContour;
 
+/*Terms:
+* - Mask ... The isolation of a certain range of colors. You're probably better off Googling it.
+* - HSV ... Another way of representing color digitally. The standard way is RGB.
+* - "Detection" ... The detection class that we built. Is initialized with two variables [see definition].
+* - MatOfPoint ... Pay extra attention to this type of MatOf[Type]. This is what we use to store contours (I think).
+* - Erode ... To thin the shapes that make up a mask. OpenCV docs give examples of this.
+* - Dilate ... Opposite of erode.
+* - "extends OpenCvPipeline" ... This is important. This pipeline class extends FTC's pipeline class. To use EasyOpenCV you need to specify a pipeline, this is ours. You'll see what I mean in CVSandbox.
+* */
+
 class CVPipeline extends OpenCvPipeline
 {
     Mat blurred = new Mat();

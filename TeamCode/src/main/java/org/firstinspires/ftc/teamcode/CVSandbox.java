@@ -9,7 +9,12 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-//Where the OpenCV code is executed (for now)?
+/*Terms:
+* - OpenCvCameraFactory ... From FTC's EasyOpenCV. Makes it easier to get camera IDs, assumably.
+* - OpenCvCamera ... Another camera extension from FTC robotics.
+*/
+
+//Executes OpenCV code (hence: "TeleOp").
 @TeleOp
 public class CVSandbox extends LinearOpMode
 {
