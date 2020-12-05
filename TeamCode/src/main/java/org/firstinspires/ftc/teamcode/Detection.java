@@ -68,6 +68,10 @@ public class Detection {
         return new Point(normalizedX, normalizedY);
     }
 
+    public Point getCenterPx() {
+        return centerPx;
+    }
+
     public double getArea() {
         if (!isValid()) {
             return INVALID_AREA;

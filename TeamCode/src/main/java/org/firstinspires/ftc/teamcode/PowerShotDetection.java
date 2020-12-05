@@ -1,0 +1,61 @@
+package org.firstinspires.ftc.teamcode;
+
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class PowerShotDetection {
+    public static final Size GOAL_DIMENSIONS_IN = new Size(24, 15.5);
+    public static final Point POWERSHOT_OFFSET_IN = new Point(-23, -11);
+    public static final Size POWERSHOT_DIMENSIONS_IN = new Size(20, 8);
+
+    private ArrayList<Detection> powerShots;
+
+    PowerShotDetection(final Size maxSize, final double minAreaFactor) {
+        powerShots = new ArrayList<Detection>() {{
+            add(new Detection(maxSize, minAreaFactor));
+            add(new Detection(maxSize, minAreaFactor));
+            add(new Detection(maxSize, minAreaFactor));
+        }};
+    }
+
+    public int getCount() {
+        int count = 0;
+        for (Detection detection : powerShots) {
+            if (detection.isValid()) {
+                count++;
+            }
+        }
+        return count;
+    }
+    public Detection get(int i) {
+        return powerShots.get(i);
+    }
+
+    public void setContours(List<MatOfPoint> contours) {
+        Collections.sort(contours, new Comparator<MatOfPoint>() {
+            @Override
+            public int compare(MatOfPoint a, MatOfPoint b) {
+                return (int)CVHelpers.getCenterOfContour(a).x - (int)CVHelpers.getCenterOfContour(b).x;
+            }
+        });
+
+        for (int i = 0; i < Math.min(contours.size(), 3); i++) {
+            powerShots.get(i).setContour(contours.get(i));
+        }
+    }
+
+    public void draw(Mat img, Scalar color) {
+        for (Detection detection: powerShots) {
+            detection.draw(img, color);
+        }
+    }
+}
