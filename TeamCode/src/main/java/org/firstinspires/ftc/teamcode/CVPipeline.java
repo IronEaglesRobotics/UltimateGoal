@@ -26,7 +26,6 @@ class CVPipeline extends OpenCvPipeline
     Mat redMask2 = new Mat();
     Mat redMask = new Mat();
     Mat blueMask = new Mat();
-    Mat mask = new Mat();
 
     final Mat STRUCTURING_ELEMENT = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size((2 * 2) + 1, (2 * 2) + 1));
     final Point ANCHOR = new Point((STRUCTURING_ELEMENT.cols() / 2f), STRUCTURING_ELEMENT.rows() / 2f);
@@ -131,7 +130,7 @@ class CVPipeline extends OpenCvPipeline
         Core.bitwise_and(redMask, psMask, psMask);
 
         ArrayList<MatOfPoint> contours = new ArrayList<>();
-        Imgproc.findContours(mask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgproc.findContours(psMask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
         powerShots.setContours(CVHelpers.getLargestContours(contours, 3));
     }

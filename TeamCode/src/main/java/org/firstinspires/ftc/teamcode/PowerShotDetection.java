@@ -48,14 +48,21 @@ public class PowerShotDetection {
             }
         });
 
-        for (int i = 0; i < Math.min(contours.size(), 3); i++) {
-            powerShots.get(i).setContour(contours.get(i));
+        for (int i = 0; i < 3; i++) {
+            if (i >= contours.size()) {
+                powerShots.get(i).setContour(null);
+            } else {
+                powerShots.get(i).setContour(contours.get(i));
+            }
         }
     }
 
     public void draw(Mat img, Scalar color) {
         for (Detection detection: powerShots) {
-            detection.draw(img, color);
+            MatOfPoint contour = detection.getContour();
+            if (contour != null) {
+                CVHelpers.drawContour(img, contour, color);
+            }
         }
     }
 }
