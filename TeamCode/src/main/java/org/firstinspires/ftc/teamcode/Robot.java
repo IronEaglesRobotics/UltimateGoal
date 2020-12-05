@@ -17,6 +17,11 @@ import java.util.Locale;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
+/*Terms:
+* - IMU ... Inertial Measurement Unit. Measures an object's change in motion, among other things.
+* - BNO055IMU ... A type of IMU sensor from Bosch hardware.
+*/
+
 public class Robot {
     public MecanumDrive drive;
     public Arm arm;

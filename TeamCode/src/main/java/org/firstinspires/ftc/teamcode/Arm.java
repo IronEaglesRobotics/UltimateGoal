@@ -5,8 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /*Terms:
-* - HardwareMap ... A list of all the parts on a robot. Like a phonebook for motors and servos.
-* -
+* - HardwareMap ... A list of all the parts on a robot. Like a phonebook for motors and servos. Going to redefine this later because it is very important.
 */
 
 //For wobble goal grabbing.

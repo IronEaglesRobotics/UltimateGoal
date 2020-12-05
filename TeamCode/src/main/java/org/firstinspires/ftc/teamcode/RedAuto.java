@@ -3,7 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-//Execution code for the CV and whatever else.
+/*Terms:
+* - OpMode ... A series of commands for the robot to follow. Can be interchanged in the control app.
+* - Iterative OpMode (or just "OpMode") ... A way to run your code. Abstracts code into stop(), start(), init(), init_loop(), loop() functions. Very often used for TeleOp since it allows asynchronous programming.
+* - Linear OpMode ... Another way to run your code. Code is executed linearly and synchronously, just like normal. This is often used for autonomous because it is very straightforward.
+*/
+
 @Autonomous(name = "RedAuto")
 public class RedAuto extends LinearOpMode {
     private Robot robot;

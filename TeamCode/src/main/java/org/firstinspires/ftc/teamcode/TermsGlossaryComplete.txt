@@ -1,0 +1,30 @@
+Easy access to all the terms defined in the file glossaries.
+
+/*Terms:
+* - HardwareMap ... A list of all the parts on a robot. Like a phonebook for motors and servos. Going to redefine this later because it is very important.
+* - Contour ... An outline, especially one bounding a shape. In this case, it is whatever OpenCV thinks is a shape.
+* - Point ... A point on the image. Note: x=0 and y=0 start in the *top left*.
+* - Imgproc ... The core OpenCV instance.
+* - Moments ... The average of all grayscale values in an image. Used for finding the center of an image. See: https://www.learnopencv.com/find-center-of-blob-centroid-using-opencv-cpp-python/
+* - Mat ... Matrix, what you store images in. Named such because an image is just a matrix of pixels.
+* - MatOfInt, MatOfFLoat, MatOf[Type] ... The Mat data type but the cells store data in a certain way.
+* - Mask ... The isolation of a certain range of colors. You're probably better off Googling it.
+* - HSV ... Another way of representing color digitally. The standard way is RGB.
+* - "Detection" ... The detection class that we built. Is initialized with two variables [see definition].
+* - MatOfPoint ... Pay extra attention to this type of MatOf[Type]. This is what we use to store contours (I think).
+* - Erode ... To thin the shapes that make up a mask. OpenCV docs give examples of this.
+* - Dilate ... Opposite of erode.
+* - "extends OpenCvPipeline" ... This is important. This pipeline class extends FTC's pipeline class. To use EasyOpenCV you need to specify a pipeline, this is ours. You'll see what I mean in CVSandbox.
+* - OpenCvCameraFactory ... From FTC's EasyOpenCV. Makes it easier to get camera IDs, assumably.
+* - OpenCvCamera ... Another camera extension from FTC robotics.
+* - Mecanum ... Mecanum wheels are those cool omnidirectional wheels we use.
+* - Ticks ... Assumably, the smallest distance you can possibly move the wheel.
+* - Vector ... A term to know if you don't already. Suggested: https://www.youtube.com/watch?v=fNk_zzaMoSs.
+* - OpMode ... A series of commands for the robot to follow. Can be interchanged in the control app.
+* - Iterative OpMode (or just "OpMode") ... A way to run your code. Abstracts code into stop(), start(), init(), init_loop(), loop() functions. Very often used for TeleOp since it allows asynchronous programming.
+* - Linear OpMode ... Another way to run your code. Code is executed linearly and synchronously, just like normal. This is often used for autonomous because it is very straightforward.
+* - IMU ... Inertial Measurement Unit. Measures an object's change in motion, among other things.
+* - BNO055IMU ... A type of IMU sensor from Bosch hardware.
+* - Telemetry ... Recording and or transmission of the readings of an instrument. Basically: enviornment sensing.
+* - TFOD ... TensorFlowObjectDetector. Invokes TensorFlow's object detection API, assumably. Read more: https://github.com/tensorflow/models/tree/master/research/object_detection.
+*/

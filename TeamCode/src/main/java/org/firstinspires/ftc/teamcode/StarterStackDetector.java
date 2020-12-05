@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
+//For advanced telemetry, namely: dealing with perspective shift. Think of it as trying to map points on the ground in AR. That shouldn't be too hard considering that Vuforia is primarily an AR library.
 public class StarterStackDetector {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";

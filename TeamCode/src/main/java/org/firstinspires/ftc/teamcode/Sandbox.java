@@ -3,7 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-//Where testing code is executed? Maybe?
+/*Terms:
+* - ms ... Milisecond(s).
+* - Telemetry ... Recording and or transmission of the readings of an instrument. Basically: enviornment sensing.
+* - TFOD ... TensorFlowObjectDetector. Invokes TensorFlow's object detection API, assumably. Read more: https://github.com/tensorflow/models/tree/master/research/object_detection.
+*/
+
+//Where the TeleOp (driver controlled) code is executed.
 @TeleOp(name = "Sandbox")
 public class Sandbox extends OpMode {
     public int msStuckDetectInit = 15000;

@@ -10,6 +10,13 @@ import java.util.Locale;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 
+/*Terms:
+* - Mecanum ... Mecanum wheels are those cool omnidirectional wheels we use.
+* - Ticks ... Assumably, the smallest distance you can possibly move the wheel.
+* - Vector ... A term to know if you don't already. Suggested: https://www.youtube.com/watch?v=fNk_zzaMoSs.
+*/
+
+//For moving the robot around the playing field.
 public class MecanumDrive {
     private final double wheelDiameter = 4.0;
     private final double wheelCircumference = Math.PI * wheelDiameter;
