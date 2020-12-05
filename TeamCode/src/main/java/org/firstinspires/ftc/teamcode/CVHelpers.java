@@ -61,33 +61,14 @@ public class CVHelpers {
         return getLargestContours(contours, 1).get(0);
     }
 
-//    public static MatOfPoint getLargestContour(List<MatOfPoint> contours) {
-//        if (contours.size() == 0) {
-//            return null;
-//        }
-//
-//        int largestContourIndex = 0;
-//        double largestContourArea = 0;
-//        for (int i = 0; i < contours.size(); i++) {
-//            double area = Imgproc.contourArea(contours.get(i));
-//            if (area > largestContourArea) {
-//                largestContourArea = area;
-//                largestContourIndex = i;
-//            }
-//        }
-//
-//        return contours.get(largestContourIndex);
-//    }
-
     public static List<MatOfPoint> getLargestContours(List<MatOfPoint> contours, int numContours) {
-//        Collections.sort(contours, new Comparator<MatOfPoint>() {
-//            @Override
-//            public int compare(MatOfPoint a, MatOfPoint b) {
-//                return (int) Imgproc.contourArea(a) - (int) Imgproc.contourArea(b);
-//            }
-//        });
-//
-//        return contours.subList(0, Math.min(numContours, contours.size()));
-        return contours;
+        Collections.sort(contours, new Comparator<MatOfPoint>() {
+            @Override
+            public int compare(MatOfPoint a, MatOfPoint b) {
+                return (int) Imgproc.contourArea(b) - (int) Imgproc.contourArea(a);
+            }
+        });
+
+        return contours.subList(0, Math.min(numContours, contours.size()));
     }
 }
