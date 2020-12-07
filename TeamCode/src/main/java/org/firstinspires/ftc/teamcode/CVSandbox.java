@@ -51,54 +51,41 @@ public class CVSandbox extends LinearOpMode
         {
             Detection red = pipeline.getRed();
             Detection blue = pipeline.getBlue();
-
             double x = 0;
             double y = 0;
             double z = 0;
 
-//            if (red.getCenter().x < -window) {
-//                z = -0.1;
-//            } else if (red.getCenter().x > window) {
-//                z = 0.1;
-//            } else if (red.getCenter() == Detection.INVALID_POINT || Math.abs(red.getCenter().x) < window) {
-//                z = 0;
-//            }
-            double xMaxSpeed = 0.7;
-            double xErr = Math.abs(red.getCenter().x);
-            double xSpeed = (xErr / 50) * xMaxSpeed;
-            if (xErr <= 1) {
-                z = 0;
-            } else if (xErr > 1) {
-                z = Math.copySign(xSpeed, red.getCenter().x);
-            }
+            if (gamepad1.right_bumper) {
+                // Aim for goal
 
-            double yMaxSpeed = 0.7;
-            double yErr = Math.abs(5-red.getArea());
-            double speed = (yErr / 5) * yMaxSpeed;
-            if (yErr <= 0.1) {
-                y = 0;
-            } else if (yErr > 0.1) {
-                y = Math.copySign(speed, 5-red.getArea());
-            }
+                double xMaxSpeed = 0.7;
+                double xErr = Math.abs(red.getCenter().x);
+                double xSpeed = (xErr / 50) * xMaxSpeed;
+                if (xErr <= 1) {
+                    z = 0;
+                } else if (xErr > 1) {
+                    z = Math.copySign(xSpeed, red.getCenter().x);
+                }
 
-//            if (red.getArea() < 4.7) {
-//                y = 0.2;
-//            } else if (red.getArea() > 5.3) {
-//                y = -0.2;
-//            } else if (red.getCenter() == Detection.INVALID_POINT || Math.abs(5.0-red.getArea()) < 0.3) {
-//                y = 0;
-//            }
-//            if (red.getArea() < 2) {
-//                y = 1;
-//            } else if (red.getArea() > 8) {
-//                y = -1;
-//            } else if (red.getArea() < 5.1) {
-//                z = red.getArea()/2.9;
-//            } else if (red.getArea() > 5.1) {
-//                z = -red.getArea()/2.9;
-//            } else if (Math.abs(5-red.getArea()) <= 0.1) {
-//                z = 0;
-//            }
+                double yMaxSpeed = 0.7;
+                double yErr = Math.abs(5-red.getArea());
+                double speed = (yErr / 5) * yMaxSpeed;
+                if (yErr <= 0.1) {
+                    y = 0;
+                } else if (yErr > 0.1) {
+                    y = Math.copySign(speed, 5-red.getArea());
+                }
+            }
+            else if (gamepad1.left_bumper) {
+                // Aim for powershot
+                PowerShotDetection powershots = pipeline.getPowerShots();
+                int count = powershots.getCount();
+                telemetry.addData("PS Count", powershots.getCount());
+                if (count > 0) {
+                    telemetry.addData("Leftmost PS Center", powershots.get(0).getCenter());
+                }
+                telemetry.update();
+            }
 
             robot.drive.setInput(x, y, z);
 

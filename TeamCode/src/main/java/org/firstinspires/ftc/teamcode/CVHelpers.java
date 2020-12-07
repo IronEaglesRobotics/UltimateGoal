@@ -8,7 +8,10 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /*Terms:
@@ -64,17 +67,17 @@ public class CVHelpers {
         if (contours.size() == 0) {
             return null;
         }
+        return getLargestContours(contours, 1).get(0);
+    }
 
-        int largestContourIndex = 0;
-        double largestContourArea = 0;
-        for (int i = 0; i < contours.size(); i++) {
-            double area = Imgproc.contourArea(contours.get(i));
-            if (area > largestContourArea) {
-                largestContourArea = area;
-                largestContourIndex = i;
+    public static List<MatOfPoint> getLargestContours(List<MatOfPoint> contours, int numContours) {
+        Collections.sort(contours, new Comparator<MatOfPoint>() {
+            @Override
+            public int compare(MatOfPoint a, MatOfPoint b) {
+                return (int) Imgproc.contourArea(b) - (int) Imgproc.contourArea(a);
             }
-        }
+        });
 
-        return contours.get(largestContourIndex);
+        return contours.subList(0, Math.min(numContours, contours.size()));
     }
 }
