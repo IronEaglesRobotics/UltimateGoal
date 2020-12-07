@@ -28,11 +28,13 @@ public class CVSandbox extends LinearOpMode
     {
         robot = new Robot(hardwareMap);
 
+        //Find the camera and add it as a variable.
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         this.webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         this.pipeline = new CVPipeline();
         webcam.setPipeline(pipeline);
 
+        //Create asynchronous camera stream in the app using EasyOpenCV.
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -47,6 +49,7 @@ public class CVSandbox extends LinearOpMode
 
         waitForStart();
 
+        //Start LinearOpMode.
         while (opModeIsActive())
         {
             Detection red = pipeline.getRed();

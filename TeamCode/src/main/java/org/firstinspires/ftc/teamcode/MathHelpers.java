@@ -19,6 +19,7 @@ public class MathHelpers {
         return  (inRads >= 0 ? inRads : inRads + (2 * Math.PI)) * 180 / Math.PI;
     }
 
+    //This is a completely useless function...
     public static float piTo2Pi(float angle) {
         return (angle + 360) % 360;
     }

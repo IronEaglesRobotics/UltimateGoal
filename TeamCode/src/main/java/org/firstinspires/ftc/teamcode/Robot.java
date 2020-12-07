@@ -22,17 +22,21 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 * - BNO055IMU ... A type of IMU sensor from Bosch hardware.
 */
 
+//Robot init and setup class.
 public class Robot {
     public MecanumDrive drive;
     public Arm arm;
     private StarterStackDetector stackDetector;
     private DcMotor wheel;
+
     // The IMU sensor object
     private BNO055IMU imu;
+
     // State used for updating telemetry
     private Orientation angles;
     private Acceleration gravity;
 
+    //Give the wheels, arms, and starter stack detector their hardware. Also set up IMU.
     public Robot(HardwareMap hardwareMap) {
         drive = new MecanumDrive(hardwareMap);
         arm = new Arm(hardwareMap);
@@ -78,6 +82,7 @@ public class Robot {
         return wheel.getPower();
     }
 
+    //Get telemetry for all relevant hardware.
     public Telemetry getTelemetry() {
         Telemetry t = new Robot.Telemetry();
         t.setDriveStatus(drive.getTelemetry());
@@ -94,6 +99,7 @@ public class Robot {
         return stackDetector.checkStack();
     }
 
+    //Setters and getters for drive, arm, and ring status.
     public class Telemetry {
         private String driveStatus;
         private String armStatus;

@@ -26,7 +26,8 @@ import static org.firstinspires.ftc.teamcode.CVHelpers.getLargestContour;
 * - Erode ... To thin the shapes that make up a mask. OpenCV docs give examples of this.
 * - Dilate ... Opposite of erode.
 * - "extends OpenCvPipeline" ... This is important. This pipeline class extends FTC's pipeline class. To use EasyOpenCV you need to specify a pipeline, this is ours. You'll see what I mean in CVSandbox.
-* */
+* - STRUCTURING_ELEMENT ... The shape that controls dilation of an image. Can be a star, ellipse, square, or etc.
+*/
 
 class CVPipeline extends OpenCvPipeline
 {
@@ -79,6 +80,7 @@ class CVPipeline extends OpenCvPipeline
         return input;
     }
 
+    //Sets `red` to largest red contour.
     private void updateRed() {
         // Get the mask for RED objects. Note that since we're in HSV color space, red appears at
         // both the lower and upper end of the H spectrum. Thus, we have two separate red masks
@@ -86,6 +88,10 @@ class CVPipeline extends OpenCvPipeline
         Core.inRange(hsv, RED_LOWER_1, RED_UPPER_1, redMask1);
         Core.inRange(hsv, RED_LOWER_2, RED_UPPER_2, redMask2);
         Core.add(redMask1, redMask2, redMask);
+
+        //Erode and then dilate the mask to get rid of white noise.
+        //This can also be done via. Opening. See:
+        //https://docs.opencv.org/master/d9/d61/tutorial_py_morphological_ops.html
         Imgproc.erode(redMask, redMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
         Imgproc.dilate(redMask, redMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
 
@@ -95,10 +101,13 @@ class CVPipeline extends OpenCvPipeline
         red.setContour(getLargestContour(contours));
     }
 
+    //Sets `blue` to largest blue contour.
     private void updateBlue() {
         // Get the mask for BLUE objects. Note that because blue is isolated in the H spectrum, we
         // do not need two separate sets of lower and upper values.
         Core.inRange(hsv, BLUE_LOWER, BLUE_UPPER, blueMask);
+
+        //Remove noise.
         Imgproc.erode(blueMask, blueMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
         Imgproc.dilate(blueMask, blueMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
 
@@ -112,6 +121,7 @@ class CVPipeline extends OpenCvPipeline
         if (!this.red.isValid()) {
             return;
         }
+
         Point gc = red.getCenterPx();
         Rect goalBoundingBox = Imgproc.boundingRect(red.getContour());
         double goalUnit = goalBoundingBox.width / PowerShotDetection.GOAL_DIMENSIONS_IN.width;

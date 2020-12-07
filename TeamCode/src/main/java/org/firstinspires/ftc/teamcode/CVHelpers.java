@@ -30,25 +30,30 @@ public class CVHelpers {
     public static final Scalar BLUE = new Scalar(0, 0, 255);
     public static final Scalar WHITE = new Scalar(255, 255, 255);
 
+    //Draw a point on an image at a given point.
     public static void drawPoint(Mat img, Point point, Scalar color) {
         Imgproc.circle(img, point, 3, color,  -1);
     }
 
+    //Get the center of a contour using moments.
     public static Point getCenterOfContour(MatOfPoint contour) {
         Moments moments = Imgproc.moments(contour);
         return new Point(moments.m10 / moments.m00, moments.m01/ moments.m00);
     }
 
+    //Draw contour on image using a given color.
     public static void drawContour(Mat img, MatOfPoint contour, Scalar color) {
         Imgproc.drawContours(img, Collections.singletonList(contour), 0, color, 2);
     }
 
+    //Draw convex hull around some contours on an image using a given color.
     public static void drawConvexHull(Mat img, MatOfPoint contour, Scalar color) {
         MatOfInt hull =  new MatOfInt();
         Imgproc.convexHull(contour, hull);
         Imgproc.drawContours(img, Collections.singletonList(convertIndexesToPoints(contour, hull)), 0, color, 2);
     }
 
+    //Senor Scott is going to need to explain this to me.
     public static MatOfPoint convertIndexesToPoints(MatOfPoint contour, MatOfInt indexes) {
         int[] arrIndex = indexes.toArray();
         Point[] arrContour = contour.toArray();
@@ -63,6 +68,7 @@ public class CVHelpers {
         return hull;
     }
 
+    //Gets the largest contour but nobody knows how.
     public static MatOfPoint getLargestContour(List<MatOfPoint> contours) {
         if (contours.size() == 0) {
             return null;
@@ -70,6 +76,7 @@ public class CVHelpers {
         return getLargestContours(contours, 1).get(0);
     }
 
+    //Why does numContours need to be an argument?
     public static List<MatOfPoint> getLargestContours(List<MatOfPoint> contours, int numContours) {
         Collections.sort(contours, new Comparator<MatOfPoint>() {
             @Override

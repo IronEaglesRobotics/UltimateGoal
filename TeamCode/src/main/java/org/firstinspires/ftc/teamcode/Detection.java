@@ -13,7 +13,7 @@ import static org.firstinspires.ftc.teamcode.CVHelpers.drawConvexHull;
 import static org.firstinspires.ftc.teamcode.CVHelpers.drawPoint;
 import static org.firstinspires.ftc.teamcode.CVHelpers.getCenterOfContour;
 
-//Note: how does this differ from CVHelpers? If someone could explain that in a comment here that would be great.
+//Not entirely sure what this does, but I'm pretty sure this is a general target detection class since it is used in every single CV class.
 public class Detection {
     public static final Point INVALID_POINT = new Point(Double.MIN_VALUE, Double.MIN_VALUE);
     public static final double INVALID_AREA = -1;
@@ -31,6 +31,8 @@ public class Detection {
         this.minAreaPx = maxSize.area() * minAreaFactor;
     }
 
+    //Draw a convex hull (see tutorial if confused) of a certain color around the image contours. Then draw a green point at centerPx.
+    //https://www.learnopencv.com/convex-hull-using-opencv-in-python-and-c/
     public void draw(Mat img, Scalar color) {
         if (isValid()) {
             drawConvexHull(img, contour, color);
@@ -38,14 +40,18 @@ public class Detection {
         }
     }
 
+    //After you initialize the class, the isValid() function makes sure you have a contour, a valid cetner point, and a valid area.
+    //Note: added parenthesis according to the chart to make Sr. Scott's code more readable.
+    //https://introcs.cs.princeton.edu/java/11precedence/
     public boolean isValid() {
-        return this.contour != null && this.centerPx != INVALID_POINT && this.areaPx != INVALID_AREA;
+        return (this.contour != null) && (this.centerPx != INVALID_POINT) && (this.areaPx != INVALID_AREA);
     }
 
     public MatOfPoint getContour() {
         return contour;
     }
 
+    //Have somebody take a look at this, I have no idea what is going on.
     public void setContour(MatOfPoint contour) {
         this.contour = contour;
 
@@ -59,7 +65,9 @@ public class Detection {
         }
     }
 
+    //Somebody needs to be clear about what normalization means in this case.
     public Point getCenter() {
+
         if (!isValid()) {
             return INVALID_POINT;
         }
@@ -74,6 +82,7 @@ public class Detection {
         return centerPx;
     }
 
+    //Shouldn't this just get the regular area in pixels?
     public double getArea() {
         if (!isValid()) {
             return INVALID_AREA;

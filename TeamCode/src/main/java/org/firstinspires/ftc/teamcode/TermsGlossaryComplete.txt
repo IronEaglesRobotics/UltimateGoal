@@ -1,7 +1,7 @@
 Easy access to all the terms defined in the file glossaries.
 
 /*Terms:
-* - HardwareMap ... A list of all the parts on a robot. Like a phonebook for motors and servos. Going to redefine this later because it is very important.
+* - HardwareMap ... A list of the parts on a robot. Like a phonebook for motors and servos. Going to redefine this later because it is very important.
 * - Contour ... An outline, especially one bounding a shape. In this case, it is whatever OpenCV thinks is a shape.
 * - Point ... A point on the image. Note: x=0 and y=0 start in the *top left*.
 * - Imgproc ... The core OpenCV instance.
@@ -27,4 +27,7 @@ Easy access to all the terms defined in the file glossaries.
 * - BNO055IMU ... A type of IMU sensor from Bosch hardware.
 * - Telemetry ... Recording and or transmission of the readings of an instrument. Basically: enviornment sensing.
 * - TFOD ... TensorFlowObjectDetector. Invokes TensorFlow's object detection API, assumably. Read more: https://github.com/tensorflow/models/tree/master/research/object_detection.
+* - STRUCTURING_ELEMENT ... The shape that controls dilation of an image. Can be a star, ellipse, square, or etc.
+* - RunMode ... The way the wheels are set to run. A few examples are: RUN_USING_ENCODER (run wheels and collect data), STOP_AND_RESET_ENCODER (brake and discard encoder data), RUN_TO_POSITION (drive until you reach a certain position).
+* - Encoder ... A thing that collects and stores data about hardware. In our case: wheel data.
 */

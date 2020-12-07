@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 * - Linear OpMode ... Another way to run your code. Code is executed linearly and synchronously, just like normal. This is often used for autonomous because it is very straightforward.
 */
 
+//Pretty sure we aren't working on this yet so I'm going to leave it alone.
 @Autonomous(name = "RedAuto")
 public class RedAuto extends LinearOpMode {
     private Robot robot;
