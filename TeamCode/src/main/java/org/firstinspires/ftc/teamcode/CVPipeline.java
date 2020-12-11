@@ -22,7 +22,7 @@ import static org.firstinspires.ftc.teamcode.CVHelpers.getLargestContour;
 * - Mask ... The isolation of a certain range of colors. You're probably better off Googling it.
 * - HSV ... Another way of representing color digitally. The standard way is RGB.
 * - "Detection" ... The detection class that we built. Is initialized with two variables [see definition].
-* - MatOfPoint ... Pay extra attention to this type of MatOf[Type]. This is what we use to store contours (I think).
+* - MatOfPoint ... Pay extra attention to this type of MatOf[Tyabpe]. This is what we use to store contours (I think).
 * - Erode ... To thin the shapes that make up a mask. OpenCV docs give examples of this.
 * - Dilate ... Opposite of erode.
 * - "extends OpenCvPipeline" ... This is important. This pipeline class extends FTC's pipeline class. To use EasyOpenCV you need to specify a pipeline, this is ours. You'll see what I mean in CVSandbox.
@@ -74,7 +74,7 @@ class CVPipeline extends OpenCvPipeline
         updateBlue();
         blue.draw(input, BLUE);
 
-        updatePowerShots();
+        updatePowerShots(input);
         powerShots.draw(input, GREEN);
 
         return input;
@@ -117,7 +117,7 @@ class CVPipeline extends OpenCvPipeline
         blue.setContour(getLargestContour(contours));
     }
 
-    private void updatePowerShots() {
+    private void updatePowerShots(Mat input) {
         if (!this.red.isValid()) {
             return;
         }
@@ -153,6 +153,8 @@ class CVPipeline extends OpenCvPipeline
         Imgproc.findContours(psMask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
         powerShots.setContours(CVHelpers.getLargestContours(contours, 3));
+
+        Imgproc.rectangle(input, powerShotTL, powerShotBR, new Scalar(255,255,255), 2);
     }
 
     public Point getCenterOfLargestContour() {

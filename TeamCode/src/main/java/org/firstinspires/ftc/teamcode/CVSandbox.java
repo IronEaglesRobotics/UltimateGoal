@@ -47,13 +47,21 @@ public class CVSandbox extends LinearOpMode
         telemetry.addLine("Waiting for start");
         telemetry.update();
 
+        while(!opModeIsActive() && webcam.getFrameCount() == 0) {
+            this.sleep(1);
+        }
+
         waitForStart();
 
+
+        Detection red = null;
+        Detection blue = null;
         //Start LinearOpMode.
         while (opModeIsActive())
         {
-            Detection red = pipeline.getRed();
-            Detection blue = pipeline.getBlue();
+            red = pipeline.getRed();
+            blue = pipeline.getBlue();
+
             double x = 0;
             double y = 0;
             double z = 0;
@@ -78,8 +86,15 @@ public class CVSandbox extends LinearOpMode
                 } else if (yErr > 0.1) {
                     y = Math.copySign(speed, 5-red.getArea());
                 }
+                telemetry.addData("FPS", String.format("%.1f", webcam.getFps()));
+                telemetry.addData("Red", String.format("Area: %.1f, Center: (%.1f, %.1f)", red.getArea(), red.getCenter().x, red.getCenter().y));
+                telemetry.addData("Blue", String.format("Area: %.1f, Center: (%.1f, %.1f)", blue.getArea(), blue.getCenter().x, blue.getCenter().y));
+                telemetry.update();
             }
-            else if (gamepad1.left_bumper) {
+            if (gamepad1.left_bumper) {
+                telemetry.addData("FPS", String.format("%.1f", webcam.getFps()));
+                telemetry.addData("Red", String.format("Area: %.1f, Center: (%.1f, %.1f)", red.getArea(), red.getCenter().x, red.getCenter().y));
+                telemetry.addData("Blue", String.format("Area: %.1f, Center: (%.1f, %.1f)", blue.getArea(), blue.getCenter().x, blue.getCenter().y));
                 // Aim for powershot
                 PowerShotDetection powershots = pipeline.getPowerShots();
                 int count = powershots.getCount();
@@ -91,11 +106,6 @@ public class CVSandbox extends LinearOpMode
             }
 
             robot.drive.setInput(x, y, z);
-
-            telemetry.addData("FPS", String.format("%.1f", webcam.getFps()));
-            telemetry.addData("Red", String.format("Area: %.1f, Center: (%.1f, %.1f)", red.getArea(), red.getCenter().x, red.getCenter().y));
-            telemetry.addData("Blue", String.format("Area: %.1f, Center: (%.1f, %.1f)", blue.getArea(), blue.getCenter().x, blue.getCenter().y));
-            telemetry.update();
 
             /*
              * For the purposes of this sample, throttle ourselves to 10Hz loop to avoid burning
