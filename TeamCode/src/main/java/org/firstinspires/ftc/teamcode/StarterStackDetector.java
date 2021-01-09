@@ -71,4 +71,8 @@ public class StarterStackDetector {
             tfod.activate();
         }
     }
+
+    public void shutdown() {
+        this.vuforia.getCamera().close();
+    }
 }

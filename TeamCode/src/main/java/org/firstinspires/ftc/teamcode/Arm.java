@@ -15,8 +15,8 @@ public class Arm {
     private final Servo claw;
 
     //Claw control.
-    private static final double CLAW_MIN = 0.2;
-    private static final double CLAW_MAX = 0.57;
+    private static final double CLAW_MIN = 0.35;
+    private static final double CLAW_MAX = 0.85;
 
     //==Constructor==//
     //Gets arm hardware and sets enviornment variables.

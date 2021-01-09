@@ -99,6 +99,10 @@ public class Robot {
         return stackDetector.checkStack();
     }
 
+    public void shutdownVuforia() {
+        stackDetector.shutdown();
+    }
+
     //Setters and getters for drive, arm, and ring status.
     public class Telemetry {
         private String driveStatus;

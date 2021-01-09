@@ -12,11 +12,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-
 public class PowerShotDetection {
     public static final Size GOAL_DIMENSIONS_IN = new Size(24, 15.5);
     public static final Point POWERSHOT_OFFSET_IN = new Point(-23, -11);
-    public static final Size POWERSHOT_DIMENSIONS_IN = new Size(20, 8);
+    public static final Size POWERSHOT_DIMENSIONS_IN = new Size(20, 10);
 
     private ArrayList<Detection> powerShots;
 
@@ -41,7 +40,7 @@ public class PowerShotDetection {
         return count;
     }
 
-    //Gets powershot of specified number.
+    //Gets powerShot of specified number.
     public Detection get(int i) {
         return powerShots.get(i);
     }
@@ -69,7 +68,7 @@ public class PowerShotDetection {
     public void draw(Mat img, Scalar color) {
         for (Detection detection: powerShots) {
             MatOfPoint contour = detection.getContour();
-            if (contour != null) {
+            if (detection.isValid()) {
                 CVHelpers.drawContour(img, contour, color);
             }
         }
