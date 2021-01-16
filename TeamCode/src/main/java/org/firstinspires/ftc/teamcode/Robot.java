@@ -25,9 +25,10 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 //Robot init and setup class.
 public class Robot {
     public MecanumDrive drive;
-    public Arm arm;
+//    public Arm arm;
+    public Intake intake;
+    public Shooter shooter;
     private StarterStackDetector stackDetector;
-    private DcMotor wheel;
 
     // The IMU sensor object
     private BNO055IMU imu;
@@ -36,10 +37,12 @@ public class Robot {
     private Orientation angles;
     private Acceleration gravity;
 
-    //Give the wheels, arms, and starter stack detector their hardware. Also set up IMU.
+    //Give the wheels, intake, shooter, arm, and starter stack detector their hardware. Also set up IMU.
     public Robot(HardwareMap hardwareMap) {
         drive = new MecanumDrive(hardwareMap);
-        arm = new Arm(hardwareMap);
+//        arm = new Arm(hardwareMap);
+        intake = new Intake(hardwareMap);
+        shooter = new Shooter(hardwareMap);
         stackDetector = new StarterStackDetector(hardwareMap);
 
         // Set up the parameters with which we will use our IMU. Note that integration
@@ -52,11 +55,6 @@ public class Robot {
         parameters.accelUnit            = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled       = false;
         this.imu.initialize(parameters);
-
-        wheel = hardwareMap.get(DcMotor.class, "wheel");
-        wheel.setDirection(DcMotor.Direction.REVERSE);
-        wheel.setMode(RunMode.RUN_USING_ENCODER);
-        wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     private float baseGyroHeading;
@@ -74,23 +72,6 @@ public class Robot {
         return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle - baseGyroHeading;
     }
 
-    public void setWheel(double power) {
-        wheel.setPower(power);
-    }
-
-    public double getWheelPower() {
-        return wheel.getPower();
-    }
-
-    //Get telemetry for all relevant hardware.
-    public Telemetry getTelemetry() {
-        Telemetry t = new Robot.Telemetry();
-        t.setDriveStatus(drive.getTelemetry());
-        t.setArmStatus(arm.getTelemetry());
-        t.setRingStatus("Ring: "+stackDetector.checkStack());
-        return t;
-    }
-
     public void setTfodZoom(int zoom) {
         this.stackDetector.setZoom(zoom);
     }
@@ -103,18 +84,39 @@ public class Robot {
         stackDetector.shutdown();
     }
 
+    //Get telemetry for all relevant hardware.
+    public Telemetry getTelemetry() {
+        Telemetry t = new Robot.Telemetry();
+        t.setDriveStatus(drive.getTelemetry());
+//        t.setArmStatus(arm.getTelemetry());
+        t.setIntakeStatus(intake.getTelemetry());
+        t.setShooterStatus(shooter.getTelemetry());
+        t.setRingStatus("Ring: "+stackDetector.checkStack());
+        return t;
+    }
+
     //Setters and getters for drive, arm, and ring status.
     public class Telemetry {
         private String driveStatus;
-        private String armStatus;
+//        private String armStatus;
+        private String intakeStatus;
+        private String shooterStatus;
         private String ringStatus;
 
         public void setDriveStatus(String driveStatus) {
             this.driveStatus = driveStatus;
         }
 
-        public void setArmStatus(String armStatus) {
-            this.armStatus = armStatus;
+//        public void setArmStatus(String armStatus) {
+//            this.armStatus = armStatus;
+//        }
+
+        public void setIntakeStatus(String armStatus) {
+            this.intakeStatus = armStatus;
+        }
+
+        public void setShooterStatus(String armStatus) {
+            this.shooterStatus = armStatus;
         }
 
         public void setRingStatus(String ringStatus) {
@@ -123,7 +125,8 @@ public class Robot {
 
         @Override
         public String toString() {
-            return String.format("\n%s\n%s\n%s", driveStatus, armStatus, ringStatus);
+//            return String.format("\n%s\n%s\n%s\n%s\n%s", driveStatus, armStatus, intakeStatus, shooterStatus, ringStatus);
+            return String.format("\n%s\n%s\n%s\n%s", driveStatus, intakeStatus, shooterStatus, ringStatus);
         }
     }
 }
