@@ -25,7 +25,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 //Robot init and setup class.
 public class Robot {
     public MecanumDrive drive;
-//    public Arm arm;
+    public Arm arm;
     public Intake intake;
     public Shooter shooter;
     private StarterStackDetector stackDetector;
@@ -40,7 +40,7 @@ public class Robot {
     //Give the wheels, intake, shooter, arm, and starter stack detector their hardware. Also set up IMU.
     public Robot(HardwareMap hardwareMap) {
         drive = new MecanumDrive(hardwareMap);
-//        arm = new Arm(hardwareMap);
+        arm = new Arm(hardwareMap);
         intake = new Intake(hardwareMap);
         shooter = new Shooter(hardwareMap);
         stackDetector = new StarterStackDetector(hardwareMap);
@@ -88,7 +88,7 @@ public class Robot {
     public Telemetry getTelemetry() {
         Telemetry t = new Robot.Telemetry();
         t.setDriveStatus(drive.getTelemetry());
-//        t.setArmStatus(arm.getTelemetry());
+        t.setArmStatus(arm.getTelemetry());
         t.setIntakeStatus(intake.getTelemetry());
         t.setShooterStatus(shooter.getTelemetry());
         t.setRingStatus("Ring: "+stackDetector.checkStack());
@@ -98,7 +98,7 @@ public class Robot {
     //Setters and getters for drive, arm, and ring status.
     public class Telemetry {
         private String driveStatus;
-//        private String armStatus;
+        private String armStatus;
         private String intakeStatus;
         private String shooterStatus;
         private String ringStatus;
@@ -107,9 +107,9 @@ public class Robot {
             this.driveStatus = driveStatus;
         }
 
-//        public void setArmStatus(String armStatus) {
-//            this.armStatus = armStatus;
-//        }
+        public void setArmStatus(String armStatus) {
+            this.armStatus = armStatus;
+        }
 
         public void setIntakeStatus(String armStatus) {
             this.intakeStatus = armStatus;
@@ -125,8 +125,8 @@ public class Robot {
 
         @Override
         public String toString() {
-//            return String.format("\n%s\n%s\n%s\n%s\n%s", driveStatus, armStatus, intakeStatus, shooterStatus, ringStatus);
-            return String.format("\n%s\n%s\n%s\n%s", driveStatus, intakeStatus, shooterStatus, ringStatus);
+            return String.format("\n%s\n%s\n%s\n%s\n%s", driveStatus, armStatus, intakeStatus, shooterStatus, ringStatus);
+//            return String.format("\n%s\n%s\n%s\n%s", driveStatus, intakeStatus, shooterStatus, ringStatus);
         }
     }
 }
