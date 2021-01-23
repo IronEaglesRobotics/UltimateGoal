@@ -51,9 +51,9 @@ public class Manual extends OpMode {
         clawPressed = gamepad2.b;
 
         if (gamepad2.x) {
-            robot.intake.setIntake(-gamepad2.left_trigger*1.0*0.75);
+            robot.intake.setIntake(-gamepad2.left_trigger);
         } else {
-            robot.intake.setIntake(gamepad2.left_trigger*1.0*0.75);
+            robot.intake.setIntake(gamepad2.left_trigger);
         }
 
         if (gamepad2.y) {
@@ -63,18 +63,23 @@ public class Manual extends OpMode {
         }
 
         //Open and close the pusher.
-        if (gamepad2.a) {
-            robot.shooter.setPusher(true);
-            sleep(2);
-            robot.shooter.setPusher(false);
+        if (gamepad2.a)
+        {
+            while(!robot.shooter.getPusher())
+            {
+                robot.shooter.setPusher(true);
+            }
+            while(robot.shooter.getPusher())
+            {
+                robot.shooter.setPusher(false);
+            }
         }
 
         /*
         //Some legacy...
 
         if (gamepad2.a && !pusherPressed) {
-            robot.shooter.setPusher(true);
-            robot.shooter.setPusher(false);
+            robot.shooter.setPusher(!robot.shooter.getPusher());
         }
         pusherPressed = gamepad2.a;
         */
