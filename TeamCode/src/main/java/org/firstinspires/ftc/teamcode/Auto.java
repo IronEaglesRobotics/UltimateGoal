@@ -72,6 +72,9 @@ public class Auto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        //TO-DO:
+        //The first auto move MUST be a slight arm tilt PROCEEDED by a grip. This way the wobble goal will be secured.
+
         robot = new Robot(hardwareMap);
 
         robot.setTfodZoom(3);
@@ -105,6 +108,7 @@ public class Auto extends LinearOpMode {
             }
         });
 
+        //Question: For what?
         move(6,0.5);
         strafe(10,0.5);
 
