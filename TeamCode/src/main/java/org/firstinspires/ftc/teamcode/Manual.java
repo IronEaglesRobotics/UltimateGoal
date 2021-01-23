@@ -29,7 +29,7 @@ public class Manual extends OpMode {
     @Override
     public void loop() {
         // driver 1
-        if (gamepad1.dpad_up) {
+        if (gamepad1.right_bumper) {
             robot.drive.setInput(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
         } else {
             robot.drive.setInput(gamepad1.left_stick_x/2, -gamepad1.left_stick_y/2, gamepad1.right_stick_x/2);
