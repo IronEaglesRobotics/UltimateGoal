@@ -17,6 +17,8 @@ import java.util.Locale;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
+//For ADB Connection: `adb connect 192.168.43.1:5555`
+
 /*Terms:
 * - IMU ... Inertial Measurement Unit. Measures an object's change in motion, among other things.
 * - BNO055IMU ... A type of IMU sensor from Bosch hardware.

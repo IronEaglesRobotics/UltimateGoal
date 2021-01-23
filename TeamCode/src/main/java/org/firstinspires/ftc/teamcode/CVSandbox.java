@@ -49,6 +49,12 @@ public class CVSandbox extends LinearOpMode
 
         waitForStart();
 
+        //Wait for frames to avoid NullReferenceException.
+        while(webcam.getFrameCount() == 0)
+        {
+            sleep(1);
+        }
+
         //Start LinearOpMode.
         while (opModeIsActive())
         {
