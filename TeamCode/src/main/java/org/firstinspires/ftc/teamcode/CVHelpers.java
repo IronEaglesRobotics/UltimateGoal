@@ -68,7 +68,7 @@ public class CVHelpers {
         return hull;
     }
 
-    //Gets the largest contour but nobody knows how.
+    //Returns the largest contour
     public static MatOfPoint getLargestContour(List<MatOfPoint> contours) {
         if (contours.size() == 0) {
             return null;
@@ -76,7 +76,7 @@ public class CVHelpers {
         return getLargestContours(contours, 1).get(0);
     }
 
-    //Why does numContours need to be an argument?
+    //Returns numContours of the largest contours
     public static List<MatOfPoint> getLargestContours(List<MatOfPoint> contours, int numContours) {
         Collections.sort(contours, new Comparator<MatOfPoint>() {
             @Override

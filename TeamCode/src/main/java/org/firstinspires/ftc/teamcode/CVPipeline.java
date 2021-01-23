@@ -22,7 +22,7 @@ import static org.firstinspires.ftc.teamcode.CVHelpers.getLargestContour;
 * - Mask ... The isolation of a certain range of colors. You're probably better off Googling it.
 * - HSV ... Another way of representing color digitally. The standard way is RGB.
 * - "Detection" ... The detection class that we built. Is initialized with two variables [see definition].
-* - MatOfPoint ... Pay extra attention to this type of MatOf[Type]. This is what we use to store contours (I think).
+* - MatOfPoint ... Pay extra attention to this type of MatOf[Tyabpe]. This is what we use to store contours (I think).
 * - Erode ... To thin the shapes that make up a mask. OpenCV docs give examples of this.
 * - Dilate ... Opposite of erode.
 * - "extends OpenCvPipeline" ... This is important. This pipeline class extends FTC's pipeline class. To use EasyOpenCV you need to specify a pipeline, this is ours. You'll see what I mean in CVSandbox.
@@ -41,7 +41,7 @@ class CVPipeline extends OpenCvPipeline
     final Mat STRUCTURING_ELEMENT = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size((2 * 2) + 1, (2 * 2) + 1));
     final Point ANCHOR = new Point((STRUCTURING_ELEMENT.cols() / 2f), STRUCTURING_ELEMENT.rows() / 2f);
     final double MIN_GOAL_AREA = 0.01;
-    final double MIN_POWERSHOT_AREA = 0;
+    final double MIN_POWERSHOT_AREA = 0.001 ;
     final Scalar RED_LOWER_1 = new Scalar(0, 90, 90);
     final Scalar RED_UPPER_1 = new Scalar(15, 255, 255);
     final Scalar RED_LOWER_2 = new Scalar(165, 90, 90);
@@ -74,7 +74,7 @@ class CVPipeline extends OpenCvPipeline
         updateBlue();
         blue.draw(input, BLUE);
 
-        updatePowerShots();
+        updatePowerShots(input);
         powerShots.draw(input, GREEN);
 
         return input;
@@ -117,7 +117,7 @@ class CVPipeline extends OpenCvPipeline
         blue.setContour(getLargestContour(contours));
     }
 
-    private void updatePowerShots() {
+    private void updatePowerShots(Mat input) {
         if (!this.red.isValid()) {
             return;
         }
@@ -142,8 +142,8 @@ class CVPipeline extends OpenCvPipeline
         Core.inRange(hsv, RED_LOWER_1, RED_UPPER_1, redMask1);
         Core.inRange(hsv, RED_LOWER_2, RED_UPPER_2, redMask2);
         Core.add(redMask1, redMask2, redMask);
-        Imgproc.erode(redMask, redMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
-        Imgproc.dilate(redMask, redMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
+        //Imgproc.erode(redMask, redMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
+        //Imgproc.dilate(redMask, redMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
 
         Mat psMask = new Mat(hsv.size(), CvType.CV_8U);
         Imgproc.rectangle(psMask, powerShotTL, powerShotBR, new Scalar(255,255,255), -1);
@@ -153,6 +153,8 @@ class CVPipeline extends OpenCvPipeline
         Imgproc.findContours(psMask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
         powerShots.setContours(CVHelpers.getLargestContours(contours, 3));
+
+        Imgproc.rectangle(input, powerShotTL, powerShotBR, new Scalar(255,255,255), 2);
     }
 
     public Point getCenterOfLargestContour() {

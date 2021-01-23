@@ -40,7 +40,7 @@ public class Detection {
         }
     }
 
-    //After you initialize the class, the isValid() function makes sure you have a contour, a valid cetner point, and a valid area.
+    //After you initialize the class, the isValid() function makes sure you have a contour, a valid center point, and a valid area.
     //Note: added parenthesis according to the chart to make Sr. Scott's code more readable.
     //https://introcs.cs.princeton.edu/java/11precedence/
     public boolean isValid() {

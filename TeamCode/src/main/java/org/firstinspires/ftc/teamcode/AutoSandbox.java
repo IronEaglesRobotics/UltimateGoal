@@ -3,7 +3,7 @@
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-//Executes the autonomous code.
+//Sandbox auto program
 @Autonomous(name = "AutoSandbox")
 public class AutoSandbox extends LinearOpMode {
     private Robot robot;
@@ -65,8 +65,6 @@ public class AutoSandbox extends LinearOpMode {
         telemetry.update();
 
         while (!(isStarted() || isStopRequested())) {
-            telemetry.addData("Status", "Waiting for start");
-            telemetry.update();
             idle();
         }
 
