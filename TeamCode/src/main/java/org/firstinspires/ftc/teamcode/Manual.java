@@ -28,6 +28,9 @@ public class Manual extends OpMode {
         telemetry.update();
     }
 
+    double startTime = 0;
+    double endTime = 0;
+
     @Override
     public void loop() {
         // driver 1
@@ -47,10 +50,10 @@ public class Manual extends OpMode {
 //      // driver 2
         if (gamepad2.right_stick_y > 0)
         {
-            robot.arm.setArm(0.25);
+            robot.arm.setArm(-0.25);
         } else if (gamepad2.right_stick_y < 0)
         {
-            robot.arm.setArm(-0.25);
+            robot.arm.setArm(0.25);
         }
         else
         {
@@ -76,13 +79,13 @@ public class Manual extends OpMode {
         // }
         // clawPressed = gamepad2.b;
 
-        if (gamepad2.left_trigger)
+        if (gamepad2.left_trigger > 0)
         {
-            robot.intake.setIntake(gamepad2.left_trigger);
+            robot.intake.setIntake(1);
         }
-        else
+        else if(gamepad2.left_bumper)
         {
-            robot.intake.setIntake(-gamepad2.left_bumper);
+            robot.intake.setIntake(-1);
         }
 
         // if (gamepad2.x) {
@@ -100,15 +103,19 @@ public class Manual extends OpMode {
         //Open and close the pusher.
         if (gamepad2.a)
         {
-            while(!robot.shooter.getPusher())
-            {
-                robot.shooter.setPusher(true);
-            }
-            while(!robot.shooter.getOpen())
-            {
-                robot.shooter.setPusher(false);
-            }
+            startTime = getRuntime();
+            endTime = startTime + 10000;
         }
+        if(!(endTime > getRuntime()))
+        {
+            robot.shooter.setPusher(false);
+        }
+        else
+        {
+            robot.shooter.setPusher(true);
+        }
+
+        telemetry.addData("Shooter pos: ", robot.shooter.getTelemetry());
 
         /*
         //Some legacy...
