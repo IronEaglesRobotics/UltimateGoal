@@ -1,34 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>FtcRobotController</name>
-	<comment>Project FtcRobotController created by Buildship.</comment>
+	<name>UltimateGoal</name>
+	<comment>Project UltimateGoal created by Buildship.</comment>
 	<projects>
 	</projects>
 	<buildSpec>
 		<buildCommand>
-<<<<<<< HEAD
-=======
-			<name>org.eclipse.jdt.core.javabuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
->>>>>>> donnell_dev
 			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
 	</buildSpec>
 	<natures>
-<<<<<<< HEAD
-=======
-		<nature>org.eclipse.jdt.core.javanature</nature>
->>>>>>> donnell_dev
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1611611723977</id>
+			<id>1611611723990</id>
 			<name></name>
 			<type>30</type>
 			<matcher>

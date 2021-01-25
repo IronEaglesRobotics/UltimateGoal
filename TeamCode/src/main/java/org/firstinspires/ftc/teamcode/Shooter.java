@@ -31,7 +31,11 @@ public class Shooter {
 
     //Pusher position getter.
     public boolean getPusher() {
-        return pusher.getPosition() < 0.4;
+        return pusher.getPosition() <= 0.27;
+    }
+
+    public boolean getOpen() {
+        return pusher.getPosition() >= 0.45;
     }
 
     //Wheel power setter.
