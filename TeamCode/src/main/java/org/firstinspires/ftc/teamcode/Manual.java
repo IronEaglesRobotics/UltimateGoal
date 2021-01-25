@@ -31,35 +31,70 @@ public class Manual extends OpMode {
     @Override
     public void loop() {
         // driver 1
-        if (gamepad1.right_bumper) {
+        if (gamepad1.right_bumper)
+        {
             robot.drive.setInput(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
-        } else {
+        }
+        else
+        {
             robot.drive.setInput(gamepad1.left_stick_x*0.7, -gamepad1.left_stick_y*0.7, gamepad1.right_stick_x*0.7);
         }
 
-//        // driver 2
-        if (gamepad2.right_bumper) {
+
+//Move the reverse intake thing to l_bumber
+
+
+//      // driver 2
+        if (gamepad2.right_stick_y > 0)
+        {
             robot.arm.setArm(0.25);
-        } else if (gamepad2.left_bumper) {
+        } else if (gamepad2.right_stick_y < 0)
+        {
             robot.arm.setArm(-0.25);
-        } else {
+        }
+        else
+        {
             robot.arm.setArm(0);
         }
+
         if (gamepad2.b && !clawPressed) {
             robot.arm.setClaw(!robot.arm.getClaw());
         }
         clawPressed = gamepad2.b;
 
-        if (gamepad2.x) {
-            robot.intake.setIntake(-gamepad2.left_trigger);
-        } else {
+
+        //Legacy
+        // if (gamepad2.right_bumper) {
+        //     robot.arm.setArm(0.25);
+        // } else if (gamepad2.left_bumper) {
+        //     robot.arm.setArm(-0.25);
+        // } else {
+        //     robot.arm.setArm(0);
+        // }
+        // if (gamepad2.b && !clawPressed) {
+        //     robot.arm.setClaw(!robot.arm.getClaw());
+        // }
+        // clawPressed = gamepad2.b;
+
+        if (gamepad2.left_trigger)
+        {
             robot.intake.setIntake(gamepad2.left_trigger);
         }
+        else
+        {
+            robot.intake.setIntake(-gamepad2.left_bumper);
+        }
+
+        // if (gamepad2.x) {
+        //     robot.intake.setIntake(-gamepad2.left_trigger);
+        // } else {
+        //     robot.intake.setIntake(gamepad2.left_trigger);
+        // }
 
         if (gamepad2.y) {
-            robot.shooter.setShooter(-gamepad2.right_trigger*1.0*0.7);
+            robot.shooter.setShooter(-gamepad2.right_trigger*0.7);
         } else {
-            robot.shooter.setShooter(gamepad2.right_trigger*1.0*0.7);
+            robot.shooter.setShooter(gamepad2.right_trigger*0.7);
         }
 
         //Open and close the pusher.
@@ -69,7 +104,7 @@ public class Manual extends OpMode {
             {
                 robot.shooter.setPusher(true);
             }
-            while(robot.shooter.getPusher())
+            while(!robot.shooter.getOpen())
             {
                 robot.shooter.setPusher(false);
             }
