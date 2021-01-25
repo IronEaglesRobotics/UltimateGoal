@@ -9,8 +9,10 @@ public class Shooter {
     private final Servo pusher;
 
     //Claw control.
-    private static final double PUSHER_MIN = 0.22; // pusher in the hopper
-    private static final double PUSHER_MAX = 0.5; // pusher out of the hopper
+    private static final double PUSHER_MIN = 0.2; // pusher in the hopper
+    private static final double PUSHER_MAX = 0.4; // pusher out of the hopper
+
+    double PUSHER_STATE = PUSHER_MAX;
 
     //==Constructor==//
     //Gets arm hardware and sets environment variables.
@@ -42,5 +44,9 @@ public class Shooter {
     //Wheel and pusher telemetry.
     public String getTelemetry() {
         return ("Shooter: " + wheel.getPower() + "\nPusher: " + pusher.getPosition());
+
     }
+
+    //Pusher Position Thingy
+
 }

@@ -124,7 +124,7 @@ public class Auto extends LinearOpMode {
                 move(-24, 0.5);
                 break;
             case QUAD:
-                strafe(8, 0.5);
+                strafe(22, 0.5);
                 move(96, 0.5);
                 placeGoal();
                 move(-48, 0.5);

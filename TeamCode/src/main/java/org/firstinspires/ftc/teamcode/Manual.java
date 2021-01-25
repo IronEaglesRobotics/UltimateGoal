@@ -29,10 +29,10 @@ public class Manual extends OpMode {
     @Override
     public void loop() {
         // driver 1
-        if (gamepad1.dpad_up) {
+        if (gamepad1.left_bumper) {
             robot.drive.setInput(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
         } else {
-            robot.drive.setInput(gamepad1.left_stick_x/2, -gamepad1.left_stick_y/2, gamepad1.right_stick_x/2);
+            robot.drive.setInput(gamepad1.left_stick_x * 0.75, -gamepad1.left_stick_y * 0.75, gamepad1.right_stick_x * 0.75);
         }
 
 //        // driver 2
@@ -48,22 +48,23 @@ public class Manual extends OpMode {
         }
         clawPressed = gamepad2.b;
 
-        if (gamepad2.x) {
-            robot.intake.setIntake(-gamepad2.left_trigger*1.0*0.75);
+        if (gamepad2.dpad_up) {
+            robot.intake.setIntake(-gamepad2.left_trigger*0.9);
         } else {
-            robot.intake.setIntake(gamepad2.left_trigger*1.0*0.75);
+            robot.intake.setIntake(gamepad2.left_trigger*0.9);
         }
-
-        if (gamepad2.y) {
-            robot.shooter.setShooter(-gamepad2.right_trigger*1.0*0.7);
+        if (gamepad2.x) {
+            robot.shooter.setShooter(gamepad2.right_trigger*1.0*0.65);
         } else {
             robot.shooter.setShooter(gamepad2.right_trigger*1.0*0.7);
         }
+
 
         if (gamepad2.a && !pusherPressed) {
             robot.shooter.setPusher(!robot.shooter.getPusher());
         }
         pusherPressed = gamepad2.a;
+
 
         // show telemetry
         telemetry.addData("Status", robot.getTelemetry());
