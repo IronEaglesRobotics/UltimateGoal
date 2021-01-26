@@ -41,16 +41,16 @@ public class Manual extends OpMode {
         }
 
         // driver 2
-        if (!pusherPressed && gamepad2.x) {
+        if (!pusherPressed && gamepad2.a) {
             robot.shooter.setPusher(true);//in
             finishTime = getRuntime() + 0.4;
             checkPusher = true;
             zig = true;
         }
-        pusherPressed = gamepad2.x;
+        pusherPressed = gamepad2.a;
         if (checkPusher && getRuntime() > finishTime) {
             if (zig) {
-                robot.shooter.setPusher(false);//out
+                robot.shooter.setPusher(false);
                 finishTime += 0.4; // reset time to move arm back out
                 zig = false;
             } else {
@@ -80,22 +80,6 @@ public class Manual extends OpMode {
         } else {
             robot.shooter.setShooter(gamepad2.right_trigger*1.0*0.7);
         }
-
-//        // Open and close the pusher.
-//        if (gamepad2.a) {
-//            robot.shooter.setPusher(true);
-//            sleep(2);
-//            robot.shooter.setPusher(false);
-//        }
-
-        /*
-        //Some legacy...
-        if (gamepad2.a && !pusherPressed) {
-            robot.shooter.setPusher(true);
-            robot.shooter.setPusher(false);
-        }
-        pusherPressed = gamepad2.a;
-        */
 
         // show telemetry
         telemetry.addData("Status", robot.getTelemetry());
