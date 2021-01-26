@@ -41,20 +41,20 @@ public class AutoSandbox extends LinearOpMode {
     }
 
     public void placeGoal() {
-        robot.arm.setTargetArmPosition(120, 0.5);
-        while(robot.arm.isBusy() && opModeIsActive()) {
-            sleep(1);
-        }
-
-        robot.arm.setClaw(true);
-        sleep(1000);
-
-        move(-2, 0.5);
-
-        robot.arm.setTargetArmPosition(-120, 0.5);
-        while(robot.arm.isBusy() && opModeIsActive()) {
-            sleep(1);
-        }
+//        robot.arm.setTargetArmPosition(120, 0.5);
+//        while(robot.arm.isBusy() && opModeIsActive()) {
+//            sleep(1);
+//        }
+//
+//        robot.arm.setClaw(true);
+//        sleep(1000);
+//
+//        move(-2, 0.5);
+//
+//        robot.arm.setTargetArmPosition(-120, 0.5);
+//        while(robot.arm.isBusy() && opModeIsActive()) {
+//            sleep(1);
+//        }
     }
 
     @Override

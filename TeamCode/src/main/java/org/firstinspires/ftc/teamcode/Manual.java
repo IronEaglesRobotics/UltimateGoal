@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import static android.os.SystemClock.sleep;
 
@@ -26,6 +27,7 @@ public class Manual extends OpMode {
     @Override
     public void init() {
         robot = new Robot(hardwareMap);
+        robot.arm.resetEncoder();
 //        robot.setTfodZoom(3);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -41,6 +43,27 @@ public class Manual extends OpMode {
         }
 
         // driver 2
+
+        // arm
+        if (gamepad2.dpad_up) {
+            robot.arm.setArm(true);
+        } else if (gamepad2.dpad_down) {
+            robot.arm.setArm(false);
+        }
+        robot.arm.stay(); // adjust to keep arm in position
+        if (gamepad2.b && !clawPressed) {
+            robot.arm.setClaw(!robot.arm.getClaw());
+        }
+        clawPressed = gamepad2.b;
+
+        // intake
+        if (gamepad2.left_bumper) {
+            robot.intake.setIntake(-gamepad2.left_trigger*1.0*0.75);
+        } else {
+            robot.intake.setIntake(gamepad2.left_trigger*1.0*0.75);
+        }
+
+        // shooter
         if (!pusherPressed && gamepad2.x) {
             robot.shooter.setPusher(true);//in
             finishTime = getRuntime() + 0.4;
@@ -60,21 +83,6 @@ public class Manual extends OpMode {
             }
         }
 
-        // arm
-        robot.arm.setArm(-gamepad2.right_stick_y*0.25);
-        if (gamepad2.b && !clawPressed) {
-            robot.arm.setClaw(!robot.arm.getClaw());
-        }
-        clawPressed = gamepad2.b;
-
-        // intake
-        if (gamepad2.left_bumper) {
-            robot.intake.setIntake(-gamepad2.left_trigger*1.0*0.75);
-        } else {
-            robot.intake.setIntake(gamepad2.left_trigger*1.0*0.75);
-        }
-
-        // shooter
         if (gamepad2.y) {
             robot.shooter.setShooter(-gamepad2.right_trigger*1.0*0.7);
         } else {

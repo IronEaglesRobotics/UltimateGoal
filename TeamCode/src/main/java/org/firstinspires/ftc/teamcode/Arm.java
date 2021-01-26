@@ -8,18 +8,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 * - HardwareMap ... A list of the parts on a robot. Like a phonebook for motors and servos. Going to redefine this later because it is very important.
 */
 
-//For wobble goal grabbing.
+//For wobble goal grabbing
 public class Arm {
     private final double ticksPerRev;
     private final DcMotor wobbler;
     private final Servo claw;
+    private boolean armIsDown; // state of where the arm is
 
-    //Claw control.
+    //Claw control
     private static final double CLAW_MIN = 0.05;
     private static final double CLAW_MAX = 0.8;
 
+    //Arm control
+    private final int ARM_DOWN_POS = -756;
+    private final int ARM_UP_POS = -221;
+
     //==Constructor==//
-    //Gets arm hardware and sets enviornment variables.
+    //Gets arm hardware and sets environment variables.
     public Arm(HardwareMap hardwareMap) {
         wobbler = hardwareMap.get(DcMotor.class, "wobbler");
         claw = hardwareMap.get(Servo.class, "claw");
@@ -49,14 +54,46 @@ public class Arm {
         return claw.getPosition() < 0.5;
     }
 
-    //Wobbler power setter.
-    public void setArm(double power) {
-        wobbler.setPower(power);
+    //Wobbler power setter. the 2 positions for the arm are straight up in the air and 90 degrees to the ground
+    //up will go to the straight up position, and down will go to the 90 degree position
+    public void setArm(boolean down) {
+        if (down) {
+            armIsDown = true;
+            wobbler.setTargetPosition(ARM_DOWN_POS);
+        } else {
+            armIsDown = false;
+            wobbler.setTargetPosition(ARM_UP_POS);
+        }
+        wobbler.setPower(0.25);
     }
 
+    // keep the arm in the right position
+    public void stay() {
+        if (!isBusy()) {
+            wobbler.setTargetPosition(armIsDown ? ARM_DOWN_POS : ARM_UP_POS);
+//            if (armIsDown) {
+//                if (wobbler.getCurrentPosition() > ARM_DOWN_POS-20) {
+//                    //move up
+//                } else if (wobbler.getCurrentPosition() < ARM_DOWN_POS+20) {
+//                    //move down
+//                }
+//            } else {
+//                if (wobbler.getCurrentPosition() > ARM_UP_POS-20) {
+//                    //move up
+//                } else if (wobbler.getCurrentPosition() < ARM_UP_POS+20) {
+//                    //move down
+//                }
+//            }
+        }
+    }
+
+    public void resetEncoder() {
+        wobbler.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        wobbler.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
     //
     public void setTargetArmPosition(int degrees, double power) {
-        //Get the rotation of your wheels but in ticks instead of degrees, I think.
+        //Get the rotation of your wheels but in ticks instead of degrees
         int ticks = (int)((degrees / 360.0) * ticksPerRev * 2.75);
 
         //Reset wobbler and encoder, then give it a new position to track.
@@ -67,7 +104,7 @@ public class Arm {
 
         wobbler.setPower(power);
     }
-    // values to set the arm to go to in the future: -221 -756
+
     //Arm and claw telemetry.
     public String getTelemetry() {
         return ("Arm: " + wobbler.getPower() + " " + wobbler.getCurrentPosition() + "\nClaw: " + claw.getPosition());
