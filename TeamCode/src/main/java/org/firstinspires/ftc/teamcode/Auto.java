@@ -108,32 +108,32 @@ public class Auto extends LinearOpMode {
             }
         });
 
-        //Question: For what?
+        //strafe to rings
         move(6,0.5);
         strafe(10,0.5);
 
-        switch(stack) {
-            case NONE:
-                strafe(22, 0.5);
-                move(48, 0.5);
-                placeGoal();
-                move(-6, 0.5);
-                strafe(-24, 0.5);
-                break;
-            case SINGLE:
-                strafe(22, 0.5);
-                move(70, 0.5);
-                strafe(-24, 0.5);
-                placeGoal();
-                move(-24, 0.5);
-                break;
-            case QUAD:
-                strafe(8, 0.5);
-                move(96, 0.5);
-                placeGoal();
-                move(-48, 0.5);
-                strafe(-24, 0.5);
-        }
+//        switch(stack) {
+//            case NONE:
+//                strafe(22, 0.5);
+//                move(48, 0.5);
+//                placeGoal();
+//                move(-6, 0.5);
+//                strafe(-24, 0.5);
+//                break;
+//            case SINGLE:
+//                strafe(22, 0.5);
+//                move(70, 0.5);
+//                strafe(-24, 0.5);
+//                placeGoal();
+//                move(-24, 0.5);
+//                break;
+//            case QUAD:
+//                strafe(8, 0.5);
+//                move(96, 0.5);
+//                placeGoal();
+//                move(-48, 0.5);
+//                strafe(-24, 0.5);
+//        }
 
         telemetry.addData("Status", "finished");
         telemetry.update();

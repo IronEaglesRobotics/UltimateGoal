@@ -19,6 +19,9 @@ public class Manual extends OpMode {
     private Robot robot;
     private boolean clawPressed;
     private boolean pusherPressed;
+    private double finishTime;
+    private boolean checkPusher;
+    private boolean zig;
 
     @Override
     public void init() {
@@ -28,100 +31,68 @@ public class Manual extends OpMode {
         telemetry.update();
     }
 
-    double startTime = 0;
-    double endTime = 0;
-
     @Override
     public void loop() {
         // driver 1
-        if (gamepad1.right_bumper)
-        {
+        if (gamepad1.right_bumper) {
             robot.drive.setInput(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
-        }
-        else
-        {
+        } else {
             robot.drive.setInput(gamepad1.left_stick_x*0.7, -gamepad1.left_stick_y*0.7, gamepad1.right_stick_x*0.7);
         }
 
-
-//Move the reverse intake thing to l_bumber
-
-
-//      // driver 2
-        if (gamepad2.right_stick_y > 0)
-        {
-            robot.arm.setArm(-0.25);
-        } else if (gamepad2.right_stick_y < 0)
-        {
-            robot.arm.setArm(0.25);
+        // driver 2
+        if (!pusherPressed && gamepad2.x) {
+            robot.shooter.setPusher(true);//in
+            finishTime = getRuntime() + 0.4;
+            checkPusher = true;
+            zig = true;
         }
-        else
-        {
-            robot.arm.setArm(0);
+        pusherPressed = gamepad2.x;
+        if (checkPusher && getRuntime() > finishTime) {
+            if (zig) {
+                robot.shooter.setPusher(false);//out
+                finishTime += 0.4; // reset time to move arm back out
+                zig = false;
+            } else {
+                zig = true;
+                checkPusher = false;
+                pusherPressed = false;
+            }
         }
 
+        // arm
+        robot.arm.setArm(-gamepad2.right_stick_y*0.25);
         if (gamepad2.b && !clawPressed) {
             robot.arm.setClaw(!robot.arm.getClaw());
         }
         clawPressed = gamepad2.b;
 
-
-        //Legacy
-        // if (gamepad2.right_bumper) {
-        //     robot.arm.setArm(0.25);
-        // } else if (gamepad2.left_bumper) {
-        //     robot.arm.setArm(-0.25);
-        // } else {
-        //     robot.arm.setArm(0);
-        // }
-        // if (gamepad2.b && !clawPressed) {
-        //     robot.arm.setClaw(!robot.arm.getClaw());
-        // }
-        // clawPressed = gamepad2.b;
-
-        if (gamepad2.left_trigger > 0)
-        {
-            robot.intake.setIntake(1);
-        }
-        else if(gamepad2.left_bumper)
-        {
-            robot.intake.setIntake(-1);
-        }
-
-        // if (gamepad2.x) {
-        //     robot.intake.setIntake(-gamepad2.left_trigger);
-        // } else {
-        //     robot.intake.setIntake(gamepad2.left_trigger);
-        // }
-
-        if (gamepad2.y) {
-            robot.shooter.setShooter(-gamepad2.right_trigger*0.7);
+        // intake
+        if (gamepad2.left_bumper) {
+            robot.intake.setIntake(-gamepad2.left_trigger*1.0*0.75);
         } else {
-            robot.shooter.setShooter(gamepad2.right_trigger*0.7);
+            robot.intake.setIntake(gamepad2.left_trigger*1.0*0.75);
         }
 
-        //Open and close the pusher.
-        if (gamepad2.a)
-        {
-            startTime = getRuntime();
-            endTime = startTime + 10000;
-        }
-        if(!(endTime > getRuntime()))
-        {
-            robot.shooter.setPusher(false);
-        }
-        else
-        {
-            robot.shooter.setPusher(true);
+        // shooter
+        if (gamepad2.y) {
+            robot.shooter.setShooter(-gamepad2.right_trigger*1.0*0.7);
+        } else {
+            robot.shooter.setShooter(gamepad2.right_trigger*1.0*0.7);
         }
 
-        telemetry.addData("Shooter pos: ", robot.shooter.getTelemetry());
+//        // Open and close the pusher.
+//        if (gamepad2.a) {
+//            robot.shooter.setPusher(true);
+//            sleep(2);
+//            robot.shooter.setPusher(false);
+//        }
 
         /*
         //Some legacy...
-
         if (gamepad2.a && !pusherPressed) {
-            robot.shooter.setPusher(!robot.shooter.getPusher());
+            robot.shooter.setPusher(true);
+            robot.shooter.setPusher(false);
         }
         pusherPressed = gamepad2.a;
         */

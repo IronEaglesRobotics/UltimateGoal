@@ -67,10 +67,10 @@ public class Arm {
 
         wobbler.setPower(power);
     }
-
+    // values to set the arm to go to in the future: -221 -756
     //Arm and claw telemetry.
     public String getTelemetry() {
-        return ("Arm: " + wobbler.getPower() + "\nClaw: " + claw.getPosition());
+        return ("Arm: " + wobbler.getPower() + " " + wobbler.getCurrentPosition() + "\nClaw: " + claw.getPosition());
     }
 }
 

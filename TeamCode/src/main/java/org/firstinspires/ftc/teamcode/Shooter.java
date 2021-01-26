@@ -10,7 +10,7 @@ public class Shooter {
 
     //Claw control.
     private static final double PUSHER_MIN = 0.22; // pusher in the hopper
-    private static final double PUSHER_MAX = 0.5; // pusher out of the hopper
+    private static final double PUSHER_MAX = 0.4; // pusher out of the hopper
 
     //==Constructor==//
     //Gets arm hardware and sets environment variables.
