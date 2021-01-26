@@ -19,6 +19,9 @@ public class Manual extends OpMode {
     private Robot robot;
     private boolean clawPressed;
     private boolean pusherPressed;
+    private double finishTime;
+    private boolean checkPusher;
+    private boolean zig;
 
     @Override
     public void init() {
@@ -37,37 +40,53 @@ public class Manual extends OpMode {
             robot.drive.setInput(gamepad1.left_stick_x*0.7, -gamepad1.left_stick_y*0.7, gamepad1.right_stick_x*0.7);
         }
 
-//        // driver 2
-        if (gamepad2.right_bumper) {
-            robot.arm.setArm(0.25);
-        } else if (gamepad2.left_bumper) {
-            robot.arm.setArm(-0.25);
-        } else {
-            robot.arm.setArm(0);
+        // driver 2
+        if (!pusherPressed && gamepad2.x) {
+            robot.shooter.setPusher(true);//in
+            finishTime = getRuntime() + 0.4;
+            checkPusher = true;
+            zig = true;
         }
+        pusherPressed = gamepad2.x;
+        if (checkPusher && getRuntime() > finishTime) {
+            if (zig) {
+                robot.shooter.setPusher(false);//out
+                finishTime += 0.4; // reset time to move arm back out
+                zig = false;
+            } else {
+                zig = true;
+                checkPusher = false;
+                pusherPressed = false;
+            }
+        }
+
+        // arm
+        robot.arm.setArm(-gamepad2.right_stick_y*0.25);
         if (gamepad2.b && !clawPressed) {
             robot.arm.setClaw(!robot.arm.getClaw());
         }
         clawPressed = gamepad2.b;
 
-        if (gamepad2.x) {
+        // intake
+        if (gamepad2.left_bumper) {
             robot.intake.setIntake(-gamepad2.left_trigger*1.0*0.75);
         } else {
             robot.intake.setIntake(gamepad2.left_trigger*1.0*0.75);
         }
 
+        // shooter
         if (gamepad2.y) {
             robot.shooter.setShooter(-gamepad2.right_trigger*1.0*0.7);
         } else {
             robot.shooter.setShooter(gamepad2.right_trigger*1.0*0.7);
         }
 
-        //Open and close the pusher.
-        if (gamepad2.a) {
-            robot.shooter.setPusher(true);
-            sleep(2);
-            robot.shooter.setPusher(false);
-        }
+//        // Open and close the pusher.
+//        if (gamepad2.a) {
+//            robot.shooter.setPusher(true);
+//            sleep(2);
+//            robot.shooter.setPusher(false);
+//        }
 
         /*
         //Some legacy...
