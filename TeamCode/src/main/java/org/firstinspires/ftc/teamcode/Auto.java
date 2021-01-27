@@ -132,45 +132,6 @@ public class Auto extends LinearOpMode {
                 placeGoal();
                 move(-48, 0.5);
                 strafe(-24, 0.5);
-        }
-        red = pipeline.getRed();
-        blue = pipeline.getBlue();
-
-        double x = 0;
-        double y = 0;
-        double z = 0;
-
-        double zErr = Math.abs(red.getCenter().x);
-
-        // Aim for goal
-        while(zErr > 1) {
-            double zMaxSpeed = 0.7;
-            zErr = Math.abs(red.getCenter().x);
-            double zSpeed = (zErr / 50) * zMaxSpeed;
-
-            if (zErr <= 1) {
-                z = 0;
-            } else if (zErr > 1) {
-                z = Math.copySign(zSpeed, red.getCenter().x);
-            }
-
-            //                double yMaxSpeed = 0.7;
-            //                double yErr = Math.abs(5-red.getArea());
-            //                double speed = (yErr / 5) * yMaxSpeed;
-            //                if (yErr <= 0.1) {
-            //                    y = 0;
-            //                } else if (yErr > 0.1) {
-            //                    y = Math.copySign(speed, 5-red.getArea());
-            //                }
-            telemetry.addData("FPS", String.format("%.1f", webcam.getFps()));
-            telemetry.addData("Red", String.format("Area: %.1f, Center: (%.1f, %.1f)", red.getArea(), red.getCenter().x, red.getCenter().y));
-            telemetry.addData("Blue", String.format("Area: %.1f, Center: (%.1f, %.1f)", blue.getArea(), blue.getCenter().x, blue.getCenter().y));
-            telemetry.update();
-
-            telemetry.addData("Status", "finished");
-            telemetry.update();
-
-            sleep(100);
 
         }
     }
