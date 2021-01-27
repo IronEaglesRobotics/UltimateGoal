@@ -20,6 +20,7 @@ public class Shooter {
 
         //Set wheel config to forward; run using an encoder for telemetry, and set brake behavior.
         wheel.setDirection(DcMotor.Direction.REVERSE);
+        wheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         pusher.scaleRange(PUSHER_MIN, PUSHER_MAX);
     }

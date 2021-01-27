@@ -13,7 +13,6 @@ public class Arm {
     private final double ticksPerRev;
     private final DcMotor wobbler;
     private final Servo claw;
-    private boolean armIsDown; // state of where the arm is
 
     //Claw control
     private static final double CLAW_MIN = 0.05;
@@ -57,52 +56,14 @@ public class Arm {
     //Wobbler power setter. the 2 positions for the arm are straight up in the air and 90 degrees to the ground
     //up will go to the straight up position, and down will go to the 90 degree position
     public void setArm(boolean down) {
-        if (down) {
-            armIsDown = true;
-            wobbler.setTargetPosition(ARM_DOWN_POS);
-        } else {
-            armIsDown = false;
-            wobbler.setTargetPosition(ARM_UP_POS);
-        }
+        wobbler.setTargetPosition(down ? ARM_DOWN_POS : ARM_UP_POS);
+        wobbler.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         wobbler.setPower(0.25);
     }
 
-    // keep the arm in the right position
-    public void stay() {
-        if (!isBusy()) {
-            wobbler.setTargetPosition(armIsDown ? ARM_DOWN_POS : ARM_UP_POS);
-//            if (armIsDown) {
-//                if (wobbler.getCurrentPosition() > ARM_DOWN_POS-20) {
-//                    //move up
-//                } else if (wobbler.getCurrentPosition() < ARM_DOWN_POS+20) {
-//                    //move down
-//                }
-//            } else {
-//                if (wobbler.getCurrentPosition() > ARM_UP_POS-20) {
-//                    //move up
-//                } else if (wobbler.getCurrentPosition() < ARM_UP_POS+20) {
-//                    //move down
-//                }
-//            }
-        }
-    }
-
+    // resets the motor encoder at startup
     public void resetEncoder() {
         wobbler.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        wobbler.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
-    //
-    public void setTargetArmPosition(int degrees, double power) {
-        //Get the rotation of your wheels but in ticks instead of degrees
-        int ticks = (int)((degrees / 360.0) * ticksPerRev * 2.75);
-
-        //Reset wobbler and encoder, then give it a new position to track.
-        wobbler.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        wobbler.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        wobbler.setTargetPosition(ticks);
-
-        wobbler.setPower(power);
     }
 
     //Arm and claw telemetry.

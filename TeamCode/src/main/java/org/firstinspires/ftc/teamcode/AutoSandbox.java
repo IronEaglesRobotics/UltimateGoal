@@ -3,10 +3,16 @@
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-//Sandbox auto program
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+
+ //Sandbox auto program
 @Autonomous(name = "AutoSandbox")
 public class AutoSandbox extends LinearOpMode {
     private Robot robot;
+     OpenCvCamera webcam;
+     CVPipeline pipeline;
 
     public void move(int inches, double power) {
         robot.drive.setTargetForwardPositionRelative(inches, power);
@@ -60,6 +66,11 @@ public class AutoSandbox extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot = new Robot(hardwareMap);
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        this.webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
+        this.pipeline = new CVPipeline();
+        webcam.setPipeline(pipeline);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();

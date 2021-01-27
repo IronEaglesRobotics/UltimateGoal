@@ -46,43 +46,40 @@ public class Auto extends LinearOpMode {
                 robot.drive.setInput(0, 0, power);
             }
         }
-        robot.drive.setPower(0);
-        this.sleep(2000);
-        telemetry.addData("", robot.getGyroHeading360());
-        telemetry.update();
-        this.sleep(10000);
+    }
+    public void shoot(double power) {
+        robot.shooter.setPusher(true);
+        this.sleep(500);
+        robot.shooter.setPusher(false);
+        this.sleep(1000);
     }
 
     public void placeGoal() {
-//        robot.arm.setTargetArmPosition(120, 0.5);
-//        while(robot.arm.isBusy() && opModeIsActive()) {
-//            sleep(1);
-//        }
-//
-//        robot.arm.setClaw(true);
-//        sleep(1000);
-//
-//        move(-2, 0.5);
-//
-//        robot.arm.setTargetArmPosition(-120, 0.5);
-//        while(robot.arm.isBusy() && opModeIsActive()) {
-//            sleep(1);
-//        }
+        robot.arm.setArm(true);
+        while(robot.arm.isBusy() && opModeIsActive()) {
+            sleep(1);
+        }
+
+        robot.arm.setClaw(true);
+        sleep(1000);
+
+        move(-2, 0.5);
+
+        robot.arm.setArm(false);
+        while(robot.arm.isBusy() && opModeIsActive()) {
+            sleep(1);
+        }
     }
 
     @Override
     public void runOpMode() {
-        //TO-DO:
-        //The first auto move MUST be a slight arm tilt PROCEEDED by a grip. This way the wobble goal will be secured.
 
         robot = new Robot(hardwareMap);
 
-        robot.setTfodZoom(3);
-//        robot.arm.setClaw(false);
+        robot.setTfodZoom(2);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
 
         while (!(isStarted() || isStopRequested())) {
             idle();
@@ -91,6 +88,8 @@ public class Auto extends LinearOpMode {
         //Check the stacks of rings and shut down the vuforia camera
         StarterStackDetector.StarterStack stack = robot.checkStack();
         robot.shutdownVuforia();
+        telemetry.addData("Stack:", stack);
+        telemetry.update();
 
         //Start up the second camera
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -108,10 +107,19 @@ public class Auto extends LinearOpMode {
             }
         });
 
-        //strafe to rings
-        move(6,0.5);
-        strafe(10,0.5);
+        // secure wobble goal
+        robot.arm.setArm(false);
+        robot.arm.setClaw(false);
 
+        // move forward and shoot 3 rings into the high goal
+        robot.shooter.setShooter(0.635);
+        move(24, 0.4);
+        shoot(0.63);
+        shoot(0.63);
+        shoot(0.63);
+        robot.shooter.setShooter(0);
+
+        // TO-DO: move around the starting stack of rings and place wobble goal, then move back to park in the start line
 //        switch(stack) {
 //            case NONE:
 //                strafe(22, 0.5);
