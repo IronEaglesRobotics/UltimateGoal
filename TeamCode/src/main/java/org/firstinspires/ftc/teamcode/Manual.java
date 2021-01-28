@@ -27,8 +27,8 @@ public class Manual extends OpMode {
     private double finishTime;
     private boolean checkPusher;
     private boolean zig;
-    private double powershotShooterPower = 0.65; // secondary speed for the shooter wheel
-    private double shooterPower = 0.7; // primary speed for the shooter wheel
+    private double powershotShooterPower = 0.57; // secondary speed for the shooter wheel
+    private double shooterPower = 0.62; // primary speed for the shooter wheel
 
     @Override
     public void init() {
@@ -54,9 +54,9 @@ public class Manual extends OpMode {
 
         // arm up and down
         if (gamepad2.y && gamepad2.dpad_up && !dpadUpPressed) {
-            robot.arm.setArm(true);
-        } else if (gamepad2.y && gamepad2.dpad_down && !dpadDownPressed) {
             robot.arm.setArm(false);
+        } else if (gamepad2.y && gamepad2.dpad_down && !dpadDownPressed) {
+            robot.arm.setArm(true);
         }
 
         // open and close claw

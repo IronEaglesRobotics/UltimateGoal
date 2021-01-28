@@ -8,6 +8,10 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import static org.firstinspires.ftc.teamcode.StarterStackDetector.StarterStack.NONE;
+import static org.firstinspires.ftc.teamcode.StarterStackDetector.StarterStack.QUAD;
+import static org.firstinspires.ftc.teamcode.StarterStackDetector.StarterStack.SINGLE;
+
 /*Terms:
 * - OpMode ... A series of commands for the robot to follow. Can be interchanged in the control app.
 * - Iterative OpMode (or just "OpMode") ... A way to run your code. Abstracts code into stop(), start(), init(), init_loop(), loop() functions. Very often used for TeleOp since it allows asynchronous programming.
@@ -20,7 +24,7 @@ public class Auto extends LinearOpMode {
     private Robot robot;
     private OpenCvCamera webcam;
     private CVPipeline pipeline;
-//    private StarterStackDetector.StarterStack[] stacks;
+    private StarterStackDetector.StarterStack[] stacks;
     private StarterStackDetector.StarterStack stack;
 
     public void move(int inches, double power) {
@@ -45,7 +49,7 @@ public class Auto extends LinearOpMode {
 
         if (degrees > 0) {
             while (current < degrees-fudge || current > 360 - fudge) {
-                robot.drive.setInput(0, 0, -(Math.max((degrees-current)/degrees*0.5,0.1)));
+                robot.drive.setInput(0, 0, -(Math.max((degrees-current)/degrees*0.65,0.2)));
                 current = robot.getGyroHeading360();
 
                 telemetry.addData("Status", current);
@@ -60,7 +64,7 @@ public class Auto extends LinearOpMode {
         robot.shooter.setPusher(true);
         this.sleep(500);
         robot.shooter.setPusher(false);
-        this.sleep(1200);
+        this.sleep(500);
     }
 
     public void placeGoal() {
@@ -69,8 +73,8 @@ public class Auto extends LinearOpMode {
             sleep(1);
         }
 
-        robot.arm.setClaw(true);
-        sleep(1000);
+        robot.arm.setClaw(false);
+        sleep(500);
 
         move(2, 0.5);
 
@@ -86,43 +90,41 @@ public class Auto extends LinearOpMode {
         robot = new Robot(hardwareMap);
         robot.setTfodZoom(2);
 
-//        stacks = new StarterStackDetector.StarterStack[10];
+        stacks = new StarterStackDetector.StarterStack[10];
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        while (!(isStarted() || isStopRequested())) {
-//            int stackCounter = 0;
-//            stacks[stackCounter] = robot.checkStack();
-//            if (stackCounter == stacks.length-1) {
-//                stackCounter = 0;
-//            } else {
-//                stackCounter++;
-//            }
-            idle();
+        for(int stackCounter = 0; !(isStarted() || isStopRequested()); stackCounter = (stackCounter + 1) % 10) {
+            stacks[stackCounter] = robot.checkStack();
+            telemetry.addData("",stacks[0]+" "+stacks[1]+" "+stacks[2]+" "+stacks[3]+" "+stacks[4]+" "+stacks[5]+" "+stacks[6]+" "+stacks[7]+" "+stacks[8]+" "+stacks[9]);
+            telemetry.update();
         }
 
         //start
-//        int none = 0;
-//        int one = 0;
-//        int four = 0;
-//        for (StarterStackDetector.StarterStack possibleStack : stacks) {
-//            switch(possibleStack) {
-//                case NONE: none++; break;
-//                case SINGLE: one++; break;
-//                case QUAD: four++;
-//            }
-//        }
-//        if (none > Math.max(one, four)) {
-//            stack = NONE;
-//        } else if (one > Math.max(none, four)) {
-//            stack = SINGLE;
-//        } else if (four > Math.max(none, one)) {
-//            stack = QUAD;
-//        }
+        int none = 0;
+        int one = 0;
+        int four = 0;
+        for (StarterStackDetector.StarterStack possibleStack : stacks) {
+            if (possibleStack == null) {
+                continue;
+            }
+            switch(possibleStack) {
+                case NONE: none++; break;
+                case SINGLE: one++; break;
+                case QUAD: four++;
+            }
+        }
+        if (none > Math.max(one, four)) {
+            stack = NONE;
+        } else if (one > Math.max(none, four)) {
+            stack = SINGLE;
+        } else if (four > Math.max(none, one)) {
+            stack = QUAD;
+        }
 
         // check the stacks of rings and shut down the vuforia camera
-        stack = robot.checkStack();
+//        stack = robot.checkStack();
         robot.shutdownVuforia();
         telemetry.addData("Stack:", stack);
         telemetry.update();
@@ -144,17 +146,18 @@ public class Auto extends LinearOpMode {
         });
 
         // secure wobble goal
-        robot.arm.setArm(false);
+
         robot.arm.setClaw(true);
 
         // everything below this should be the correct steps but has not been tested yet!!!
 
         // move up to white line and shoot 3 rings into the high goal
-        move(24,0.4);
-        strafe(12,0.4);
+        move(24,0.5);
+        robot.arm.setArm(false);
+        strafe(12,0.55);
         robot.shooter.setShooter(0.630);
-        move(40,0.4);
-        strafe(-12,0.4);
+        move(40,0.5);
+        strafe(-15,0.5);
         shoot();
         shoot();
         shoot();
@@ -164,24 +167,23 @@ public class Auto extends LinearOpMode {
         // move to drop off wobble goal in correct location and move back to the white line
         switch(stack) {
             case NONE:
-                strafe(-10,0.4);
+                strafe(-8,0.5);
                 placeGoal();
-                strafe(12,0.4);
-                move(-6,0.4);
+                strafe(24,0.5);
+                move(-12,0.5);
                 break;
             case SINGLE:
-                move(-36,0.4);
+                move(-22,0.5);
+                strafe(12,0.5);
                 placeGoal();
-                move(6,0.4);
+                move(6,0.5);
                 break;
             case QUAD:
-                move(-48,0.4);
-                strafe(-10,0.4);
+                move(-46,0.5);
+                strafe(-6,0.5);
                 placeGoal();
-                strafe(10,0.4);
-                move(40,0.4);
+                move(30,0.5);
         }
-        turn(178);
 
         telemetry.addData("Status", "finished");
         telemetry.update();
