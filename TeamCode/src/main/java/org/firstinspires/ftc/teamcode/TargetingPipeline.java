@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import static org.firstinspires.ftc.teamcode.CVHelpers.BLUE;
 import static org.firstinspires.ftc.teamcode.CVHelpers.GREEN;
 import static org.firstinspires.ftc.teamcode.CVHelpers.RED;
+import static org.firstinspires.ftc.teamcode.CVHelpers.WHITE;
 import static org.firstinspires.ftc.teamcode.CVHelpers.getLargestContour;
 
 /*Terms:
@@ -29,7 +30,7 @@ import static org.firstinspires.ftc.teamcode.CVHelpers.getLargestContour;
 * - STRUCTURING_ELEMENT ... The shape that controls dilation of an image. Can be a star, ellipse, square, or etc.
 */
 
-class CVPipeline extends OpenCvPipeline
+class TargetingPipeline extends OpenCvPipeline
 {
     Mat blurred = new Mat();
     Mat hsv = new Mat();

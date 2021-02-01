@@ -8,10 +8,6 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-import static org.firstinspires.ftc.teamcode.StarterStackDetector.StarterStack.NONE;
-import static org.firstinspires.ftc.teamcode.StarterStackDetector.StarterStack.QUAD;
-import static org.firstinspires.ftc.teamcode.StarterStackDetector.StarterStack.SINGLE;
-
 /*Terms:
 * - OpMode ... A series of commands for the robot to follow. Can be interchanged in the control app.
 * - Iterative OpMode (or just "OpMode") ... A way to run your code. Abstracts code into stop(), start(), init(), init_loop(), loop() functions. Very often used for TeleOp since it allows asynchronous programming.
@@ -22,10 +18,13 @@ import static org.firstinspires.ftc.teamcode.StarterStackDetector.StarterStack.S
 @Autonomous(name = "Auto")
 public class Auto extends LinearOpMode {
     private Robot robot;
-    private OpenCvCamera webcam;
-    private CVPipeline pipeline;
-    private StarterStackDetector.StarterStack[] stacks;
-    private StarterStackDetector.StarterStack stack;
+    private OpenCvCamera stackCamera;
+    private OpenCvCamera targetingCamera;
+    private StarterStackPipeline stackPipeline;
+    private TargetingPipeline targetingPipeline;
+
+//    private StarterStackDetector.StarterStack[] stacks;
+//    private StarterStackDetector.StarterStack stack;
 
     public void move(int inches, double power) {
         robot.drive.setTargetForwardPositionRelative(inches, power);
@@ -88,60 +87,81 @@ public class Auto extends LinearOpMode {
     public void runOpMode() {
 
         robot = new Robot(hardwareMap);
-        robot.setTfodZoom(2);
+//        robot.setTfodZoom(2);
 
-        stacks = new StarterStackDetector.StarterStack[10];
+//        stacks = new StarterStackDetector.StarterStack[10];
 
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
 
-        for(int stackCounter = 0; !(isStarted() || isStopRequested()); stackCounter = (stackCounter + 1) % 10) {
-            stacks[stackCounter] = robot.checkStack();
-            telemetry.addData("",stacks[0]+" "+stacks[1]+" "+stacks[2]+" "+stacks[3]+" "+stacks[4]+" "+stacks[5]+" "+stacks[6]+" "+stacks[7]+" "+stacks[8]+" "+stacks[9]);
-            telemetry.update();
-        }
 
-        //start
-        int none = 0;
-        int one = 0;
-        int four = 0;
-        for (StarterStackDetector.StarterStack possibleStack : stacks) {
-            if (possibleStack == null) {
-                continue;
-            }
-            switch(possibleStack) {
-                case NONE: none++; break;
-                case SINGLE: one++; break;
-                case QUAD: four++;
-            }
-        }
-        if (none > Math.max(one, four)) {
-            stack = NONE;
-        } else if (one > Math.max(none, four)) {
-            stack = SINGLE;
-        } else if (four > Math.max(none, one)) {
-            stack = QUAD;
-        }
+//        for(int stackCounter = 0; !(isStarted() || isStopRequested()); stackCounter = (stackCounter + 1) % 10) {
+//            stacks[stackCounter] = robot.checkStack();
+//            telemetry.addData("",stacks[0]+" "+stacks[1]+" "+stacks[2]+" "+stacks[3]+" "+stacks[4]+" "+stacks[5]+" "+stacks[6]+" "+stacks[7]+" "+stacks[8]+" "+stacks[9]);
+//            telemetry.update();
+//        }
 
-        // check the stacks of rings and shut down the vuforia camera
-//        stack = robot.checkStack();
-        robot.shutdownVuforia();
-        telemetry.addData("Stack:", stack);
-        telemetry.update();
-
-        // start up the second camera
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        this.webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
-        this.pipeline = new CVPipeline();
-        webcam.setPipeline(pipeline);
-
+        // start up the first camera
+        int stackCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        this.stackCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Stack Webcam"), stackCameraMonitorViewId);
+        this.stackPipeline = new StarterStackPipeline();
+        stackCamera.setPipeline(stackPipeline);
         // create asynchronous camera stream in the app using EasyOpenCV.
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        stackCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
-                webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                stackCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+        });
+
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        while (!(isStarted() || isStopRequested())) {
+            idle();
+        }
+
+
+        //start
+//        int none = 0;
+//        int one = 0;
+//        int four = 0;
+//        for (StarterStackDetector.StarterStack possibleStack : stacks) {
+//            if (possibleStack == null) {
+//                continue;
+//            }
+//            switch(possibleStack) {
+//                case NONE: none++; break;
+//                case SINGLE: one++; break;
+//                case QUAD: four++;
+//            }
+//        }
+//        if (none > Math.max(one, four)) {
+//            stack = NONE;
+//        } else if (one > Math.max(none, four)) {
+//            stack = SINGLE;
+//        } else if (four > Math.max(none, one)) {
+//            stack = QUAD;
+//        }
+
+        // check the stacks of rings and shut down the vuforia camera
+//        stack = robot.checkStack();
+//        robot.shutdownVuforia();
+//        telemetry.addData("Stack:", stack);
+//        telemetry.update();
+
+        // start up the second camera
+        int targetingCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        this.targetingCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Targeting Webcam"), targetingCameraMonitorViewId);
+        this.targetingPipeline = new TargetingPipeline();
+        targetingCamera.setPipeline(targetingPipeline);
+        // create asynchronous camera stream in the app using EasyOpenCV.
+        targetingCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                targetingCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
             }
         });
 
@@ -152,38 +172,38 @@ public class Auto extends LinearOpMode {
         // everything below this should be the correct steps but has not been tested yet!!!
 
         // move up to white line and shoot 3 rings into the high goal
-        move(24,0.5);
-        robot.arm.setArm(false);
-        strafe(12,0.55);
-        robot.shooter.setShooter(0.630);
-        move(40,0.5);
-        strafe(-15,0.5);
-        shoot();
-        shoot();
-        shoot();
-        robot.shooter.setShooter(0);
-        turn(178);
-
-        // move to drop off wobble goal in correct location and move back to the white line
-        switch(stack) {
-            case NONE:
-                strafe(-8,0.5);
-                placeGoal();
-                strafe(24,0.5);
-                move(-12,0.5);
-                break;
-            case SINGLE:
-                move(-22,0.5);
-                strafe(12,0.5);
-                placeGoal();
-                move(6,0.5);
-                break;
-            case QUAD:
-                move(-46,0.5);
-                strafe(-6,0.5);
-                placeGoal();
-                move(30,0.5);
-        }
+//        move(24,0.5);
+//        robot.arm.setArm(false);
+//        strafe(12,0.55);
+//        robot.shooter.setShooter(0.630);
+//        move(40,0.5);
+//        strafe(-15,0.5);
+//        shoot();
+//        shoot();
+//        shoot();
+//        robot.shooter.setShooter(0);
+//        turn(178);
+//
+//        // move to drop off wobble goal in correct location and move back to the white line
+//        switch(stack) {
+//            case NONE:
+//                strafe(-8,0.5);
+//                placeGoal();
+//                strafe(24,0.5);
+//                move(-12,0.5);
+//                break;
+//            case SINGLE:
+//                move(-22,0.5);
+//                strafe(12,0.5);
+//                placeGoal();
+//                move(6,0.5);
+//                break;
+//            case QUAD:
+//                move(-46,0.5);
+//                strafe(-6,0.5);
+//                placeGoal();
+//                move(30,0.5);
+//        }
 
         telemetry.addData("Status", "finished");
         telemetry.update();

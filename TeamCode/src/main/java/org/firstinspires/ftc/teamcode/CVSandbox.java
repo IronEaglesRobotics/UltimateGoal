@@ -3,11 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.SwitchableCamera;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.opencv.core.Point;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -24,7 +20,7 @@ public class CVSandbox extends LinearOpMode
     //private Robot robot;
 
     OpenCvCamera webcam;
-    CVPipeline pipeline;
+    TargetingPipeline pipeline;
 
     @Override
     public void runOpMode()
@@ -35,7 +31,7 @@ public class CVSandbox extends LinearOpMode
         //Find the camera and add it as a variable.
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         this.webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        this.pipeline = new CVPipeline();
+        this.pipeline = new TargetingPipeline();
         webcam.setPipeline(pipeline);
 
         //Create asynchronous camera stream in the app using EasyOpenCV.

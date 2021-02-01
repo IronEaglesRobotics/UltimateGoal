@@ -30,7 +30,7 @@ public class Robot {
     public Arm arm;
     public Intake intake;
     public Shooter shooter;
-    private StarterStackDetector stackDetector;
+//    private StarterStackDetector stackDetector;
 
     // The IMU sensor object
     private BNO055IMU imu;
@@ -45,7 +45,7 @@ public class Robot {
         arm = new Arm(hardwareMap);
         intake = new Intake(hardwareMap);
         shooter = new Shooter(hardwareMap);
-        stackDetector = new StarterStackDetector(hardwareMap);
+//        stackDetector = new StarterStackDetector(hardwareMap);
 
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
@@ -74,17 +74,17 @@ public class Robot {
         return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle - baseGyroHeading;
     }
 
-    public void setTfodZoom(int zoom) {
-        this.stackDetector.setZoom(zoom);
-    }
-
-    public StarterStackDetector.StarterStack checkStack() {
-        return stackDetector.checkStack();
-    }
-
-    public void shutdownVuforia() {
-        stackDetector.shutdown();
-    }
+//    public void setTfodZoom(int zoom) {
+//        this.stackDetector.setZoom(zoom);
+//    }
+//
+//    public StarterStackDetector.StarterStack checkStack() {
+//        return stackDetector.checkStack();
+//    }
+//
+//    public void shutdownVuforia() {
+//        stackDetector.shutdown();
+//    }
 
     //Get telemetry for all relevant hardware.
     public Telemetry getTelemetry() {
@@ -93,7 +93,7 @@ public class Robot {
         t.setArmStatus(arm.getTelemetry());
         t.setIntakeStatus(intake.getTelemetry());
         t.setShooterStatus(shooter.getTelemetry());
-        t.setRingStatus("Ring: "+stackDetector.checkStack());
+//        t.setRingStatus("Ring: "+stackDetector.checkStack());
         return t;
     }
 

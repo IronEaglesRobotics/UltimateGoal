@@ -12,7 +12,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 public class AutoSandbox extends LinearOpMode {
     private Robot robot;
      OpenCvCamera webcam;
-     CVPipeline pipeline;
+     TargetingPipeline pipeline;
 
     public void move(int inches, double power) {
         robot.drive.setTargetForwardPositionRelative(inches, power);
@@ -77,7 +77,7 @@ public class AutoSandbox extends LinearOpMode {
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         this.webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
-        this.pipeline = new CVPipeline();
+        this.pipeline = new TargetingPipeline();
         webcam.setPipeline(pipeline);
 
         telemetry.addData("Status", "Initialized");
