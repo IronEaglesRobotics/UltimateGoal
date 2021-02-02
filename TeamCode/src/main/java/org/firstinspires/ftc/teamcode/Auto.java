@@ -18,13 +18,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous(name = "Auto")
 public class Auto extends LinearOpMode {
     private Robot robot;
-    private OpenCvCamera stackCamera;
-    private OpenCvCamera targetingCamera;
-    private StarterStackPipeline stackPipeline;
-    private TargetingPipeline targetingPipeline;
-
-//    private StarterStackDetector.StarterStack[] stacks;
-//    private StarterStackDetector.StarterStack stack;
+    private Camera.StarterStack stack;
 
     public void move(int inches, double power) {
         robot.drive.setTargetForwardPositionRelative(inches, power);
@@ -85,93 +79,41 @@ public class Auto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
+        telemetry.addData("Status", "Initializing Robot");
+        telemetry.update();
         robot = new Robot(hardwareMap);
-//        robot.setTfodZoom(2);
-
-//        stacks = new StarterStackDetector.StarterStack[10];
-
-
-
-//        for(int stackCounter = 0; !(isStarted() || isStopRequested()); stackCounter = (stackCounter + 1) % 10) {
-//            stacks[stackCounter] = robot.checkStack();
-//            telemetry.addData("",stacks[0]+" "+stacks[1]+" "+stacks[2]+" "+stacks[3]+" "+stacks[4]+" "+stacks[5]+" "+stacks[6]+" "+stacks[7]+" "+stacks[8]+" "+stacks[9]);
-//            telemetry.update();
-//        }
-
-        // start up the first camera
-        int stackCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        this.stackCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Stack Webcam"), stackCameraMonitorViewId);
-        this.stackPipeline = new StarterStackPipeline();
-        stackCamera.setPipeline(stackPipeline);
-        // create asynchronous camera stream in the app using EasyOpenCV.
-        stackCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                stackCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
-            }
-        });
+        robot.camera.initStackCamera();
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        // wait for start
         while (!(isStarted() || isStopRequested())) {
-            idle();
+            stack = robot.camera.checkStack();
+            telemetry.addData("Status", "Initialized");
+            telemetry.addData("Stack", stack);
+            telemetry.update();
         }
 
+        stack = robot.camera.checkStack();
+        telemetry.addData("Stack", stack);
+        telemetry.update();
 
-        //start
-//        int none = 0;
-//        int one = 0;
-//        int four = 0;
-//        for (StarterStackDetector.StarterStack possibleStack : stacks) {
-//            if (possibleStack == null) {
-//                continue;
-//            }
-//            switch(possibleStack) {
-//                case NONE: none++; break;
-//                case SINGLE: one++; break;
-//                case QUAD: four++;
-//            }
-//        }
-//        if (none > Math.max(one, four)) {
-//            stack = NONE;
-//        } else if (one > Math.max(none, four)) {
-//            stack = SINGLE;
-//        } else if (four > Math.max(none, one)) {
-//            stack = QUAD;
-//        }
+        telemetry.addData("Stack", stack);
+        telemetry.addData("Status", "Initializing Targeting Camera");
+        telemetry.update();
+        robot.camera.initTargetingCamera();
 
-        // check the stacks of rings and shut down the vuforia camera
-//        stack = robot.checkStack();
-//        robot.shutdownVuforia();
-//        telemetry.addData("Stack:", stack);
-//        telemetry.update();
+        telemetry.addData("Stack", stack);
+        telemetry.update();
 
-        // start up the second camera
-        int targetingCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        this.targetingCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Targeting Webcam"), targetingCameraMonitorViewId);
-        this.targetingPipeline = new TargetingPipeline();
-        targetingCamera.setPipeline(targetingPipeline);
-        // create asynchronous camera stream in the app using EasyOpenCV.
-        targetingCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                targetingCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
-            }
-        });
 
-        // secure wobble goal
+        // movements for auto
 
-        robot.arm.setClaw(true);
-
-        // everything below this should be the correct steps but has not been tested yet!!!
-
-        // move up to white line and shoot 3 rings into the high goal
+//        // secure wobble goal
+//        robot.arm.setClaw(true);
+//
+//        // move up to white line and shoot 3 rings into the high goal
 //        move(24,0.5);
 //        robot.arm.setArm(false);
 //        strafe(12,0.55);
@@ -205,7 +147,7 @@ public class Auto extends LinearOpMode {
 //                move(30,0.5);
 //        }
 
-        telemetry.addData("Status", "finished");
+        telemetry.addData("Status", "Finished");
         telemetry.update();
     }
 }

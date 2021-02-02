@@ -9,17 +9,19 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import java.util.Locale;
+
 import static android.os.SystemClock.sleep;
 
 /*Terms:
-* - ms ... Milisecond(s).
-* - Telemetry ... Recording and or transmission of the readings of an instrument. Basically: enviornment sensing.
-* - TFOD ... TensorFlowObjectDetector. Invokes TensorFlow's object detection API, assumably. Read more: https://github.com/tensorflow/models/tree/master/research/object_detection.
-*/
+ * - ms ... Milisecond(s).
+ * - Telemetry ... Recording and or transmission of the readings of an instrument. Basically: enviornment sensing.
+ * - TFOD ... TensorFlowObjectDetector. Invokes TensorFlow's object detection API, assumably. Read more: https://github.com/tensorflow/models/tree/master/research/object_detection.
+ */
 
 // manual driver control
-@TeleOp(name = "Manual")
-public class Manual extends OpMode {
+@TeleOp(name = "ManualSandbox")
+public class ManualSandbox extends OpMode {
     public int msStuckDetectInit = 15000;
 
     private Robot robot;
@@ -34,6 +36,12 @@ public class Manual extends OpMode {
     private boolean zig;
     private double powershotShooterPower = 0.57; // secondary speed for the shooter wheel
     private double shooterPower = 0.62; // primary speed for the shooter wheel
+
+    private Detection red;
+    private Detection blue;
+    private double x;
+    private double y;
+    private double z;
 
     @Override
     public void init() {
@@ -50,14 +58,62 @@ public class Manual extends OpMode {
     @Override
     public void loop() {
         // driver 1
+        red = robot.camera.getRed();
+        blue = robot.camera.getBlue();
 
-        // mecanum drive base
-        // the left bumper activates "turbo mode"
-        if (gamepad1.left_bumper) {
-            robot.drive.setInput(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
-        } else {
-            robot.drive.setInput(gamepad1.left_stick_x*0.7, -gamepad1.left_stick_y*0.7, gamepad1.right_stick_x*0.7);
+        x = 0;
+        y = 0;
+        z = 0;
+
+        if (gamepad1.right_bumper) {
+            // Aim for goal
+            double zMaxSpeed = 0.7;
+            double zErr = Math.abs(red.getCenter().x);
+            double zSpeed = (zErr / 50) * zMaxSpeed;
+            if (zErr <= 1) {
+                z = 0;
+            } else if (zErr > 1) {
+                z = Math.copySign(zSpeed, red.getCenter().x);
+            }
+
+//                double yMaxSpeed = 0.7;
+//                double yErr = Math.abs(5-red.getArea());
+//                double speed = (yErr / 5) * yMaxSpeed;
+//                if (yErr <= 0.1) {
+//                    y = 0;
+//                } else if (yErr > 0.1) {
+//                    y = Math.copySign(speed, 5-red.getArea());
+//                }
+            telemetry.addData("Red", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", red.getArea(), red.getCenter().x, red.getCenter().y));
+            telemetry.addData("Blue", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", blue.getArea(), blue.getCenter().x, blue.getCenter().y));
+            telemetry.update();
+        } else if (gamepad1.left_bumper) {
+            telemetry.addData("Red", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", red.getArea(), red.getCenter().x, red.getCenter().y));
+            telemetry.addData("Blue", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", blue.getArea(), blue.getCenter().x, blue.getCenter().y));
+            // Aim for powershot
+            PowerShotDetection powershots = robot.camera.getPowerShots();
+            int count = powershots.getCount();
+            telemetry.addData("PS Count", powershots.getCount());
+            if (count > 0) {
+//                    double zMaxSpeed = 0.7;
+//                    double zErr = Math.abs(powershots.get(0).getCenter().x);
+//                    double zSpeed = (zErr / 50) * zMaxSpeed;
+//                    if (zErr <= 1) {
+//                        z = 0;
+//                    } else if (zErr > 1) {
+//                        z = Math.copySign(zSpeed, red.getCenter().x);
+//                    }
+                telemetry.addData("First PS Center", powershots.get(0).getCenter());
+                telemetry.addData("Second PS Center", powershots.get(1).getCenter());
+                telemetry.addData("Third PS Center", powershots.get(2).getCenter());
+
+            } else {
+                x = gamepad1.left_stick_x*0.7;
+                y = -gamepad1.left_stick_y*0.7;
+                z = gamepad1.right_stick_x*0.7;
+            }
         }
+        robot.drive.setInput(x,y,z);
 
         // driver 2
 
