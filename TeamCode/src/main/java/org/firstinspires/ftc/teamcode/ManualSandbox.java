@@ -2,16 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 import java.util.Locale;
 
-import static android.os.SystemClock.sleep;
+import static org.firstinspires.ftc.teamcode.Detection.INVALID_POINT;
 
 /*Terms:
  * - ms ... Milisecond(s).
@@ -36,6 +31,7 @@ public class ManualSandbox extends OpMode {
     private boolean zig;
     private double powershotShooterPower = 0.57; // secondary speed for the shooter wheel
     private double shooterPower = 0.62; // primary speed for the shooter wheel
+    private CRServo spinner;
 
     private Detection red;
     private Detection blue;
@@ -49,7 +45,8 @@ public class ManualSandbox extends OpMode {
         telemetry.update();
         robot = new Robot(hardwareMap);
         robot.arm.resetEncoder();
-        robot.camera.initStackCamera();
+        robot.camera.initTargetingCamera();
+        spinner = hardwareMap.get(CRServo.class, "spinner");
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -65,28 +62,24 @@ public class ManualSandbox extends OpMode {
         y = 0;
         z = 0;
 
+        x = gamepad1.left_stick_x*0.7;
+        y = -gamepad1.left_stick_y*0.7;
+        z = gamepad1.right_stick_x*0.7;
         if (gamepad1.right_bumper) {
             // Aim for goal
-            double zMaxSpeed = 0.7;
-            double zErr = Math.abs(red.getCenter().x);
-            double zSpeed = (zErr / 50) * zMaxSpeed;
-            if (zErr <= 1) {
-                z = 0;
-            } else if (zErr > 1) {
-                z = Math.copySign(zSpeed, red.getCenter().x);
+            double gx = red.getCenter().x;
+            if (gx != INVALID_POINT.x) {
+                double zMaxSpeed = 0.7;
+                double zErr = Math.abs(red.getCenter().x);
+                double zSpeed = (zErr / 50) * zMaxSpeed;
+                if (zErr <= 1) {
+                    z = 0;
+                } else if (zErr > 1) {
+                    z = Math.copySign(zSpeed, red.getCenter().x);
+                }
             }
-
-//                double yMaxSpeed = 0.7;
-//                double yErr = Math.abs(5-red.getArea());
-//                double speed = (yErr / 5) * yMaxSpeed;
-//                if (yErr <= 0.1) {
-//                    y = 0;
-//                } else if (yErr > 0.1) {
-//                    y = Math.copySign(speed, 5-red.getArea());
-//                }
             telemetry.addData("Red", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", red.getArea(), red.getCenter().x, red.getCenter().y));
             telemetry.addData("Blue", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", blue.getArea(), blue.getCenter().x, blue.getCenter().y));
-            telemetry.update();
         } else if (gamepad1.left_bumper) {
             telemetry.addData("Red", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", red.getArea(), red.getCenter().x, red.getCenter().y));
             telemetry.addData("Blue", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", blue.getArea(), blue.getCenter().x, blue.getCenter().y));
@@ -95,22 +88,24 @@ public class ManualSandbox extends OpMode {
             int count = powershots.getCount();
             telemetry.addData("PS Count", powershots.getCount());
             if (count > 0) {
-//                    double zMaxSpeed = 0.7;
-//                    double zErr = Math.abs(powershots.get(0).getCenter().x);
-//                    double zSpeed = (zErr / 50) * zMaxSpeed;
-//                    if (zErr <= 1) {
-//                        z = 0;
-//                    } else if (zErr > 1) {
-//                        z = Math.copySign(zSpeed, red.getCenter().x);
-//                    }
-                telemetry.addData("First PS Center", powershots.get(0).getCenter());
-                telemetry.addData("Second PS Center", powershots.get(1).getCenter());
-                telemetry.addData("Third PS Center", powershots.get(2).getCenter());
-
-            } else {
-                x = gamepad1.left_stick_x*0.7;
-                y = -gamepad1.left_stick_y*0.7;
-                z = gamepad1.right_stick_x*0.7;
+                double px = powershots.get(0).getCenter().x;
+                if (px != INVALID_POINT.x) {
+                    double zMaxSpeed = 0.7;
+                    double zErr = Math.abs(powershots.get(0).getCenter().x);
+                    double zSpeed = (zErr / 50) * zMaxSpeed;
+                    if (zErr <= 1) {
+                        z = 0;
+                    } else if (zErr > 1) {
+                        z = Math.copySign(zSpeed, red.getCenter().x);
+                    }
+                }
+                telemetry.addData("PS 1 Center", powershots.get(0).getCenter());
+                if (count > 1) {
+                    telemetry.addData("PS 2 Center", powershots.get(1).getCenter());
+                }
+                if (count > 2) {
+                    telemetry.addData("PS 3 Center", powershots.get(2).getCenter());
+                }
             }
         }
         robot.drive.setInput(x,y,z);
@@ -181,8 +176,17 @@ public class ManualSandbox extends OpMode {
         dpadLeftPressed = gamepad2.dpad_left;
         dpadRightPressed = gamepad2.dpad_right;
 
+        // test servo
+        spinner.setPower(-gamepad2.right_stick_y);
+
         // show telemetry
         telemetry.addData("Status", robot.getTelemetry());
+        telemetry.addData("Spinner Power", spinner.getPower());
         telemetry.update();
+    }
+
+    @Override
+    public void stop() {
+        robot.camera.stopTargetingCamera();
     }
 }

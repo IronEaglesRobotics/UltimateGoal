@@ -38,7 +38,7 @@ class StarterStackPipeline extends OpenCvPipeline
 
     final Mat STRUCTURING_ELEMENT = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size((2 * 2) + 1, (2 * 2) + 1));
     final Point ANCHOR = new Point((STRUCTURING_ELEMENT.cols() / 2f), STRUCTURING_ELEMENT.rows() / 2f);
-    final double MIN_STARTERSTACK_AREA = 0.01;
+    final double MIN_STARTERSTACK_AREA = 0.005;
     final Scalar ORANGE_LOWER = new Scalar(10, 85, 100);
     final Scalar ORANGE_UPPER = new Scalar(25, 255, 255);
     final int ERODE_DILATE_ITERATIONS = 2;
@@ -72,8 +72,8 @@ class StarterStackPipeline extends OpenCvPipeline
         Imgproc.erode(orangeMask, orangeMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
         Imgproc.dilate(orangeMask, orangeMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
 
-        Rect starterStackBox = new Rect(0,0,input.cols()/2,input.rows());
-        Mat starterStackMask = new Mat(hsv.size(), CvType.CV_8U);
+        Rect starterStackBox = new Rect(0,75,input.cols()/2,90);
+        Mat starterStackMask = new Mat(hsv.size(), CvType.CV_8U);//320 240
 
         Imgproc.rectangle(starterStackMask, starterStackBox, new Scalar(255,255,255), -1);
         Core.bitwise_and(orangeMask, starterStackMask, starterStackMask);

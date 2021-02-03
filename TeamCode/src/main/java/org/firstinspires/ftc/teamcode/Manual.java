@@ -41,7 +41,7 @@ public class Manual extends OpMode {
         telemetry.update();
         robot = new Robot(hardwareMap);
         robot.arm.resetEncoder();
-        robot.camera.initStackCamera();
+        robot.camera.initTargetingCamera();
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -128,5 +128,10 @@ public class Manual extends OpMode {
         // show telemetry
         telemetry.addData("Status", robot.getTelemetry());
         telemetry.update();
+    }
+
+    @Override
+    public void stop() {
+        robot.camera.stopTargetingCamera();
     }
 }

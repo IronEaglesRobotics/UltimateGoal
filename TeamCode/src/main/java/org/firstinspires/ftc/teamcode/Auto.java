@@ -92,61 +92,57 @@ public class Auto extends LinearOpMode {
             stack = robot.camera.checkStack();
             telemetry.addData("Status", "Initialized");
             telemetry.addData("Stack", stack);
+            telemetry.addData("Size", robot.camera.getSize());
             telemetry.update();
         }
 
-        stack = robot.camera.checkStack();
         telemetry.addData("Stack", stack);
         telemetry.update();
 
-        telemetry.addData("Stack", stack);
-        telemetry.addData("Status", "Initializing Targeting Camera");
-        telemetry.update();
-        robot.camera.initTargetingCamera();
-
-        telemetry.addData("Stack", stack);
-        telemetry.update();
-
+        robot.camera.stopStackCamera();
 
         // movements for auto
 
-//        // secure wobble goal
-//        robot.arm.setClaw(true);
-//
-//        // move up to white line and shoot 3 rings into the high goal
-//        move(24,0.5);
-//        robot.arm.setArm(false);
-//        strafe(12,0.55);
-//        robot.shooter.setShooter(0.630);
-//        move(40,0.5);
-//        strafe(-15,0.5);
-//        shoot();
-//        shoot();
-//        shoot();
-//        robot.shooter.setShooter(0);
-//        turn(178);
-//
-//        // move to drop off wobble goal in correct location and move back to the white line
-//        switch(stack) {
-//            case NONE:
-//                strafe(-8,0.5);
-//                placeGoal();
-//                strafe(24,0.5);
-//                move(-12,0.5);
-//                break;
-//            case SINGLE:
-//                move(-22,0.5);
-//                strafe(12,0.5);
-//                placeGoal();
-//                move(6,0.5);
-//                break;
-//            case QUAD:
-//                move(-46,0.5);
-//                strafe(-6,0.5);
-//                placeGoal();
-//                move(30,0.5);
-//        }
+        // secure wobble goal
+        robot.arm.setClaw(true);
+        robot.camera.initTargetingCamera();
 
+        // move up to white line and shoot 3 rings into the high goal
+        move(24,0.5);
+        robot.arm.setArm(false);
+
+        strafe(12,0.55);
+        robot.shooter.setShooter(0.630);
+        move(40,0.5);
+        strafe(-15,0.5);
+        shoot();
+        shoot();
+        shoot();
+        robot.shooter.setShooter(0);
+        turn(178);
+
+        // move to drop off wobble goal in correct location and move back to the white line
+        switch(stack) {
+            case NONE:
+                strafe(-8,0.5);
+                placeGoal();
+                strafe(24,0.5);
+                move(-12,0.5);
+                break;
+            case SINGLE:
+                move(-22,0.5);
+                strafe(12,0.5);
+                placeGoal();
+                move(6,0.5);
+                break;
+            case QUAD:
+                move(-46,0.5);
+                strafe(-6,0.5);
+                placeGoal();
+                move(30,0.5);
+        }
+
+        robot.camera.stopTargetingCamera();
         telemetry.addData("Status", "Finished");
         telemetry.update();
     }

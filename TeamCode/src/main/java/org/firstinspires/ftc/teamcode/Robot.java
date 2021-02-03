@@ -46,7 +46,6 @@ public class Robot {
         intake = new Intake(hardwareMap);
         shooter = new Shooter(hardwareMap);
         camera = new Camera(hardwareMap);
-
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information.
