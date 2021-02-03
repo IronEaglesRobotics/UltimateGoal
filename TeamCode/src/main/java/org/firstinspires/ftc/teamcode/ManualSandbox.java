@@ -70,12 +70,12 @@ public class ManualSandbox extends OpMode {
             double gx = red.getCenter().x;
             if (gx != INVALID_POINT.x) {
                 double zMaxSpeed = 0.7;
-                double zErr = Math.abs(red.getCenter().x);
+                double zErr = Math.abs(gx);
                 double zSpeed = (zErr / 50) * zMaxSpeed;
                 if (zErr <= 1) {
                     z = 0;
                 } else if (zErr > 1) {
-                    z = Math.copySign(zSpeed, red.getCenter().x);
+                    z = Math.copySign(zSpeed, gx);
                 }
             }
             telemetry.addData("Red", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", red.getArea(), red.getCenter().x, red.getCenter().y));
@@ -91,12 +91,12 @@ public class ManualSandbox extends OpMode {
                 double px = powershots.get(0).getCenter().x;
                 if (px != INVALID_POINT.x) {
                     double zMaxSpeed = 0.7;
-                    double zErr = Math.abs(powershots.get(0).getCenter().x);
+                    double zErr = Math.abs(px);
                     double zSpeed = (zErr / 50) * zMaxSpeed;
                     if (zErr <= 1) {
                         z = 0;
                     } else if (zErr > 1) {
-                        z = Math.copySign(zSpeed, red.getCenter().x);
+                        z = Math.copySign(zSpeed, px);
                     }
                 }
                 telemetry.addData("PS 1 Center", powershots.get(0).getCenter());
