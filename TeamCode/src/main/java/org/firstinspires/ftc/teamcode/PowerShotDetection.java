@@ -14,8 +14,8 @@ import java.util.List;
 
 public class PowerShotDetection {
     public static final Size GOAL_DIMENSIONS_IN = new Size(24, 15.5);
-    public static final Point POWERSHOT_OFFSET_IN = new Point(-27, -11);
-    public static final Size POWERSHOT_DIMENSIONS_IN = new Size(30, 30);
+    public static final Point POWERSHOT_OFFSET_IN = new Point(-29, -11);
+    public static final Size POWERSHOT_DIMENSIONS_IN = new Size(30, 25);
 
     private ArrayList<Detection> powerShots;
 

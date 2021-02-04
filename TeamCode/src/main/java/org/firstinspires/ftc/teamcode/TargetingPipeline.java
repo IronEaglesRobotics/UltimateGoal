@@ -69,6 +69,8 @@ class TargetingPipeline extends OpenCvPipeline
         Imgproc.GaussianBlur(input, blurred, BLUR_SIZE, 0);
         Imgproc.cvtColor(blurred, hsv, Imgproc.COLOR_RGB2HSV);
 
+        Imgproc.rectangle(input, new Point(160-2,0), new Point(160+2,240), WHITE, -1);
+
         updateRed();
         red.draw(input, RED);
 

@@ -22,10 +22,14 @@ public class ManualSandbox extends OpMode {
     private Robot robot;
     private boolean clawPressed;
     private boolean pusherPressed;
-    private boolean dpadUpPressed;
-    private boolean dpadDownPressed;
-    private boolean dpadLeftPressed;
-    private boolean dpadRightPressed;
+    private boolean dpad1UpPressed;
+    private boolean dpad1DownPressed;
+    private boolean dpad1LeftPressed;
+    private boolean dpad1RightPressed;
+    private boolean dpad2UpPressed;
+    private boolean dpad2DownPressed;
+    private boolean dpad2LeftPressed;
+    private boolean dpad2RightPressed;
     private double finishTime;
     private boolean checkPusher;
     private boolean zig;
@@ -62,12 +66,21 @@ public class ManualSandbox extends OpMode {
         y = 0;
         z = 0;
 
-        x = gamepad1.left_stick_x*0.7;
-        y = -gamepad1.left_stick_y*0.7;
-        z = gamepad1.right_stick_x*0.7;
-        if (gamepad1.right_bumper) {
+        // normal movements
+        if (gamepad1.left_bumper) {
+            x = gamepad1.left_stick_x;
+            y = -gamepad1.left_stick_y;
+            z = gamepad1.right_stick_x;
+        } else {
+            x = gamepad1.left_stick_x*0.7;
+            y = -gamepad1.left_stick_y*0.7;
+            z = gamepad1.right_stick_x*0.7;
+        }
+
+        // auto aim at goal
+        if (gamepad1.dpad_right) {
             // Aim for goal
-            double gx = red.getCenter().x;
+            double gx = red.getCenter().x+10;
             if (gx != INVALID_POINT.x) {
                 double zMaxSpeed = 0.7;
                 double zErr = Math.abs(gx);
@@ -78,44 +91,49 @@ public class ManualSandbox extends OpMode {
                     z = Math.copySign(zSpeed, gx);
                 }
             }
-            telemetry.addData("Red", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", red.getArea(), red.getCenter().x, red.getCenter().y));
-            telemetry.addData("Blue", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", blue.getArea(), blue.getCenter().x, blue.getCenter().y));
-        } else if (gamepad1.left_bumper) {
-            telemetry.addData("Red", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", red.getArea(), red.getCenter().x, red.getCenter().y));
-            telemetry.addData("Blue", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", blue.getArea(), blue.getCenter().x, blue.getCenter().y));
-            // Aim for powershot
-            PowerShotDetection powershots = robot.camera.getPowerShots();
-            int count = powershots.getCount();
-            telemetry.addData("PS Count", powershots.getCount());
-            if (count > 0) {
-                double px = powershots.get(0).getCenter().x;
-                if (px != INVALID_POINT.x) {
-                    double zMaxSpeed = 0.7;
-                    double zErr = Math.abs(px);
-                    double zSpeed = (zErr / 50) * zMaxSpeed;
-                    if (zErr <= 1) {
-                        z = 0;
-                    } else if (zErr > 1) {
-                        z = Math.copySign(zSpeed, px);
-                    }
-                }
-                telemetry.addData("PS 1 Center", powershots.get(0).getCenter());
-                if (count > 1) {
-                    telemetry.addData("PS 2 Center", powershots.get(1).getCenter());
-                }
-                if (count > 2) {
-                    telemetry.addData("PS 3 Center", powershots.get(2).getCenter());
-                }
+        }
+
+        // auto aim powershots
+        PowerShotDetection powershots = robot.camera.getPowerShots();
+        int count = powershots.getCount();
+        telemetry.addData("PS Count", powershots.getCount());
+
+        double px = INVALID_POINT.x;
+        if (gamepad1.dpad_left) {
+            double pxleft = powershots.get(0).getCenter().x+10;
+            double pxmiddle = powershots.get(1).getCenter().x+10;
+            double pxright = powershots.get(2).getCenter().x+10;
+            if (pxleft != INVALID_POINT.x) {
+                px = pxleft;
+            } else if (pxmiddle != INVALID_POINT.x) {
+                px = pxmiddle;
+            } else if (pxright != INVALID_POINT.x) {
+                px = pxmiddle;
             }
         }
+        if (px != INVALID_POINT.x) {
+            double zMaxSpeed = 0.7;
+            double zErr = Math.abs(px);
+            double zSpeed = (zErr / 50) * zMaxSpeed;
+            if (zErr <= 2) {
+                z = 0;
+            } else if (zErr > 1) {
+                z = Math.copySign(zSpeed, px);
+            }
+        }
+        telemetry.addData("PS 1 Center", powershots.get(0).getCenter());
+        telemetry.addData("PS 2 Center", powershots.get(1).getCenter());
+        telemetry.addData("PS 3 Center", powershots.get(2).getCenter());
+        telemetry.addData("Red", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", red.getArea(), red.getCenter().x, red.getCenter().y));
+        telemetry.addData("Blue", String.format(Locale.US, "Area: %.1f, Center: (%.1f, %.1f)", blue.getArea(), blue.getCenter().x, blue.getCenter().y));
         robot.drive.setInput(x,y,z);
 
         // driver 2
 
         // arm up and down
-        if (gamepad2.y && gamepad2.dpad_up && !dpadUpPressed) {
+        if (gamepad2.y && gamepad2.dpad_up && !dpad2UpPressed) {
             robot.arm.setArm(false);
-        } else if (gamepad2.y && gamepad2.dpad_down && !dpadDownPressed) {
+        } else if (gamepad2.y && gamepad2.dpad_down && !dpad2DownPressed) {
             robot.arm.setArm(true);
         }
 
@@ -162,19 +180,23 @@ public class ManualSandbox extends OpMode {
         }
 
         // dpad is used to change the speed of the primary and secondary speeds for the shooter wheel
-        if (gamepad2.dpad_up && !dpadUpPressed) {
+        if (gamepad2.dpad_up && !dpad2UpPressed) {
             powershotShooterPower += 0.01;
-        } if (gamepad2.dpad_down && !dpadDownPressed) {
+        } if (gamepad2.dpad_down && !dpad2DownPressed) {
             powershotShooterPower -= 0.01;
-        } if (gamepad2.dpad_left && !dpadLeftPressed) {
+        } if (gamepad2.dpad_left && !dpad2LeftPressed) {
             shooterPower += 0.01;
-        } if (gamepad2.dpad_right && !dpadRightPressed) {
+        } if (gamepad2.dpad_right && !dpad2RightPressed) {
             shooterPower -= 0.01;
         }
-        dpadUpPressed = gamepad2.dpad_up;
-        dpadDownPressed = gamepad2.dpad_down;
-        dpadLeftPressed = gamepad2.dpad_left;
-        dpadRightPressed = gamepad2.dpad_right;
+        dpad1UpPressed = gamepad1.dpad_up;
+        dpad1DownPressed = gamepad1.dpad_down;
+        dpad1LeftPressed = gamepad1.dpad_left;
+        dpad1RightPressed = gamepad1.dpad_right;
+        dpad2UpPressed = gamepad2.dpad_up;
+        dpad2DownPressed = gamepad2.dpad_down;
+        dpad2LeftPressed = gamepad2.dpad_left;
+        dpad2RightPressed = gamepad2.dpad_right;
 
         // test servo
         spinner.setPower(-gamepad2.right_stick_y);
