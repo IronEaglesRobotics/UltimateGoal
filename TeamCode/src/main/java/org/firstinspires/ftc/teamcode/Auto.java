@@ -3,11 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-
 /*Terms:
 * - OpMode ... A series of commands for the robot to follow. Can be interchanged in the control app.
 * - Iterative OpMode (or just "OpMode") ... A way to run your code. Abstracts code into stop(), start(), init(), init_loop(), loop() functions. Very often used for TeleOp since it allows asynchronous programming.
@@ -84,6 +79,9 @@ public class Auto extends LinearOpMode {
         robot = new Robot(hardwareMap);
         robot.camera.initStackCamera();
 
+        while (robot.camera.getFrameCount() < 1) {
+            this.sleep(1);
+        }
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 

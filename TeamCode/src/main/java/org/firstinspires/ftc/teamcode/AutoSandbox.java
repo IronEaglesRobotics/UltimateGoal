@@ -84,6 +84,9 @@ public class AutoSandbox extends LinearOpMode {
         robot = new Robot(hardwareMap);
         robot.camera.initStackCamera();
 
+        while (robot.camera.getFrameCount() < 1) {
+            this.sleep(1);
+        }
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 

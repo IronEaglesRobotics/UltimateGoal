@@ -7,18 +7,20 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import java.util.Locale;
+
 public class Camera {
     private HardwareMap hardwareMap;
     private OpenCvCamera stackCamera;
     private OpenCvCamera targetingCamera;
     private StarterStackPipeline stackPipeline;
     private TargetingPipeline targetingPipeline;
-    private int stackCameraMonitorViewId;
-    private int targetingCameraMonitorViewId;
 
     private boolean stackCameraInitialized;
     private boolean targetingCameraInitialized;
 
+    private final int WEBCAM_WIDTH = 320;
+    private final int WEBCAM_HEIGHT = 240;
     private final double SINGLE_MIN_AREA = 0.7;
     private final double QUAD_MIN_AREA = 1.85;
 
@@ -27,7 +29,7 @@ public class Camera {
     }
 
     public void initStackCamera() {
-        stackCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        int stackCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         this.stackCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Stack Webcam"), stackCameraMonitorViewId);
         this.stackPipeline = new StarterStackPipeline();
         stackCamera.setPipeline(stackPipeline);
@@ -36,7 +38,7 @@ public class Camera {
             @Override
             public void onOpened()
             {
-                stackCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                stackCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, OpenCvCameraRotation.UPRIGHT);
             }
         });
         stackCameraInitialized = true;
@@ -52,7 +54,7 @@ public class Camera {
     }
 
     public void initTargetingCamera() {
-        targetingCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        int targetingCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         this.targetingCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Targeting Webcam"), targetingCameraMonitorViewId);
         this.targetingPipeline = new TargetingPipeline();
         targetingCamera.setPipeline(targetingPipeline);
@@ -61,7 +63,7 @@ public class Camera {
             @Override
             public void onOpened()
             {
-                targetingCamera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                targetingCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, OpenCvCameraRotation.UPRIGHT);
             }
         });
         targetingCameraInitialized = true;
@@ -100,8 +102,8 @@ public class Camera {
         return targetingPipeline.getBlue();
     }
 
-    public PowerShotDetection getPowerShots() {
-        return targetingPipeline.getPowerShots();
+    public PowerShotDetection getPowerShot() {
+        return targetingPipeline.getPowerShot();
     }
 
     public double getSize() {
@@ -109,5 +111,31 @@ public class Camera {
             return stackPipeline.getStarterStackArea();
         }
         return 0;
+    }
+
+    public int getFrameCount() {
+        if (stackCameraInitialized) {
+            return stackCamera.getFrameCount();
+        } else if (targetingCameraInitialized) {
+            return targetingCamera.getFrameCount();
+        } else {
+            return 0;
+        }
+    }
+
+    public String getTelemetry() {
+        if (stackCameraInitialized) {
+            return String.format(Locale.US, "Stack: %s", checkStack());
+        } else if (targetingCameraInitialized) {
+            return String.format(Locale.US, "PowerShots: (%.1f,%.1f) (%.1f,%.1f) (%.1f,%.1f)\n" +
+                                                    "Red Goal:  Area: %.2f Center: (%.2f,%.2f)\n" +
+                                                    "Blue Goal: Area: %.2f Center: (%.2f,%.2f)",
+                    targetingPipeline.getPowerShot().get(0).getCenter().x, targetingPipeline.getPowerShot().get(0).getCenter().y,
+                    targetingPipeline.getPowerShot().get(1).getCenter().x, targetingPipeline.getPowerShot().get(1).getCenter().y,
+                    targetingPipeline.getPowerShot().get(2).getCenter().x, targetingPipeline.getPowerShot().get(2).getCenter().y,
+                    targetingPipeline.getRed().getArea(), targetingPipeline.getRed().getCenter().x, targetingPipeline.getRed().getCenter().x,
+                    targetingPipeline.getBlue().getArea(), targetingPipeline.getBlue().getCenter().x, targetingPipeline.getBlue().getCenter().x);
+        }
+        return ("No Camera Initialized");
     }
 }

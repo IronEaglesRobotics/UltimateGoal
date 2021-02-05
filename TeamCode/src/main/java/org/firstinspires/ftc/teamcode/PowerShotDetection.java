@@ -5,7 +5,6 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +42,17 @@ public class PowerShotDetection {
     //Gets powerShot of specified number.
     public Detection get(int i) {
         return powerShots.get(i);
+    }
+
+    public Detection getLeftMost() {
+        if (powerShots.get(0).isValid()) {
+            return powerShots.get(0);
+        } else if (powerShots.get(1).isValid()) {
+            return powerShots.get(1);
+        } else if (powerShots.get(2).isValid()) {
+            return powerShots.get(2);
+        }
+        return powerShots.get(0);
     }
 
     //Sorts out the detected contours and sets `powerShots` accordingly.

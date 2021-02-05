@@ -152,8 +152,6 @@ public class MecanumDrive {
 
     //Gets power telemetry for all the wheels on the robot.
     public String getTelemetry() {
-//        return String.format("\nDrive: %s\nArm: %s\nRing: %s", driveStatus, armStatus, ringStatus);
-//        return ("fl: "+frontLeft.getPower()+"\nfr: "+frontRight.getPower()+"\nbl: "+backLeft.getPower()+"\nbr: "+backRight.getPower());
         return String.format(Locale.US, "Drive: fl: %.2f fr: %.2f bl: %.2f br: %.2f", frontLeft.getPower(), frontRight.getPower(), backLeft.getPower(), backRight.getPower());
     }
 }

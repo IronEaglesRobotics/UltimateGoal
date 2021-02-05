@@ -1,21 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.hardware.bosch.NaiveAccelerationIntegrator;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
-import java.util.Locale;
-
-import static com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 
 //For ADB Connection: `adb connect 192.168.43.1:5555`
 
@@ -80,7 +72,7 @@ public class Robot {
         t.setArmStatus(arm.getTelemetry());
         t.setIntakeStatus(intake.getTelemetry());
         t.setShooterStatus(shooter.getTelemetry());
-        t.setRingStatus("Ring: "+camera.checkStack());
+        t.setCameraStatus(camera.getTelemetry());
         return t;
     }
 
@@ -90,7 +82,7 @@ public class Robot {
         private String armStatus;
         private String intakeStatus;
         private String shooterStatus;
-        private String ringStatus;
+        private String cameraStatus;
 
         public void setDriveStatus(String driveStatus) {
             this.driveStatus = driveStatus;
@@ -108,13 +100,13 @@ public class Robot {
             this.shooterStatus = armStatus;
         }
 
-        public void setRingStatus(String ringStatus) {
-            this.ringStatus = ringStatus;
+        public void setCameraStatus(String cameraStatus) {
+            this.cameraStatus = cameraStatus;
         }
 
         @Override
         public String toString() {
-            return String.format("\n%s\n%s\n%s\n%s\n%s", driveStatus, armStatus, intakeStatus, shooterStatus, ringStatus);
+            return String.format("\n%s\n%s\n%s\n%s\n%s", driveStatus, armStatus, intakeStatus, shooterStatus, cameraStatus);
         }
     }
 }

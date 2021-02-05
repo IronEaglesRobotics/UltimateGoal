@@ -2,14 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-
-import static android.os.SystemClock.sleep;
 
 /*Terms:
 * - ms ... Milisecond(s).
@@ -42,9 +34,14 @@ public class Manual extends OpMode {
         robot = new Robot(hardwareMap);
         robot.arm.resetEncoder();
         robot.camera.initTargetingCamera();
+    }
 
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+    @Override
+    public void init_loop() {
+        if (robot.camera.getFrameCount() > 0) {
+            telemetry.addData("Status", "Initialized");
+            telemetry.update();
+        }
     }
 
     @Override

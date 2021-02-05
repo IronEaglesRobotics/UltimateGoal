@@ -18,6 +18,7 @@ import static org.firstinspires.ftc.teamcode.CVHelpers.GREEN;
 import static org.firstinspires.ftc.teamcode.CVHelpers.RED;
 import static org.firstinspires.ftc.teamcode.CVHelpers.WHITE;
 import static org.firstinspires.ftc.teamcode.CVHelpers.getLargestContour;
+import static org.firstinspires.ftc.teamcode.CVHelpers.getLargestContours;
 
 /*Terms:
 * - Mask ... The isolation of a certain range of colors. You're probably better off Googling it.
@@ -155,7 +156,7 @@ class TargetingPipeline extends OpenCvPipeline
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(psMask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
-        powerShots.setContours(CVHelpers.getLargestContours(contours, 3));
+        powerShots.setContours(getLargestContours(contours, 3));
 
         Imgproc.rectangle(input, powerShotTL, powerShotBR, new Scalar(255,255,255), 2);
     }
@@ -184,7 +185,7 @@ class TargetingPipeline extends OpenCvPipeline
         return blue;
     }
 
-    public PowerShotDetection getPowerShots() {
+    public PowerShotDetection getPowerShot() {
         return powerShots;
     }
 }
