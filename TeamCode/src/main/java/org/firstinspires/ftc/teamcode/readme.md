@@ -5,11 +5,11 @@
 1. then run 'adb connect 192.168.43.1:5555' in the terminal (you may have to specify the specific path for where adb is located)
 
 ## How the code is structured:
-In the opmodes folder there are 4 different opmodes, 2 autonomous and 2 manual ones. The ones called sandboxes are basically duplicates that can be used to test out new functions like auto aiming before being implemented in the main opmode
-The opmodes use the classes that make up the robot from the robot folder to direct the robot to make certain movements
-the opencv folders contains classes for detection of something that our code recognizes as something, and the pipelines are just methods that run every time a frame is received from the cameras
-the CVHelpers and MathHelpers contain helper methods for the rest of the code
-the constants class contains a list of all the major constants that don't change
+* In the opmodes folder there are 4 different opmodes, 2 autonomous and 2 manual ones. The ones called sandboxes are basically duplicates that can be used to test out new functions like auto aiming before being implemented in the main opmode
+* The opmodes use the classes that make up the robot from the robot folder to direct the robot to make certain movements
+* the opencv folders contains classes for detection of something that our code recognizes as something, and the pipelines are just methods that run every time a frame is received from the cameras
+* the CVHelpers and MathHelpers contain helper methods for the rest of the code
+* the constants class contains a list of all the major constants that don't change
 
 ## Some important terms that could be helpful to know:
 * HardwareMap ... A list of the parts on a robot, like a phone book for motors and servos
