@@ -1,17 +1,17 @@
-#Iron Eagles Robotics 3708 Teamcode
+# Iron Eagles Robotics 3708 Teamcode
 
-##To connect to the robot over wifi:
+## To connect to the robot over wifi:
 1. first connect to the ftc-prn network (password is password)
 1. then run 'adb connect 192.168.43.1:5555' in the terminal (you may have to specify the specific path for where adb is located)
 
-##How the code is structured:
+## How the code is structured:
 In the opmodes folder there are 4 different opmodes, 2 autonomous and 2 manual ones. The ones called sandboxes are basically duplicates that can be used to test out new functions like auto aiming before being implemented in the main opmode
 The opmodes use the classes that make up the robot from the robot folder to direct the robot to make certain movements
 the opencv folders contains classes for detection of something that our code recognizes as something, and the pipelines are just methods that run every time a frame is received from the cameras
 the CVHelpers and MathHelpers contain helper methods for the rest of the code
 the constants class contains a list of all the major constants that don't change
 
-#Some important terms that could be helpful to know:
+## Some important terms that could be helpful to know:
 * HardwareMap ... A list of the parts on a robot, like a phone book for motors and servos
 * Contour ... An outline, especially one bounding a shape. In this case, it is whatever OpenCV thinks is a shape
 * Point ... A point on the image. Note: x=0 and y=0 start in the *top left*
@@ -41,7 +41,7 @@ the constants class contains a list of all the major constants that don't change
 * RunMode ... The way the wheels are set to run. A few examples are: RUN_USING_ENCODER (run wheels and collect data), STOP_AND_RESET_ENCODER (brake and discard encoder data), RUN_TO_POSITION (drive until you reach a certain position)
 * Encoder ... A thing that collects and stores data about hardware. In our case: wheel data
 
-##How to add on your own code
+## How to add on your own code
 1. download android studio and clone (copy) this current git repository to somewhere local on your computer
 1. ask Senor Scott or Mr. Thurlow to give you your own branch if you don't already have one so we don't all try to change the same branch of code
 1. add your own code (try to add comments, make it readable, and make it something that you think will work / be an improvement over what was there before)
