@@ -1,14 +1,29 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.opencv.Detection;
+import org.firstinspires.ftc.teamcode.opencv.PowershotDetection;
+import org.firstinspires.ftc.teamcode.opencv.StarterStackPipeline;
+import org.firstinspires.ftc.teamcode.opencv.TargetingPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.Locale;
 
+import static org.firstinspires.ftc.teamcode.Constants.INVALID_DETECTION;
+import static org.firstinspires.ftc.teamcode.Constants.INVALID_POWERSHOT_DETECTION;
+import static org.firstinspires.ftc.teamcode.Constants.MIN_STARTERSTACK_QUAD_AREA;
+import static org.firstinspires.ftc.teamcode.Constants.MIN_STARTERSTACK_SINGLE_AREA;
+import static org.firstinspires.ftc.teamcode.Constants.STACK_WEBCAM;
+import static org.firstinspires.ftc.teamcode.Constants.TARGETING_WEBCAM;
+import static org.firstinspires.ftc.teamcode.Constants.WEBCAM_HEIGHT;
+import static org.firstinspires.ftc.teamcode.Constants.WEBCAM_ROTATION;
+import static org.firstinspires.ftc.teamcode.Constants.WEBCAM_WIDTH;
+
+// Class for the camera
 public class Camera {
     private HardwareMap hardwareMap;
     private OpenCvCamera stackCamera;
@@ -19,18 +34,15 @@ public class Camera {
     private boolean stackCameraInitialized;
     private boolean targetingCameraInitialized;
 
-    private final int WEBCAM_WIDTH = 320;
-    private final int WEBCAM_HEIGHT = 240;
-    private final double SINGLE_MIN_AREA = 0.7;
-    private final double QUAD_MIN_AREA = 1.85;
-
+    // Constructor
     public Camera(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
     }
 
+    // Initiate the StarterStack Camera
     public void initStackCamera() {
         int stackCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        this.stackCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Stack Webcam"), stackCameraMonitorViewId);
+        this.stackCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, STACK_WEBCAM), stackCameraMonitorViewId);
         this.stackPipeline = new StarterStackPipeline();
         stackCamera.setPipeline(stackPipeline);
         stackCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -38,12 +50,13 @@ public class Camera {
             @Override
             public void onOpened()
             {
-                stackCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, OpenCvCameraRotation.UPRIGHT);
+                stackCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, WEBCAM_ROTATION);
             }
         });
         stackCameraInitialized = true;
     }
 
+    // Close the StarterStack Camera
     public void stopStackCamera() {
         stackCamera.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener()
         {
@@ -53,9 +66,10 @@ public class Camera {
         stackCameraInitialized = false;
     }
 
+    // Initiate the Targeting Camera
     public void initTargetingCamera() {
         int targetingCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        this.targetingCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Targeting Webcam"), targetingCameraMonitorViewId);
+        this.targetingCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, TARGETING_WEBCAM), targetingCameraMonitorViewId);
         this.targetingPipeline = new TargetingPipeline();
         targetingCamera.setPipeline(targetingPipeline);
         targetingCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -63,12 +77,13 @@ public class Camera {
             @Override
             public void onOpened()
             {
-                targetingCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, OpenCvCameraRotation.UPRIGHT);
+                targetingCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, WEBCAM_ROTATION);
             }
         });
         targetingCameraInitialized = true;
     }
 
+    // Close the Targeting Camera
     public void stopTargetingCamera() {
         targetingCamera.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener()
         {
@@ -78,41 +93,40 @@ public class Camera {
         targetingCameraInitialized = false;
     }
 
-    public StarterStack checkStack() {
-        if (stackCameraInitialized && stackPipeline.getStarterStack() != null) {
-            double area = stackPipeline.getStarterStackArea();
-            if (area > QUAD_MIN_AREA) {
-                return StarterStack.QUAD;
-            } else if (area > SINGLE_MIN_AREA){
-                return StarterStack.SINGLE;
+    // Check what StarterStack configuration is on the field
+    public Constants.StarterStack checkStack() {
+        if (stackCameraInitialized) {
+            double area = stackPipeline.getStarterStack().getArea();
+            if (area > MIN_STARTERSTACK_QUAD_AREA) {
+                return Constants.StarterStack.QUAD;
+            } else if (area > MIN_STARTERSTACK_SINGLE_AREA){
+                return Constants.StarterStack.SINGLE;
             }
         }
-        return StarterStack.NONE;
+        return Constants.StarterStack.NONE;
     }
 
-    public enum StarterStack {
-        NONE, SINGLE, QUAD
+    // Get the StarterStack Detection
+    public Detection getStarterStack() {
+        return (stackCameraInitialized ? stackPipeline.getStarterStack() : INVALID_DETECTION);
     }
 
+    // Get the Red Goal Detection
     public Detection getRed() {
-        return targetingPipeline.getRed();
+        return (targetingCameraInitialized ? targetingPipeline.getRed() : INVALID_DETECTION);
     }
 
+    // Get the Blue Goal Detection
     public Detection getBlue() {
-        return targetingPipeline.getBlue();
+        return (targetingCameraInitialized ? targetingPipeline.getBlue() : INVALID_DETECTION);
     }
 
-    public PowerShotDetection getPowerShot() {
-        return targetingPipeline.getPowerShot();
+    // Get the Powershot Detection
+    public PowershotDetection getPowershots() {
+        return targetingCameraInitialized ? targetingPipeline.getPowershots() : INVALID_POWERSHOT_DETECTION;
     }
 
-    public double getSize() {
-        if (stackPipeline.getStarterStack() != null) {
-            return stackPipeline.getStarterStackArea();
-        }
-        return 0;
-    }
-
+    // Get the number of frames the current camera has processed
     public int getFrameCount() {
         if (stackCameraInitialized) {
             return stackCamera.getFrameCount();
@@ -123,6 +137,7 @@ public class Camera {
         }
     }
 
+    // Get Telemetry for the current active camera
     public String getTelemetry() {
         if (stackCameraInitialized) {
             return String.format(Locale.US, "Stack: %s", checkStack());
@@ -130,9 +145,9 @@ public class Camera {
             return String.format(Locale.US, "PowerShots: (%.1f,%.1f) (%.1f,%.1f) (%.1f,%.1f)\n" +
                                                     "Red Goal:  Area: %.2f Center: (%.2f,%.2f)\n" +
                                                     "Blue Goal: Area: %.2f Center: (%.2f,%.2f)",
-                    targetingPipeline.getPowerShot().get(0).getCenter().x, targetingPipeline.getPowerShot().get(0).getCenter().y,
-                    targetingPipeline.getPowerShot().get(1).getCenter().x, targetingPipeline.getPowerShot().get(1).getCenter().y,
-                    targetingPipeline.getPowerShot().get(2).getCenter().x, targetingPipeline.getPowerShot().get(2).getCenter().y,
+                    targetingPipeline.getPowershots().get(0).getCenter().x, targetingPipeline.getPowershots().get(0).getCenter().y,
+                    targetingPipeline.getPowershots().get(1).getCenter().x, targetingPipeline.getPowershots().get(1).getCenter().y,
+                    targetingPipeline.getPowershots().get(2).getCenter().x, targetingPipeline.getPowershots().get(2).getCenter().y,
                     targetingPipeline.getRed().getArea(), targetingPipeline.getRed().getCenter().x, targetingPipeline.getRed().getCenter().x,
                     targetingPipeline.getBlue().getArea(), targetingPipeline.getBlue().getCenter().x, targetingPipeline.getBlue().getCenter().x);
         }

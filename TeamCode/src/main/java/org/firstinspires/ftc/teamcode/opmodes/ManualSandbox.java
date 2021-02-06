@@ -1,39 +1,44 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-/*Terms:
- * - ms ... Milisecond(s).
- * - Telemetry ... Recording and or transmission of the readings of an instrument. Basically: enviornment sensing.
- * - TFOD ... TensorFlowObjectDetector. Invokes TensorFlow's object detection API, assumably. Read more: https://github.com/tensorflow/models/tree/master/research/object_detection.
- */
+import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.opencv.Detection;
+import org.firstinspires.ftc.teamcode.robot.Robot;
 
-// manual driver control
-@TeleOp(name = "ManualSandbox")
+import static org.firstinspires.ftc.teamcode.Constants.AUTO_AIM_OFFSET_X;
+import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_SHOOTER_POWER;
+import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_POWER;
+import static org.firstinspires.ftc.teamcode.Constants.WHEEL_SPEED;
+import static org.firstinspires.ftc.teamcode.Constants.WHEEL_TURBO_SPEED;
+
+// Main Driver Program
+@TeleOp(name = "Manual Sandbox")
 public class ManualSandbox extends OpMode {
-    public int msStuckDetectInit = 15000;
-
     private Robot robot;
-    private boolean clawPressed;
-    private boolean pusherPressed;
-    private boolean dpad2UpPressed;
-    private boolean dpad2DownPressed;
-    private boolean dpad2LeftPressed;
-    private boolean dpad2RightPressed;
-    private double finishTime;
-    private boolean checkPusher;
-    private boolean zig;
-    private double powershotShooterPower = 0.57; // secondary speed for the shooter wheel
-    private double shooterPower = 0.62; // primary speed for the shooter wheel
+    private double shooterPower;
+    private double powershotShooterPower;
 
     private Detection red;
     private Detection blue;
-    private Detection powerShot;
+    private Detection powershot;
     private double x;
     private double y;
     private double z;
 
+    private double finishTime;
+    private boolean checkPusher;
+    private boolean zig;
+
+    private boolean clawPressed;
+    private boolean pusherPressed;
+    private boolean dpadUpPressed;
+    private boolean dpadDownPressed;
+    private boolean dpadLeftPressed;
+    private boolean dpadRightPressed;
+
+    // Init
     @Override
     public void init() {
         telemetry.addData("Status", "Initializing Robot");
@@ -41,8 +46,11 @@ public class ManualSandbox extends OpMode {
         robot = new Robot(hardwareMap);
         robot.arm.resetEncoder();
         robot.camera.initTargetingCamera();
+        shooterPower = SHOOTER_POWER;
+        powershotShooterPower = POWERSHOT_SHOOTER_POWER;
     }
 
+    // Wait for the first frame after the init button was pressed
     @Override
     public void init_loop() {
         if (robot.camera.getFrameCount() > 0) {
@@ -51,32 +59,30 @@ public class ManualSandbox extends OpMode {
         }
     }
 
+    // Main loop
     @Override
     public void loop() {
         // driver 1
+        // detection and movement constants
         red = robot.camera.getRed();
         blue = robot.camera.getBlue();
-        powerShot = robot.camera.getPowerShot().getLeftMost();
-
+        powershot = robot.camera.getPowershots().getLeftMost();
         x = 0;
         y = 0;
         z = 0;
-
-        // normal movements
+        // driver base control (left bumper activates 'turbo mode')
         if (gamepad1.left_bumper) {
-            x = gamepad1.left_stick_x;
-            y = -gamepad1.left_stick_y;
-            z = gamepad1.right_stick_x;
+            x = gamepad1.left_stick_x * WHEEL_TURBO_SPEED;
+            y = gamepad1.left_stick_y * WHEEL_TURBO_SPEED;
+            z = gamepad1.right_stick_x * WHEEL_TURBO_SPEED;
         } else {
-            x = gamepad1.left_stick_x*0.7;
-            y = -gamepad1.left_stick_y*0.7;
-            z = gamepad1.right_stick_x*0.7;
+            x = gamepad1.left_stick_x * WHEEL_SPEED;
+            y = gamepad1.left_stick_y * WHEEL_SPEED;
+            z = gamepad1.right_stick_x * WHEEL_SPEED;
         }
-
         // auto aim at goal
         if (gamepad1.dpad_right) {
-            // Aim for goal
-            double gx = red.getCenter().x+10;
+            double gx = red.getCenter().x+AUTO_AIM_OFFSET_X;
             if (Math.abs(gx) < 50) {
                 double zMaxSpeed = 0.7;
                 double zErr = Math.abs(gx);
@@ -88,11 +94,9 @@ public class ManualSandbox extends OpMode {
                 }
             }
         }
-
         // auto aim powershots
         if (gamepad1.dpad_left) {
-            // Aim for goal
-            double px = powerShot.getCenter().x+10;
+            double px = powershot.getCenter().x+AUTO_AIM_OFFSET_X;
             if (Math.abs(px) < 50) {
                 double zMaxSpeed = 0.7;
                 double zErr = Math.abs(px);
@@ -104,33 +108,30 @@ public class ManualSandbox extends OpMode {
                 }
             }
         }
-        robot.drive.setInput(x,y,z);
+        robot.drive.setInput(x, y, z);
 
         // driver 2
-
-        // arm up and down
-        if (gamepad2.y && gamepad2.dpad_up && !dpad2UpPressed) {
-            robot.arm.setArm(false);
-        } else if (gamepad2.y && gamepad2.dpad_down && !dpad2DownPressed) {
-            robot.arm.setArm(true);
+        // move arm up and down
+        if (gamepad2.y && gamepad2.dpad_up && !dpadUpPressed) {
+            robot.arm.setArm(Constants.ArmPosition.UP);
+        } else if (gamepad2.y && gamepad2.dpad_down && !dpadDownPressed) {
+            robot.arm.setArm(Constants.ArmPosition.DOWN);
         }
-
         // open and close claw
         if (gamepad2.b && !clawPressed) {
-            robot.arm.setClaw(!robot.arm.getClaw());
+            robot.arm.setClaw(robot.arm.getClaw() == Constants.ServoPosition.OPEN
+                    ? Constants.ServoPosition.CLOSED
+                    : Constants.ServoPosition.OPEN);
         }
-        clawPressed = gamepad2.b;
-
         // intake
         if (gamepad2.left_bumper) {
             robot.intake.setIntake(-gamepad2.left_trigger*1.0*0.75);
         } else {
             robot.intake.setIntake(gamepad2.left_trigger*1.0*0.75);
         }
-
         // move pusher in and out
         if (!pusherPressed && gamepad2.a) {
-            robot.shooter.setPusher(true);//in
+            robot.shooter.setPusher(Constants.ServoPosition.CLOSED);
             finishTime = getRuntime() + 0.4;
             checkPusher = true;
             zig = true;
@@ -138,8 +139,8 @@ public class ManualSandbox extends OpMode {
         pusherPressed = gamepad2.a;
         if (checkPusher && getRuntime() > finishTime) {
             if (zig) {
-                robot.shooter.setPusher(false);//out
-                finishTime += 0.4; // reset time to move arm back out
+                robot.shooter.setPusher(Constants.ServoPosition.OPEN);
+                finishTime += 0.4;
                 zig = false;
             } else {
                 zig = true;
@@ -147,36 +148,36 @@ public class ManualSandbox extends OpMode {
                 pusherPressed = false;
             }
         }
-
-        // run the shooter at primary or secondary speed
-        // the thinking is to use a secondary speed for the powershots as opposed to the high goal,
-        // but the proper speeds haven't been found yet, more testing needs to be done
+        // run the shooter at goal or powershot speed
         if (gamepad2.x) {
             robot.shooter.setShooter(gamepad2.right_trigger*powershotShooterPower);
         } else {
             robot.shooter.setShooter(gamepad2.right_trigger*shooterPower);
         }
-
         // dpad is used to change the speed of the primary and secondary speeds for the shooter wheel
-        if (gamepad2.dpad_up && !dpad2UpPressed) {
+        if (gamepad2.dpad_up && !dpadUpPressed) {
             powershotShooterPower += 0.01;
-        } if (gamepad2.dpad_down && !dpad2DownPressed) {
+        } if (gamepad2.dpad_down && !dpadDownPressed) {
             powershotShooterPower -= 0.01;
-        } if (gamepad2.dpad_left && !dpad2LeftPressed) {
+        } if (gamepad2.dpad_left && !dpadLeftPressed) {
             shooterPower += 0.01;
-        } if (gamepad2.dpad_right && !dpad2RightPressed) {
+        } if (gamepad2.dpad_right && !dpadRightPressed) {
             shooterPower -= 0.01;
         }
-        dpad2UpPressed = gamepad2.dpad_up;
-        dpad2DownPressed = gamepad2.dpad_down;
-        dpad2LeftPressed = gamepad2.dpad_left;
-        dpad2RightPressed = gamepad2.dpad_right;
+
+        // update all of the button press variables (except the pusher one, because of the way it is programmed)
+        clawPressed = gamepad2.b;
+        dpadUpPressed = gamepad2.dpad_up;
+        dpadDownPressed = gamepad2.dpad_down;
+        dpadLeftPressed = gamepad2.dpad_left;
+        dpadRightPressed = gamepad2.dpad_right;
 
         // show telemetry
         telemetry.addData("Status", robot.getTelemetry());
         telemetry.update();
     }
 
+    // Stop function called after TeleOp is finished
     @Override
     public void stop() {
         robot.camera.stopTargetingCamera();

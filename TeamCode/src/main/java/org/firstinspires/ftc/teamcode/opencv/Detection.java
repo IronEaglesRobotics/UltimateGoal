@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opencv;
 
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -8,31 +7,28 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-import static org.firstinspires.ftc.teamcode.CVHelpers.GREEN;
 import static org.firstinspires.ftc.teamcode.CVHelpers.drawConvexHull;
 import static org.firstinspires.ftc.teamcode.CVHelpers.drawPoint;
 import static org.firstinspires.ftc.teamcode.CVHelpers.getCenterOfContour;
+import static org.firstinspires.ftc.teamcode.Constants.GREEN;
+import static org.firstinspires.ftc.teamcode.Constants.INVALID_AREA;
+import static org.firstinspires.ftc.teamcode.Constants.INVALID_POINT;
 
-// this is a general target detection class since it is used in every single CV class.
+// Class for a Detection
 public class Detection {
-    public static final Point INVALID_POINT = new Point(Double.MIN_VALUE, Double.MIN_VALUE);
-    public static final double INVALID_AREA = -1;
-
     private final double minAreaPx;
     private final Size maxSizePx;
-
     private double areaPx =  INVALID_AREA;
     private Point centerPx = INVALID_POINT;
     private MatOfPoint contour;
 
-    //==Constructor==//
-    Detection(Size maxSize, double minAreaFactor) {
+    // Constructor
+    public Detection(Size maxSize, double minAreaFactor) {
         this.maxSizePx = maxSize;
         this.minAreaPx = maxSize.area() * minAreaFactor;
     }
 
-    //Draw a convex hull (see tutorial if confused) of a certain color around the image contours. Then draw a green point at centerPx.
-    //https://www.learnopencv.com/convex-hull-using-opencv-in-python-and-c/
+    // Draw a convex hull around the current detection on the given image
     public void draw(Mat img, Scalar color) {
         if (isValid()) {
             drawConvexHull(img, contour, color);
@@ -40,18 +36,17 @@ public class Detection {
         }
     }
 
-    //After you initialize the class, the isValid() function makes sure you have a contour, a valid center point, and a valid area.
-    //Note: added parenthesis according to the chart to make Sr. Scott's code more readable.
-    //https://introcs.cs.princeton.edu/java/11precedence/
+    // Check if the current Detection is valid
     public boolean isValid() {
         return (this.contour != null) && (this.centerPx != INVALID_POINT) && (this.areaPx != INVALID_AREA);
     }
 
+    // Get the current contour
     public MatOfPoint getContour() {
         return contour;
     }
 
-    //Have somebody take a look at this, I have no idea what is going on.
+    // Set the area and center of the contour
     public void setContour(MatOfPoint contour) {
         this.contour = contour;
 
@@ -65,9 +60,8 @@ public class Detection {
         }
     }
 
-    //Somebody needs to be clear about what normalization means in this case.
+    // Returns the center of the Detection, normalized so that the width and height of the frame is from [-50,50]
     public Point getCenter() {
-
         if (!isValid()) {
             return INVALID_POINT;
         }
@@ -78,11 +72,12 @@ public class Detection {
         return new Point(normalizedX, normalizedY);
     }
 
+    // Get the center point in pixels
     public Point getCenterPx() {
         return centerPx;
     }
 
-    //Shouldn't this just get the regular area in pixels?
+    // Get the area of the Detection, normalized so that the area of the frame is 100
     public double getArea() {
         if (!isValid()) {
             return INVALID_AREA;
