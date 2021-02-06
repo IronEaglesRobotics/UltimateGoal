@@ -41,7 +41,7 @@
 * RunMode ... The way the wheels are set to run. A few examples are: RUN_USING_ENCODER (run wheels and collect data), STOP_AND_RESET_ENCODER (brake and discard encoder data), RUN_TO_POSITION (drive until you reach a certain position)
 * Encoder ... A thing that collects and stores data about hardware. In our case: wheel data
 
-## How to add on your own code
+## How to add on your own code:
 1. download android studio and clone (copy) this current git repository to somewhere local on your computer
 1. ask Senor Scott or Mr. Thurlow to give you your own branch if you don't already have one so we don't all try to change the same branch of code
 1. add your own code (try to add comments, make it readable, and make it something that you think will work / be an improvement over what was there before)
