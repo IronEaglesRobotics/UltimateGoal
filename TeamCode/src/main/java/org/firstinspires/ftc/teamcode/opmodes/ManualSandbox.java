@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.opencv.Detection;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
 import static org.firstinspires.ftc.teamcode.Constants.AUTO_AIM_OFFSET_X;
+import static org.firstinspires.ftc.teamcode.Constants.INTAKE_MAX_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_SHOOTER_POWER;
 import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_POWER;
 import static org.firstinspires.ftc.teamcode.Constants.WHEEL_SPEED;
@@ -81,7 +82,7 @@ public class ManualSandbox extends OpMode {
             z = gamepad1.right_stick_x * WHEEL_SPEED;
         }
         // auto aim at goal
-        if (gamepad1.dpad_right) {
+        if (gamepad1.dpad_right && red.isValid()) {
             double gx = red.getCenter().x+AUTO_AIM_OFFSET_X;
             if (Math.abs(gx) < 50) {
                 double zMaxSpeed = 0.7;
@@ -95,7 +96,7 @@ public class ManualSandbox extends OpMode {
             }
         }
         // auto aim powershots
-        if (gamepad1.dpad_left) {
+        if (gamepad1.dpad_left && powershot.isValid()) {
             double px = powershot.getCenter().x+AUTO_AIM_OFFSET_X;
             if (Math.abs(px) < 50) {
                 double zMaxSpeed = 0.7;
@@ -125,9 +126,9 @@ public class ManualSandbox extends OpMode {
         }
         // intake
         if (gamepad2.left_bumper) {
-            robot.intake.setIntake(-gamepad2.left_trigger*1.0*0.75);
+            robot.intake.setIntake(-gamepad2.left_trigger * INTAKE_MAX_SPEED);
         } else {
-            robot.intake.setIntake(gamepad2.left_trigger*1.0*0.75);
+            robot.intake.setIntake(gamepad2.left_trigger * INTAKE_MAX_SPEED);
         }
         // move pusher in and out
         if (!pusherPressed && gamepad2.a) {
@@ -150,9 +151,9 @@ public class ManualSandbox extends OpMode {
         }
         // run the shooter at goal or powershot speed
         if (gamepad2.x) {
-            robot.shooter.setShooter(gamepad2.right_trigger*powershotShooterPower);
+            robot.shooter.setShooter(gamepad2.right_trigger * powershotShooterPower);
         } else {
-            robot.shooter.setShooter(gamepad2.right_trigger*shooterPower);
+            robot.shooter.setShooter(gamepad2.right_trigger * shooterPower);
         }
         // dpad is used to change the speed of the primary and secondary speeds for the shooter wheel
         if (gamepad2.dpad_up && !dpadUpPressed) {

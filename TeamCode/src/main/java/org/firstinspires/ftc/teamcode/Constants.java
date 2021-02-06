@@ -71,6 +71,7 @@ public class Constants {
     public static final double WHEEL_SPEED = 0.7;
     public static final double WHEEL_TURBO_SPEED = 1.0;
     public static final double ARM_SPEED = 0.25;
+    public static final double INTAKE_MAX_SPEED = 0.75;
     public static final double SECONDARY_INTAKE_RELATIVE_SPEED = 0.5;
 
     // Hardware Name Constants
