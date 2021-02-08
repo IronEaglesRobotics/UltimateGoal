@@ -55,6 +55,11 @@ public class Arm {
         wobbler.setPower(ARM_SPEED);
     }
 
+    public void setArm(double power) {
+        wobbler.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        wobbler.setPower(power);
+    }
+
     // Reset arm encoder because the movement is based on the number of ticks from the starting position
     public void resetEncoder() {
         wobbler.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
