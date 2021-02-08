@@ -204,6 +204,8 @@ public class Manual extends OpMode {
             robot.intake.setIntake(INTAKE_MAX_SPEED);
         } else if (intakeToggledBackward) {
             robot.intake.setIntake(-INTAKE_MAX_SPEED);
+        } else {
+            robot.intake.setIntake(0);
         }
         // shooter
         if (shooterPower > 0.1 && shooterToggledGoal) {
@@ -214,6 +216,8 @@ public class Manual extends OpMode {
             robot.shooter.setShooter(SHOOTER_POWER);
         } else if (shooterToggledPowershot) {
             robot.shooter.setShooter(POWERSHOT_SHOOTER_POWER);
+        } else {
+            robot.shooter.setShooter(0);
         }
         // move pusher in and out (autoaim can also control the pusher)
         if ((pusherPressed && !pusherPressedPrev) ||

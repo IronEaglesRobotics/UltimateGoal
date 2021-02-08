@@ -204,6 +204,8 @@ public class ManualSandbox extends OpMode {
             robot.intake.setIntake(INTAKE_MAX_SPEED);
         } else if (intakeToggledBackward) {
             robot.intake.setIntake(-INTAKE_MAX_SPEED);
+        } else {
+            robot.intake.setIntake(0);
         }
         // shooter
         if (shooterPower > 0.1 && shooterToggledGoal) {
@@ -214,11 +216,13 @@ public class ManualSandbox extends OpMode {
             robot.shooter.setShooter(SHOOTER_POWER);
         } else if (shooterToggledPowershot) {
             robot.shooter.setShooter(POWERSHOT_SHOOTER_POWER);
+        } else {
+            robot.shooter.setShooter(0);
         }
         // move pusher in and out (autoaim can also control the pusher)
         if ((pusherPressed && !pusherPressedPrev) ||
-            (aimedAtGoal && autoaimAndFireGoal && !firingRingsCurrently) ||
-            (aimedAtPowershots && autoaimAndFirePowershots && !firingRingsCurrently)) {
+                (aimedAtGoal && autoaimAndFireGoal && !firingRingsCurrently) ||
+                (aimedAtPowershots && autoaimAndFirePowershots && !firingRingsCurrently)) {
             robot.shooter.setPusher(Constants.ServoPosition.CLOSED);
             finishTime = getRuntime() + 0.4;
             checkPusher = true;
