@@ -188,6 +188,8 @@ public class Manual extends OpMode {
             robot.arm.setArm(ARM_SPEED);
         } else if (armDownManual) {
             robot.arm.setArm(-ARM_SPEED);
+        } else {
+            robot.arm.setArm(0);
         }
         // open and close claw
         if (clawPressed && !clawPressedPrev) {
