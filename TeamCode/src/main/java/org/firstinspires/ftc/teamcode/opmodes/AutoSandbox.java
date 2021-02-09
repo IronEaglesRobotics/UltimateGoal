@@ -12,17 +12,9 @@ public class AutoSandbox extends LinearOpMode {
     private Robot robot;
     private Constants.StarterStack stack;
 
-    // Move forward and backward a certain number of inches
-    public void move(int inches, double power) {
-        robot.drive.setTargetForwardPositionRelative(inches, power);
-        while(robot.drive.isBusy() && opModeIsActive()) {
-            sleep(1);
-        }
-    }
-
-    // Move sideways a certain number of inches
-    public void strafe(int inches, double power) {
-        robot.drive.setTargetStrafePositionRelative(inches, power);
+    // Move in 2 dimensions
+    public void move(double x, double y, double power, int state) {
+        robot.drive.setTargetPositionRelative(x, y, power, state);
         while(robot.drive.isBusy() && opModeIsActive()) {
             sleep(1);
         }
@@ -66,7 +58,7 @@ public class AutoSandbox extends LinearOpMode {
         robot.arm.setClaw(Constants.ServoPosition.OPEN);
         sleep(500);
 
-        move(2, 0.5);
+        move(0, -2, 0.5, 1);
 
         robot.arm.setArm(Constants.ArmPosition.UP);
         while(robot.arm.isBusy() && opModeIsActive()) {
@@ -98,12 +90,41 @@ public class AutoSandbox extends LinearOpMode {
         }
 
         telemetry.addData("Stack", stack);
+        telemetry.addData("Ticks per rev", robot.drive.getTicksPerRev());
         telemetry.update();
 
         robot.camera.stopStackCamera();
 
         // movements for auto
-        turn(178);
+        while (!gamepad1.a) {
+            this.sleep(1);
+        }
+        move(10, 0, 0.4, 1);
+        while (!gamepad1.a) {
+            this.sleep(1);
+        }
+        move(0, 10, 0.4, 1);
+        while (!gamepad1.a) {
+            this.sleep(1);
+        }
+        move(-10, -10, 0.4, 1);
+        while (!gamepad1.a) {
+            this.sleep(1);
+        }
+
+        move(10, 0, 0.4, 2);
+        while (!gamepad1.a) {
+            this.sleep(1);
+        }
+        move(0, 10, 0.4, 2);
+        while (!gamepad1.a) {
+            this.sleep(1);
+        }
+        move(-10, -10, 0.4, 2);
+        while (!gamepad1.a) {
+            this.sleep(1);
+        }
+
 
         robot.camera.initTargetingCamera();
 

@@ -19,6 +19,7 @@ public class MecanumDrive {
     private final DcMotor frontRight;
     private final DcMotor backLeft;
     private final DcMotor backRight;
+    private final double ticksPerRev;
 
     // Constructor
     public MecanumDrive(HardwareMap hardwareMap) {
@@ -36,6 +37,8 @@ public class MecanumDrive {
         // set motors to use encoders and keep their position when stopped
         this.setRunMode(RunMode.RUN_USING_ENCODER);
         this.setBrakeMode(ZeroPowerBehavior.BRAKE);
+
+        ticksPerRev = frontLeft.getMotorType().getTicksPerRev();
     }
 
     // Check if the motors are currently moving
@@ -47,30 +50,24 @@ public class MecanumDrive {
                 || this.backRight.isBusy();
     }
 
-    // Move forward/backward and certain number of inches
-    public void setTargetForwardPositionRelative(double inches, double power) {
-        int ticks = (int)((inches / WHEEL_CIRCUMFERENCE) * 560);
+    // move in two directions a certain number of inches
+    public void setTargetPositionRelative(double x, double y, double power, int state) {
+        double ticksX = 0;
+        double ticksY = 0;
+        if (state == 1) {
+            ticksX = (x / WHEEL_CIRCUMFERENCE) * 560;
+            ticksY = (y / WHEEL_CIRCUMFERENCE) * 560;
+        } else if (state == 2) {
+            ticksX = (x / WHEEL_CIRCUMFERENCE) * ticksPerRev;
+            ticksY = (y / WHEEL_CIRCUMFERENCE) * ticksPerRev;
+        }
         this.setRunMode(RunMode.STOP_AND_RESET_ENCODER);
         this.setRunMode(RunMode.RUN_TO_POSITION);
 
-        this.frontLeft.setTargetPosition(ticks);
-        this.frontRight.setTargetPosition(ticks);
-        this.backLeft.setTargetPosition(ticks);
-        this.backRight.setTargetPosition(ticks);
-
-        this.setPower(power);
-    }
-
-    // Move sideways a certain number of inches
-    public void setTargetStrafePositionRelative(double inches, double power) {
-        int ticks = (int)((inches / WHEEL_CIRCUMFERENCE) * 560);
-        this.setRunMode(RunMode.STOP_AND_RESET_ENCODER);
-        this.setRunMode(RunMode.RUN_TO_POSITION);
-
-        this.frontLeft.setTargetPosition(ticks);
-        this.frontRight.setTargetPosition(-ticks);
-        this.backLeft.setTargetPosition(-ticks);
-        this.backRight.setTargetPosition(ticks);
+        this.frontLeft.setTargetPosition((int) (ticksX + ticksY));
+        this.frontRight.setTargetPosition((int) (ticksX - ticksY));
+        this.backLeft.setTargetPosition((int) (ticksX - ticksY));
+        this.backRight.setTargetPosition((int) (ticksX + ticksY));
 
         this.setPower(power);
     }
@@ -122,6 +119,10 @@ public class MecanumDrive {
 
         frontLeft.setPower(flPower);    frontRight.setPower(frPower);
         backLeft.setPower(blPower);     backRight.setPower(brPower);
+    }
+
+    public double getTicksPerRev() {
+        return ticksPerRev;
     }
 
     // Get Telemetry of the wheels

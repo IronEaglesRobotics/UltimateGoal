@@ -27,6 +27,7 @@ public class Shooter {
 
         // scale the range of the pusher
         pusher.scaleRange(PUSHER_MIN, PUSHER_MAX);
+        pusher.setDirection(Servo.Direction.REVERSE);
     }
 
     // Set position for the pusher

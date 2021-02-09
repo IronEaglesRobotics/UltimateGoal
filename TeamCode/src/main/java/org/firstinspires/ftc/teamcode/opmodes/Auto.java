@@ -4,7 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.opencv.Detection;
 import org.firstinspires.ftc.teamcode.robot.Robot;
+
+import static org.firstinspires.ftc.teamcode.Constants.AUTO_AIM_OFFSET_X;
+import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_SHOOTER_POWER;
 
 // Main Autonomous Program
 @Autonomous(name = "Auto")
@@ -12,17 +16,9 @@ public class Auto extends LinearOpMode {
     private Robot robot;
     private Constants.StarterStack stack;
 
-    // Move forward and backward a certain number of inches
-    public void move(int inches, double power) {
-        robot.drive.setTargetForwardPositionRelative(inches, power);
-        while(robot.drive.isBusy() && opModeIsActive()) {
-            sleep(1);
-        }
-    }
-
-    // Move sideways a certain number of inches
-    public void strafe(int inches, double power) {
-        robot.drive.setTargetStrafePositionRelative(inches, power);
+    // Move in 2 dimensions
+    public void move(double x, double y, double power, int state) {
+        robot.drive.setTargetPositionRelative(x, y, power, state);
         while(robot.drive.isBusy() && opModeIsActive()) {
             sleep(1);
         }
@@ -49,11 +45,60 @@ public class Auto extends LinearOpMode {
     }
 
     // Shoot a ring
-    public void shoot() {
-        robot.shooter.setPusher(Constants.ServoPosition.CLOSED);
-        this.sleep(500);
-        robot.shooter.setPusher(Constants.ServoPosition.OPEN);
-        this.sleep(500);
+    public void shootPowershots() {
+        robot.shooter.setShooter(POWERSHOT_SHOOTER_POWER);
+        int ringsFired = 0;
+        double timeout = getRuntime();
+        Detection powershot;
+        double z = 0;
+        boolean aimedAtPowershots = false;
+        boolean shooting = false;
+        double finishTime = 0;
+        boolean checkPusher = false;
+        boolean zig = false;
+        while (ringsFired < 3 || timeout < getRuntime() + 10000) {
+            powershot = robot.camera.getPowershots().getLeftMost();
+            if (powershot.isValid()) {
+                double px = powershot.getCenter().x+AUTO_AIM_OFFSET_X;
+                if (Math.abs(px) < 50) {
+                    double zMaxSpeed = 0.7;
+                    double zErr = Math.abs(px);
+                    double zSpeed = (zErr / 50) * zMaxSpeed;
+                    if (zErr <= 1) {
+                        z = 0;
+                        aimedAtPowershots = true;
+                    } else if (zErr > 1) {
+                        z = Math.copySign(zSpeed, px);
+                        aimedAtPowershots = false;
+                    }
+                }
+            } else {
+                aimedAtPowershots = false;
+            }
+            if (aimedAtPowershots) {
+                if (!shooting) {
+                    robot.shooter.setPusher(Constants.ServoPosition.CLOSED);
+                    finishTime = getRuntime() + 0.35;
+                    checkPusher = true;
+                    zig = true;
+                    shooting = true;
+                }
+                if (checkPusher && getRuntime() > finishTime) {
+                    if (zig) {
+                        robot.shooter.setPusher(Constants.ServoPosition.OPEN);
+                        finishTime += 0.35;
+                        zig = false;
+                    } else {
+                        zig = true;
+                        checkPusher = false;
+                        shooting = false;
+                        ringsFired ++;
+                    }
+                }
+            }
+            robot.drive.setInput(0, 0, z);
+        }
+        robot.shooter.setShooter(0);
     }
 
     // Place down the goal
@@ -66,12 +111,9 @@ public class Auto extends LinearOpMode {
         robot.arm.setClaw(Constants.ServoPosition.OPEN);
         sleep(500);
 
-        move(2, 0.5);
+        move(0, -2, 0.5, 1);
 
         robot.arm.setArm(Constants.ArmPosition.UP);
-        while(robot.arm.isBusy() && opModeIsActive()) {
-            sleep(1);
-        }
     }
 
     // Main method to run all the steps for autonomous
@@ -102,45 +144,37 @@ public class Auto extends LinearOpMode {
 
         robot.camera.stopStackCamera();
 
+        this.sleep(1000);
         // movements for auto
 
-        // secure wobble goal
-        robot.arm.setClaw(Constants.ServoPosition.CLOSED);
         robot.camera.initTargetingCamera();
 
-        // move up to white line and shoot 3 rings into the high goal
-        move(24,0.5);
-        robot.arm.setArm(Constants.ArmPosition.UP);
-
-        strafe(12,0.55);
-        robot.shooter.setShooter(0.630);
-        move(40,0.5);
-        strafe(-15,0.5);
-        shoot();
-        shoot();
-        shoot();
-        robot.shooter.setShooter(0);
-        turn(178);
-
-        // move to drop off wobble goal in correct location and move back to the white line
+        // move depending on the starting configuration
         switch(stack) {
             case NONE:
-                strafe(-8,0.5);
+                robot.arm.setClaw(Constants.ServoPosition.CLOSED);
+                move(5, -36, 0.4, 1);
                 placeGoal();
-                strafe(24,0.5);
-                move(-12,0.5);
+                turn(178);
+                move(-35, 0, 0.4, 1);
+                shootPowershots();
+
+                // move to A and drop off wobble goal
+                // go pick up the second wobble goal
+                // shoot powershots
+                // park at white line
                 break;
             case SINGLE:
-                move(-22,0.5);
-                strafe(12,0.5);
-                placeGoal();
-                move(6,0.5);
+                // move to B and drop off wobble goal
+                // shoot powershots
+                // pick up the second wobble goal
+                // park at white line
                 break;
             case QUAD:
-                move(-46,0.5);
-                strafe(-6,0.5);
-                placeGoal();
-                move(30,0.5);
+                // move to C and drop off wobble goal
+                // shoot powershots
+                // pick up the second wobble goal
+                // park at white line
         }
 
         robot.camera.stopTargetingCamera();

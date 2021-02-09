@@ -72,8 +72,8 @@ public class Constants {
     public static final double SHOOTER_POWER = 0.62;
     public static final double POWERSHOT_SHOOTER_POWER = 0.57;
     public static final int AUTO_AIM_OFFSET_X = 10;
-    public static final double PUSHER_MIN = 0.22;
-    public static final double PUSHER_MAX = 0.4;
+    public static final double PUSHER_MIN = 0.35;
+    public static final double PUSHER_MAX = 0.55;
 
     // Hardware Name Constants
     public static final String WHEEL_FRONT_LEFT = "frontLeft";
@@ -84,7 +84,7 @@ public class Constants {
     public static final String CLAW = "claw";
     public static final String INTAKE = "intake";
     public static final String SECONDARY_INTAKE = "secondary";
-    public static final String SHOOTER = "shooter";
+    public static final String SHOOTER = "wheel";
     public static final String PUSHER = "pusher";
     public static final String STACK_WEBCAM = "Stack Webcam";
     public static final String TARGETING_WEBCAM = "Targeting Webcam";
