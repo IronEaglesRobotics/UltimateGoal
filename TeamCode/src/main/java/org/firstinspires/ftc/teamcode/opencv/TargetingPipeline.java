@@ -119,8 +119,8 @@ public class TargetingPipeline extends OpenCvPipeline {
         Rect powershotRect = new Rect(
                 (int) ((goalCenter.x + goalUnit * POWERSHOT_OFFSET_IN.x) - (goalUnit * POWERSHOT_DIMENSIONS_IN.width  / 2)),
                 (int) ((goalCenter.y + goalUnit * POWERSHOT_OFFSET_IN.y) - (goalUnit * POWERSHOT_DIMENSIONS_IN.height / 2)),
-                (int) ((goalCenter.x + goalUnit * POWERSHOT_OFFSET_IN.x) + (goalUnit * POWERSHOT_DIMENSIONS_IN.width  / 2)),
-                (int) ((goalCenter.y + goalUnit * POWERSHOT_OFFSET_IN.y) + (goalUnit * POWERSHOT_DIMENSIONS_IN.height / 2))
+                (int) (goalUnit * POWERSHOT_DIMENSIONS_IN.width),
+                (int) (goalUnit * POWERSHOT_DIMENSIONS_IN.height)
         );
 
         // take pixels that are in the color range and put them into a mask

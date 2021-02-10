@@ -40,12 +40,12 @@ public class Arm {
 
     // Set claw position
     public void setClaw(Constants.ServoPosition position) {
-        claw.setPosition(position == Constants.ServoPosition.OPEN ? 0 : 1);
+        claw.setPosition(position == Constants.ServoPosition.OPEN ? 1 : 0);
     }
 
     // Get claw position
     public Constants.ServoPosition getClaw() {
-        return claw.getPosition() < 0.5 ? Constants.ServoPosition.OPEN : Constants.ServoPosition.CLOSED;
+        return claw.getPosition() > 0.5 ? Constants.ServoPosition.OPEN : Constants.ServoPosition.CLOSED;
     }
 
     // Set arm position (UP is straight up, DOWN is parallel to the ground)

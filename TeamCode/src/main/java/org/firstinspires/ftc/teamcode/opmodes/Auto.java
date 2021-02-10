@@ -17,8 +17,8 @@ public class Auto extends LinearOpMode {
     private Constants.StarterStack stack;
 
     // Move in 2 dimensions
-    public void move(double x, double y, double power, int state) {
-        robot.drive.setTargetPositionRelative(x, y, power, state);
+    public void move(double x, double y, double power) {
+        robot.drive.setTargetPositionRelative(x, y, power);
         while(robot.drive.isBusy() && opModeIsActive()) {
             sleep(1);
         }
@@ -33,7 +33,7 @@ public class Auto extends LinearOpMode {
 
         if (degrees > 0) {
             while (current < degrees-fudge || current > 360 - fudge) {
-                robot.drive.setInput(0, 0, -(Math.max((degrees-current)/degrees*0.65,0.2)));
+                robot.drive.setInput(0, 0, -(Math.max((degrees-current)/degrees*0.85,0.3)));
                 current = robot.imu.getGyroHeading360();
 
                 telemetry.addData("Status", current);
@@ -46,17 +46,13 @@ public class Auto extends LinearOpMode {
 
     // Shoot a ring
     public void shootPowershots() {
-        robot.shooter.setShooter(POWERSHOT_SHOOTER_POWER);
         int ringsFired = 0;
         double timeout = getRuntime();
         Detection powershot;
         double z = 0;
         boolean aimedAtPowershots = false;
-        boolean shooting = false;
-        double finishTime = 0;
-        boolean checkPusher = false;
-        boolean zig = false;
-        while (ringsFired < 3 || timeout < getRuntime() + 10000) {
+
+        while (ringsFired < 3 && getRuntime() < timeout + 15000) {
             powershot = robot.camera.getPowershots().getLeftMost();
             if (powershot.isValid()) {
                 double px = powershot.getCenter().x+AUTO_AIM_OFFSET_X;
@@ -64,10 +60,10 @@ public class Auto extends LinearOpMode {
                     double zMaxSpeed = 0.7;
                     double zErr = Math.abs(px);
                     double zSpeed = (zErr / 50) * zMaxSpeed;
-                    if (zErr <= 1) {
+                    if (zErr <= 0.5) {
                         z = 0;
                         aimedAtPowershots = true;
-                    } else if (zErr > 1) {
+                    } else {
                         z = Math.copySign(zSpeed, px);
                         aimedAtPowershots = false;
                     }
@@ -75,28 +71,16 @@ public class Auto extends LinearOpMode {
             } else {
                 aimedAtPowershots = false;
             }
+            robot.drive.setInput(0, 0, z);
+
             if (aimedAtPowershots) {
-                if (!shooting) {
-                    robot.shooter.setPusher(Constants.ServoPosition.CLOSED);
-                    finishTime = getRuntime() + 0.35;
-                    checkPusher = true;
-                    zig = true;
-                    shooting = true;
-                }
-                if (checkPusher && getRuntime() > finishTime) {
-                    if (zig) {
-                        robot.shooter.setPusher(Constants.ServoPosition.OPEN);
-                        finishTime += 0.35;
-                        zig = false;
-                    } else {
-                        zig = true;
-                        checkPusher = false;
-                        shooting = false;
-                        ringsFired ++;
-                    }
+                robot.shooter.setPusher(Constants.ServoPosition.CLOSED);
+                sleep(850);
+                robot.shooter.setPusher(Constants.ServoPosition.OPEN);
+                if (ringsFired++ < 2) {
+                    sleep(850);
                 }
             }
-            robot.drive.setInput(0, 0, z);
         }
         robot.shooter.setShooter(0);
     }
@@ -109,11 +93,10 @@ public class Auto extends LinearOpMode {
         }
 
         robot.arm.setClaw(Constants.ServoPosition.OPEN);
-        sleep(500);
-
-        move(0, -2, 0.5, 1);
+        sleep(400);
 
         robot.arm.setArm(Constants.ArmPosition.UP);
+        sleep(500);
     }
 
     // Main method to run all the steps for autonomous
@@ -153,12 +136,13 @@ public class Auto extends LinearOpMode {
         switch(stack) {
             case NONE:
                 robot.arm.setClaw(Constants.ServoPosition.CLOSED);
-                move(5, -36, 0.4, 1);
+                move(0, -50, 0.6);
                 placeGoal();
                 turn(178);
-                move(-35, 0, 0.4, 1);
+                robot.shooter.setShooter(POWERSHOT_SHOOTER_POWER);
+                move(-35, 8, 0.6);
                 shootPowershots();
-
+                move(0, 8, 0.6);
                 // move to A and drop off wobble goal
                 // go pick up the second wobble goal
                 // shoot powershots

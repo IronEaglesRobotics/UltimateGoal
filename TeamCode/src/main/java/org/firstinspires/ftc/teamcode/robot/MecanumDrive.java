@@ -51,23 +51,17 @@ public class MecanumDrive {
     }
 
     // move in two directions a certain number of inches
-    public void setTargetPositionRelative(double x, double y, double power, int state) {
-        double ticksX = 0;
-        double ticksY = 0;
-        if (state == 1) {
-            ticksX = (x / WHEEL_CIRCUMFERENCE) * 560;
-            ticksY = (y / WHEEL_CIRCUMFERENCE) * 560;
-        } else if (state == 2) {
-            ticksX = (x / WHEEL_CIRCUMFERENCE) * ticksPerRev;
-            ticksY = (y / WHEEL_CIRCUMFERENCE) * ticksPerRev;
-        }
+    public void setTargetPositionRelative(double x, double y, double power) {
+        double ticksX = (x / WHEEL_CIRCUMFERENCE) * 615; // Thse numbers are magicc!!!
+        double ticksY = (y / WHEEL_CIRCUMFERENCE) * 615;
+
         this.setRunMode(RunMode.STOP_AND_RESET_ENCODER);
         this.setRunMode(RunMode.RUN_TO_POSITION);
 
-        this.frontLeft.setTargetPosition((int) (ticksX + ticksY));
-        this.frontRight.setTargetPosition((int) (ticksX - ticksY));
-        this.backLeft.setTargetPosition((int) (ticksX - ticksY));
-        this.backRight.setTargetPosition((int) (ticksX + ticksY));
+        this.frontLeft.setTargetPosition((int) (ticksY + ticksX));
+        this.frontRight.setTargetPosition((int) (ticksY - ticksX));
+        this.backLeft.setTargetPosition((int) (ticksY - ticksX));
+        this.backRight.setTargetPosition((int) (ticksY + ticksX));
 
         this.setPower(power);
     }

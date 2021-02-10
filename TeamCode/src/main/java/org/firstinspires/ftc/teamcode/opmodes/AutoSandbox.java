@@ -14,7 +14,7 @@ public class AutoSandbox extends LinearOpMode {
 
     // Move in 2 dimensions
     public void move(double x, double y, double power, int state) {
-        robot.drive.setTargetPositionRelative(x, y, power, state);
+        robot.drive.setTargetPositionRelative(x, y, power);
         while(robot.drive.isBusy() && opModeIsActive()) {
             sleep(1);
         }
@@ -86,6 +86,7 @@ public class AutoSandbox extends LinearOpMode {
             stack = robot.camera.checkStack();
             telemetry.addData("Status", "Initialized");
             telemetry.addData("Stack", stack);
+            telemetry.addData("Size", robot.camera.getStarterStack().getArea());
             telemetry.update();
         }
 
@@ -96,35 +97,6 @@ public class AutoSandbox extends LinearOpMode {
         robot.camera.stopStackCamera();
 
         // movements for auto
-        while (!gamepad1.a) {
-            this.sleep(1);
-        }
-        move(10, 0, 0.4, 1);
-        while (!gamepad1.a) {
-            this.sleep(1);
-        }
-        move(0, 10, 0.4, 1);
-        while (!gamepad1.a) {
-            this.sleep(1);
-        }
-        move(-10, -10, 0.4, 1);
-        while (!gamepad1.a) {
-            this.sleep(1);
-        }
-
-        move(10, 0, 0.4, 2);
-        while (!gamepad1.a) {
-            this.sleep(1);
-        }
-        move(0, 10, 0.4, 2);
-        while (!gamepad1.a) {
-            this.sleep(1);
-        }
-        move(-10, -10, 0.4, 2);
-        while (!gamepad1.a) {
-            this.sleep(1);
-        }
-
 
         robot.camera.initTargetingCamera();
 
