@@ -52,7 +52,7 @@ public class MecanumDrive {
 
     // move in two directions a certain number of inches
     public void setTargetPositionRelative(double x, double y, double power) {
-        double ticksX = (x / WHEEL_CIRCUMFERENCE) * 615; // Thse numbers are magicc!!!
+        double ticksX = (x / WHEEL_CIRCUMFERENCE) * 615; // These numbers are magicc!!!
         double ticksY = (y / WHEEL_CIRCUMFERENCE) * 615;
 
         this.setRunMode(RunMode.STOP_AND_RESET_ENCODER);

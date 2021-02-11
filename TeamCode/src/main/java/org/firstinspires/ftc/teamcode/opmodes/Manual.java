@@ -34,10 +34,11 @@ public class Manual extends OpMode {
     private double z;
     private double turbo;
     private double slow;
+
+    // button presses for driver 2
     private boolean autoaimPowershots;
     private boolean autoaimGoal;
 
-    // button presses for driver 2
     private boolean armUpPressedPrev;
     private boolean armDownPressedPrev;
     private boolean armUpPressed;
@@ -92,19 +93,19 @@ public class Manual extends OpMode {
         z = gamepad1.right_stick_x;
         turbo = gamepad1.left_trigger;
         slow = gamepad1.right_trigger;
-        autoaimPowershots = gamepad1.left_bumper;
-        autoaimGoal = gamepad1.right_bumper;
 
         // update gamepad presses for driver 2
         armUpPressed = gamepad2.dpad_up;
         armDownPressed = gamepad2.dpad_down;
         armManual = -gamepad2.right_stick_y;
         clawPressed = gamepad2.b;
+        autoaimPowershots = gamepad2.x;
+        autoaimGoal = gamepad2.y;
 
         intakeReversePressed = gamepad2.left_bumper;
         intakePower = gamepad2.left_trigger;
 
-        powershotPowerPressed = gamepad2.x;
+        powershotPowerPressed = gamepad2.right_bumper;
         shooterPower = gamepad2.right_trigger;
         pusherPressed = gamepad2.a;
 
@@ -114,6 +115,8 @@ public class Manual extends OpMode {
         x += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), x) - Math.copySign(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), x);
         y += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), y) - Math.copySign(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), y);
         z += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), z) - Math.copySign(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), z);
+
+        // ------------------------- driver 2 ------------------------- //
 
         // auto aim at powershots
         if ((autoaimPowershots) && powershot.isValid()) {
@@ -153,14 +156,12 @@ public class Manual extends OpMode {
         }
         robot.drive.setInput(x, y, z);
 
-        // ------------------------- driver 2 ------------------------- //
-
         // move arm up and down
         if (armUpPressed && !armUpPressedPrev) {
             robot.arm.setArm(Constants.ArmPosition.UP);
         } else if (armDownPressed && !armDownPressedPrev) {
             robot.arm.setArm(Constants.ArmPosition.DOWN);
-        } else {
+        } else if (!robot.arm.isBusy()){
             robot.arm.setArm(armManual * ARM_SPEED);
         }
 

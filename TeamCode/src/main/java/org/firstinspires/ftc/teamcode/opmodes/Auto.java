@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 
 import static org.firstinspires.ftc.teamcode.Constants.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_SHOOTER_POWER;
+import static org.firstinspires.ftc.teamcode.Constants.WHEEL_CIRCUMFERENCE;
 
 // Main Autonomous Program
 @Autonomous(name = "Auto")
@@ -87,8 +88,9 @@ public class Auto extends LinearOpMode {
 
     // Place down the goal
     public void placeGoal() {
+        double startTime = getRuntime();
         robot.arm.setArm(Constants.ArmPosition.DOWN);
-        while(robot.arm.isBusy() && opModeIsActive()) {
+        while(robot.arm.isBusy() && opModeIsActive() && getRuntime() < startTime + 2) {
             sleep(1);
         }
 
@@ -127,38 +129,43 @@ public class Auto extends LinearOpMode {
 
         robot.camera.stopStackCamera();
 
-        this.sleep(1000);
         // movements for auto
-
-        robot.camera.initTargetingCamera();
 
         // move depending on the starting configuration
         switch(stack) {
             case NONE:
                 robot.arm.setClaw(Constants.ServoPosition.CLOSED);
-                move(0, -50, 0.6);
-                placeGoal();
-                turn(178);
+                move(0, -50, 0.5);
                 robot.shooter.setShooter(POWERSHOT_SHOOTER_POWER);
-                move(-35, 8, 0.6);
+                placeGoal();
+                robot.camera.initTargetingCamera();
+                turn(178);
+                move(-39, 8, 0.5);
                 shootPowershots();
-                move(0, 8, 0.6);
-                // move to A and drop off wobble goal
-                // go pick up the second wobble goal
-                // shoot powershots
-                // park at white line
+                move(0, 8, 0.5);
                 break;
             case SINGLE:
-                // move to B and drop off wobble goal
-                // shoot powershots
-                // pick up the second wobble goal
-                // park at white line
+                robot.arm.setClaw(Constants.ServoPosition.CLOSED);
+                move(0, -75, 0.5);
+                move(26, 0, 0.5);
+                placeGoal();
+                robot.camera.initTargetingCamera();
+                robot.shooter.setShooter(POWERSHOT_SHOOTER_POWER);
+                turn(178);
+                move(-13, -18, 0.5);
+                shootPowershots();
+                move(0, 8, 0.5);
                 break;
             case QUAD:
-                // move to C and drop off wobble goal
-                // shoot powershots
-                // pick up the second wobble goal
-                // park at white line
+                robot.arm.setClaw(Constants.ServoPosition.CLOSED);
+                move(0, -95, 0.5);
+                placeGoal();
+                robot.camera.initTargetingCamera();
+                robot.shooter.setShooter(POWERSHOT_SHOOTER_POWER);
+                turn(178);
+                move(-39, -37, 0.5);
+                shootPowershots();
+                move(0, 8, 0.5);
         }
 
         robot.camera.stopTargetingCamera();

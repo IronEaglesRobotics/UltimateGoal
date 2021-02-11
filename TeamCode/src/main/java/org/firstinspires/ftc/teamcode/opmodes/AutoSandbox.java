@@ -4,16 +4,21 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.opencv.Detection;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
-// Sandbox Autonomous Program
+import static org.firstinspires.ftc.teamcode.Constants.AUTO_AIM_OFFSET_X;
+import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_SHOOTER_POWER;
+import static org.firstinspires.ftc.teamcode.Constants.WHEEL_CIRCUMFERENCE;
+
+// Main Autonomous Program
 @Autonomous(name = "Auto Sandbox")
 public class AutoSandbox extends LinearOpMode {
     private Robot robot;
     private Constants.StarterStack stack;
 
     // Move in 2 dimensions
-    public void move(double x, double y, double power, int state) {
+    public void move(double x, double y, double power) {
         robot.drive.setTargetPositionRelative(x, y, power);
         while(robot.drive.isBusy() && opModeIsActive()) {
             sleep(1);
@@ -29,7 +34,7 @@ public class AutoSandbox extends LinearOpMode {
 
         if (degrees > 0) {
             while (current < degrees-fudge || current > 360 - fudge) {
-                robot.drive.setInput(0, 0, -(Math.max((degrees-current)/degrees*0.65,0.2)));
+                robot.drive.setInput(0, 0, -(Math.max((degrees-current)/degrees*0.85,0.3)));
                 current = robot.imu.getGyroHeading360();
 
                 telemetry.addData("Status", current);
@@ -41,29 +46,59 @@ public class AutoSandbox extends LinearOpMode {
     }
 
     // Shoot a ring
-    public void shoot() {
-        robot.shooter.setPusher(Constants.ServoPosition.CLOSED);
-        this.sleep(500);
-        robot.shooter.setPusher(Constants.ServoPosition.OPEN);
-        this.sleep(500);
+    public void shootPowershots() {
+        int ringsFired = 0;
+        double timeout = getRuntime();
+        Detection powershot;
+        double z = 0;
+        boolean aimedAtPowershots = false;
+
+        while (ringsFired < 3 && getRuntime() < timeout + 15000) {
+            powershot = robot.camera.getPowershots().getLeftMost();
+            if (powershot.isValid()) {
+                double px = powershot.getCenter().x+AUTO_AIM_OFFSET_X;
+                if (Math.abs(px) < 50) {
+                    double zMaxSpeed = 0.7;
+                    double zErr = Math.abs(px);
+                    double zSpeed = (zErr / 50) * zMaxSpeed;
+                    if (zErr <= 0.5) {
+                        z = 0;
+                        aimedAtPowershots = true;
+                    } else {
+                        z = Math.copySign(zSpeed, px);
+                        aimedAtPowershots = false;
+                    }
+                }
+            } else {
+                aimedAtPowershots = false;
+            }
+            robot.drive.setInput(0, 0, z);
+
+            if (aimedAtPowershots) {
+                robot.shooter.setPusher(Constants.ServoPosition.CLOSED);
+                sleep(850);
+                robot.shooter.setPusher(Constants.ServoPosition.OPEN);
+                if (ringsFired++ < 2) {
+                    sleep(850);
+                }
+            }
+        }
+        robot.shooter.setShooter(0);
     }
 
     // Place down the goal
     public void placeGoal() {
+        double startTime = getRuntime();
         robot.arm.setArm(Constants.ArmPosition.DOWN);
-        while(robot.arm.isBusy() && opModeIsActive()) {
+        while(robot.arm.isBusy() && opModeIsActive() && getRuntime() < startTime + 2) {
             sleep(1);
         }
 
         robot.arm.setClaw(Constants.ServoPosition.OPEN);
-        sleep(500);
-
-        move(0, -2, 0.5, 1);
+        sleep(400);
 
         robot.arm.setArm(Constants.ArmPosition.UP);
-        while(robot.arm.isBusy() && opModeIsActive()) {
-            sleep(1);
-        }
+        sleep(500);
     }
 
     // Main method to run all the steps for autonomous
@@ -72,7 +107,7 @@ public class AutoSandbox extends LinearOpMode {
         telemetry.addData("Status", "Initializing Robot");
         telemetry.update();
         robot = new Robot(hardwareMap);
-        robot.camera.initStackCamera();
+        robot.camera.initWobbleGoalCamera();
 
         // wait for the first frame to make sure it doesn't try to analyze a non existent frame
         while (robot.camera.getFrameCount() < 1) {
@@ -83,26 +118,14 @@ public class AutoSandbox extends LinearOpMode {
 
         // wait for start
         while (!(isStarted() || isStopRequested())) {
-            stack = robot.camera.checkStack();
-            telemetry.addData("Status", "Initialized");
-            telemetry.addData("Stack", stack);
-            telemetry.addData("Size", robot.camera.getStarterStack().getArea());
-            telemetry.update();
+            sleep(1);
         }
 
-        telemetry.addData("Stack", stack);
-        telemetry.addData("Ticks per rev", robot.drive.getTicksPerRev());
-        telemetry.update();
-
-        robot.camera.stopStackCamera();
-
         // movements for auto
+        move(0, 20, 0.5);
+        // move depending on the starting configuration
 
-        robot.camera.initTargetingCamera();
-
-        this.sleep(2000);
-
-        robot.camera.stopTargetingCamera();
+        robot.camera.stopWobbleGoalCamera();
         telemetry.addData("Status", "Finished");
         telemetry.update();
     }

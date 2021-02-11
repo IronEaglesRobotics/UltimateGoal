@@ -19,7 +19,7 @@ public class Constants {
     public static final Scalar WHITE = new Scalar(255, 255, 255);
 
     // CV Color Threshold Constants
-    public static final Scalar RED_LOWER_1 = new Scalar(0, 90, 90);
+    public static final Scalar RED_LOWER_1 = new Scalar(0, 90, 40);
     public static final Scalar RED_UPPER_1 = new Scalar(15, 255, 255);
     public static final Scalar RED_LOWER_2 = new Scalar(165, 90, 90);
     public static final Scalar RED_UPPER_2 = new Scalar(180, 255, 255);
@@ -40,6 +40,7 @@ public class Constants {
     public static final OpenCvCameraRotation WEBCAM_ROTATION = OpenCvCameraRotation.UPRIGHT;
 
     // CV Detection Constants
+    public static final double MIN_WOBBLEGOAL_AREA = 0.1;
     public static final double MIN_STARTERSTACK_AREA = 0;
     public static final double MIN_STARTERSTACK_SINGLE_AREA = 0.15;
     public static final double MIN_STARTERSTACK_QUAD_AREA = 1.10;
