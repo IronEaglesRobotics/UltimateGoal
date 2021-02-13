@@ -68,7 +68,6 @@ public class Camera {
                 @Override
                 public void onClose() {
                     stackCameraInitialized = false;
-                    initTargetingCamera();
                 }
             });
         }

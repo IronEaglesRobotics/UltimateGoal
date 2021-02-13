@@ -37,10 +37,10 @@ public class AutoNew extends LinearOpMode {
         }
         robot.camera.stopStackCamera();
         initializeSteps(stack);
-//        while(robot.camera.getFrameCount() > 0) {
-//            idle();
-//        }
-//        robot.camera.initTargetingCamera();
+        while(robot.camera.getFrameCount() > 0) {
+            idle();
+        }
+        robot.camera.initTargetingCamera();
         while (robot.camera.getFrameCount() < 1) {
             idle();
         }
