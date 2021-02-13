@@ -19,9 +19,9 @@ public class Constants {
     public static final Scalar WHITE = new Scalar(255, 255, 255);
 
     // CV Color Threshold Constants
-    public static final Scalar RED_LOWER_1 = new Scalar(0, 90, 40);
+    public static final Scalar RED_LOWER_1 = new Scalar(0, 85, 40);
     public static final Scalar RED_UPPER_1 = new Scalar(15, 255, 255);
-    public static final Scalar RED_LOWER_2 = new Scalar(165, 90, 90);
+    public static final Scalar RED_LOWER_2 = new Scalar(165, 85, 90);
     public static final Scalar RED_UPPER_2 = new Scalar(180, 255, 255);
     public static final Scalar BLUE_LOWER = new Scalar(75, 85, 100);
     public static final Scalar BLUE_UPPER = new Scalar(120, 255, 255);
@@ -99,6 +99,6 @@ public class Constants {
         OPEN, CLOSED
     }
     public enum ArmPosition {
-        UP, DOWN
+        UP, DOWN, UNKNOWN
     }
 }

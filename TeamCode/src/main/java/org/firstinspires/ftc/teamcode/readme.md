@@ -1,7 +1,7 @@
 # Iron Eagles Robotics 3708 Teamcode
 
 ## To connect to the robot over wifi:
-1. first connect to the ftc-prn network (password is password)
+1. first connect to the FTC-prN network (password is password)
 1. then run 'adb connect 192.168.43.1:5555' in the terminal (you may have to specify the specific path for where adb is located)
 
 ## How the code is structured:

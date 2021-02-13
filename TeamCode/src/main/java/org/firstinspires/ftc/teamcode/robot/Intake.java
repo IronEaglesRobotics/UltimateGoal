@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.robot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import java.util.Locale;
+
 import static org.firstinspires.ftc.teamcode.Constants.INTAKE;
 import static org.firstinspires.ftc.teamcode.Constants.SECONDARY_INTAKE;
 import static org.firstinspires.ftc.teamcode.Constants.SECONDARY_INTAKE_RELATIVE_SPEED;
@@ -32,6 +34,6 @@ public class Intake {
 
     // Get Telemetry for the intake
     public String getTelemetry() {
-        return ("Intake: " + intake.getPower() + " " + secondary.getPower());
+        return String.format(Locale.US, "Intake: %.2f %.2f", intake.getPower(), secondary.getPower());
     }
 }

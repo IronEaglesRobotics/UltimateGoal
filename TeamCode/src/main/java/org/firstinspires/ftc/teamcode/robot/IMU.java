@@ -8,12 +8,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.MathHelpers;
 
+import java.util.Locale;
+
 import static org.firstinspires.ftc.teamcode.Constants.IMU_SENSOR;
 
 // Class for the IMU Sensor on the Control Hub
 public class IMU {
     private BNO055IMU imu;
     private float baseGyroHeading;
+    private float initialGyroHeading;
 
     // Constructor
     public IMU(HardwareMap hardwareMap) {
@@ -24,11 +27,19 @@ public class IMU {
         parameters.accelUnit            = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled       = false;
         this.imu.initialize(parameters);
+
+        resetGyroHeading();
+        this.initialGyroHeading = baseGyroHeading;
     }
 
     // Reset the Gyro heading
     public void resetGyroHeading() {
         baseGyroHeading = getGyroHeading180();
+    }
+
+    // Reset the Gyro heading to the initial value
+    public void resetGyroHeadingToInitial() {
+        baseGyroHeading = initialGyroHeading;
     }
 
     // Get the heading out of 360 degrees (0 is default, counterclockwise is increasing from 0 to 360, clockwise is decreasing from 359 to 0)
@@ -40,5 +51,9 @@ public class IMU {
     // Get the heading out of 180 degrees (0 is default, counterclockwise is increasing from 0 to 180, clockwise is decreasing from to 0 to -180)
     public float getGyroHeading180() {
         return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle - baseGyroHeading;
+    }
+
+    public String getTelemetry() {
+        return String.format(Locale.US, "Heading: %.4f", getGyroHeading360());
     }
 }

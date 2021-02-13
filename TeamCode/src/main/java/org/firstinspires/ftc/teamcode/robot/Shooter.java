@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Constants;
 
+import java.util.Locale;
+
 import static org.firstinspires.ftc.teamcode.Constants.PUSHER;
 import static org.firstinspires.ftc.teamcode.Constants.PUSHER_MAX;
 import static org.firstinspires.ftc.teamcode.Constants.PUSHER_MIN;
@@ -35,6 +37,10 @@ public class Shooter {
         pusher.setPosition(position == Constants.ServoPosition.OPEN ? 0 : 1);
     }
 
+    public Constants.ServoPosition getPusher() {
+        return pusher.getPosition() < 0.5 ? Constants.ServoPosition.OPEN : Constants.ServoPosition.CLOSED;
+    }
+
     // Set wheel power
     public void setShooter(double power) {
         wheel.setPower(power);
@@ -42,6 +48,6 @@ public class Shooter {
 
     // Get Telemetry for the wheel
     public String getTelemetry() {
-        return ("Shooter: " + wheel.getPower() + "\nPusher: " + pusher.getPosition());
+        return String.format(Locale.US, "Shooter: %.2f\nPusher: %s", wheel.getPower(), getPusher());
     }
 }

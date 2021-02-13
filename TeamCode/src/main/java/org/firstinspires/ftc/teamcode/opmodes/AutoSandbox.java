@@ -12,14 +12,14 @@ import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_SHOOTER_POWER;
 import static org.firstinspires.ftc.teamcode.Constants.WHEEL_CIRCUMFERENCE;
 
 // Main Autonomous Program
-@Autonomous(name = "Auto Sandbox")
+@Autonomous(name = "Auto Sandbox", group = "Testing", preselectTeleOp = "")
 public class AutoSandbox extends LinearOpMode {
     private Robot robot;
     private Constants.StarterStack stack;
 
     // Move in 2 dimensions
-    public void move(double x, double y, double power) {
-        robot.drive.setTargetPositionRelative(x, y, power);
+    public void moveXYZ(double x, double y, double power) {
+        robot.drive.setTargetPositionRelativeXXX(x, y, power);
         while(robot.drive.isBusy() && opModeIsActive()) {
             sleep(1);
         }
@@ -30,6 +30,26 @@ public class AutoSandbox extends LinearOpMode {
         final float fudge = 2;
         degrees = Math.abs(degrees);
         robot.imu.resetGyroHeading();
+        float current = robot.imu.getGyroHeading360();
+
+        if (degrees > 0) {
+            while (current < degrees-fudge || current > 360 - fudge) {
+                robot.drive.setInput(0, 0, -(Math.max((degrees-current)/degrees*0.85,0.3)));
+                current = robot.imu.getGyroHeading360();
+
+                telemetry.addData("Status", current);
+                telemetry.update();
+                sleep(1);
+            }
+        }
+        robot.drive.setInput(0,0,0);
+    }
+
+    // Absolute Turn
+    public void absoluteTurn(double degrees) {
+        final float fudge = 2;
+        degrees = Math.abs(degrees);
+        robot.imu.resetGyroHeadingToInitial();
         float current = 5;
 
         if (degrees > 0) {
@@ -122,7 +142,23 @@ public class AutoSandbox extends LinearOpMode {
         }
 
         // movements for auto
-        move(0, 20, 0.5);
+        turn(90);
+        sleep(2000);
+
+        turn(90);
+        sleep(2000);
+
+        turn(90);
+        sleep(2000);
+
+        turn(90);
+        sleep(2000);
+
+        turn(180);
+        sleep(2000);
+
+        turn(360);
+
         // move depending on the starting configuration
 
         robot.camera.stopWobbleGoalCamera();

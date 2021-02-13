@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Constants;
 
+import java.util.Locale;
+
 import static org.firstinspires.ftc.teamcode.Constants.ARM;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_UP_POS;
@@ -60,6 +62,15 @@ public class Arm {
         wobbler.setPower(power);
     }
 
+    public Constants.ArmPosition getArm() {
+        if (ARM_UP_POS - 20 < wobbler.getCurrentPosition() && wobbler.getCurrentPosition() < ARM_UP_POS + 20) {
+            return Constants.ArmPosition.UP;
+        } else if (ARM_DOWN_POS - 20 < wobbler.getCurrentPosition() && wobbler.getCurrentPosition() < ARM_DOWN_POS + 20) {
+            return Constants.ArmPosition.DOWN;
+        }
+        return Constants.ArmPosition.UNKNOWN;
+    }
+
     // Reset arm encoder because the movement is based on the number of ticks from the starting position
     public void resetEncoder() {
         wobbler.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -67,6 +78,6 @@ public class Arm {
 
     // Get Telemetry for the arm and claw
     public String getTelemetry() {
-        return ("Arm: " + wobbler.getPower() + " " + wobbler.getCurrentPosition() + "\nClaw: " + claw.getPosition());
+        return String.format(Locale.US, "Arm: %.2f %s\nClaw: %s", wobbler.getPower(), getArm(), getClaw());
     }
 }

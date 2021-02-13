@@ -66,6 +66,22 @@ public class MecanumDrive {
         this.setPower(power);
     }
 
+    // move in two directions and turn certain number of inches
+    public void setTargetPositionRelativeXXX(double x, double y, double power) {
+        double ticksX = (x / WHEEL_CIRCUMFERENCE) * 615; // These numbers are magicc!!!
+        double ticksY = (y / WHEEL_CIRCUMFERENCE) * 615;
+
+        this.setRunMode(RunMode.STOP_AND_RESET_ENCODER);
+        this.setRunMode(RunMode.RUN_TO_POSITION);
+
+        this.frontLeft.setTargetPosition((int) (ticksY + ticksX));
+        this.frontRight.setTargetPosition((int) (ticksY - ticksX));
+        this.backLeft.setTargetPosition((int) (ticksY - ticksX));
+        this.backRight.setTargetPosition((int) (ticksY + ticksX));
+
+        this.setPower(power);
+    }
+
     // Set wheel power
     public void setPower(double power) {
         this.frontLeft.setPower(power);

@@ -17,8 +17,8 @@ import static org.firstinspires.ftc.teamcode.Constants.WHEEL_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.WHEEL_TURBO_SPEED;
 
 // Main Driver Program
-@TeleOp(name = "Manual", group = "Competition")
-public class Manual extends OpMode {
+@TeleOp(name = "Manual Solo", group = "Testing")
+public class ManualSolo extends OpMode {
     private Robot robot;
 
     // detection values
@@ -28,14 +28,12 @@ public class Manual extends OpMode {
     private boolean aimedAtPowershots;
     private boolean aimedAtGoal;
 
-    // button presses for driver 1
+    // button presses for the driver
     private double x;
     private double y;
     private double z;
     private double turbo;
-    private double slow;
 
-    // button presses for driver 2
     private boolean autoaimPowershots;
     private boolean autoaimGoal;
 
@@ -43,19 +41,21 @@ public class Manual extends OpMode {
     private boolean armDownPressedPrev;
     private boolean armUpPressed;
     private boolean armDownPressed;
-    private double armManual;
     private boolean clawPressedPrev;
     private boolean clawPressed;
 
     private boolean intakeReversePressed;
     private double intakePower;
 
-    private boolean powershotPowerPressedPrev;
-    private boolean powershotPowerPressed;
-    private boolean inPowerShotShooterMode;
-    private double shooterPower;
+    private boolean shooterPressedPrev;
+    private boolean powershotPressedPrev;
+    private boolean shooterPressed;
+    private boolean powershotPressed;
+    private boolean shooterOn;
+    private boolean powershotOn;
+
     private boolean pusherPressedPrev;
-    private boolean pusherPressed;
+    private double pusherPressed;
     private double finishTime;
     private boolean checkPusher;
     private boolean zig;
@@ -92,32 +92,21 @@ public class Manual extends OpMode {
         x = gamepad1.left_stick_x;
         y = -gamepad1.left_stick_y;
         z = gamepad1.right_stick_x;
-        turbo = gamepad1.left_trigger;
-        slow = gamepad1.right_trigger;
 
         // update gamepad presses for driver 2
-        armUpPressed = gamepad2.dpad_up;
-        armDownPressed = gamepad2.dpad_down;
-        armManual = -gamepad2.right_stick_y;
-        clawPressed = gamepad2.b;
-        autoaimPowershots = gamepad2.x;
-        autoaimGoal = gamepad2.y;
+        armUpPressed = gamepad1.dpad_up;
+        armDownPressed = gamepad1.dpad_down;
+        clawPressed = gamepad1.b;
+        autoaimPowershots = gamepad1.left_bumper;
+        autoaimGoal = gamepad1.right_bumper;
 
-        intakeReversePressed = gamepad2.left_bumper;
-        intakePower = gamepad2.left_trigger;
-
-        powershotPowerPressed = gamepad2.right_bumper;
-        shooterPower = gamepad2.right_trigger;
-        pusherPressed = gamepad2.a;
+        intakeReversePressed = gamepad1.a;
+        intakePower = gamepad1.left_trigger;
+        shooterPressed = gamepad1.y;
+        powershotPressed = gamepad1.x;
+        pusherPressed = gamepad1.right_trigger;
 
         // ------------------------- driver 1 ------------------------- //
-
-        // base control (left trigger adds speed for turbo mode, right trigger removes speed for slow mode)
-        x += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), x) - Math.copySign(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), x);
-        y += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), y) - Math.copySign(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), y);
-        z += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), z) - Math.copySign(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), z);
-
-        // ------------------------- driver 2 ------------------------- //
 
         // auto aim at powershots
         if ((autoaimPowershots) && powershot.isValid()) {
@@ -162,8 +151,6 @@ public class Manual extends OpMode {
             robot.arm.setArm(Constants.ArmPosition.UP);
         } else if (armDownPressed && !armDownPressedPrev) {
             robot.arm.setArm(Constants.ArmPosition.DOWN);
-        } else if (!robot.arm.isBusy()){
-            robot.arm.setArm(armManual * ARM_SPEED);
         }
 
         // open and close claw
@@ -181,17 +168,23 @@ public class Manual extends OpMode {
         }
 
         // shooter
-        if (powershotPowerPressed && !powershotPowerPressedPrev) {
-            inPowerShotShooterMode = !inPowerShotShooterMode;
+        if (shooterPressed && !shooterPressedPrev) {
+            shooterOn = !shooterOn;
+            powershotOn = false;
+        } else if (powershotPressed && !powershotPressedPrev) {
+            shooterOn = false;
+            powershotOn = !powershotOn;
         }
-        if (inPowerShotShooterMode) {
-            robot.shooter.setShooter(shooterPower * POWERSHOT_SHOOTER_POWER);
+        if (shooterOn) {
+            robot.shooter.setShooter(SHOOTER_POWER);
+        } else if (powershotOn) {
+            robot.shooter.setShooter(POWERSHOT_SHOOTER_POWER);
         } else {
-            robot.shooter.setShooter(shooterPower * SHOOTER_POWER);
+            robot.shooter.setShooter(0);
         }
 
         // move pusher in and out
-        if (pusherPressed && !pusherPressedPrev) {
+        if (pusherPressed > 0.9 && !pusherPressedPrev) {
             robot.shooter.setPusher(Constants.ServoPosition.CLOSED);
             finishTime = getRuntime() + 0.35;
             checkPusher = true;
@@ -205,9 +198,10 @@ public class Manual extends OpMode {
             } else {
                 zig = true;
                 checkPusher = false;
-                pusherPressed = false;
+                pusherPressed = 0;
             }
         }
+
 
         // ------------------------------------------------------------ //
 
@@ -215,8 +209,9 @@ public class Manual extends OpMode {
         armUpPressedPrev = armUpPressed;
         armDownPressedPrev = armDownPressed;
         clawPressedPrev = clawPressed;
-        powershotPowerPressedPrev = powershotPowerPressed;
-        pusherPressedPrev = pusherPressed;
+        shooterPressedPrev = shooterPressed;
+        powershotPressedPrev = powershotPressed;
+        pusherPressedPrev = pusherPressed > 0.9;
 
         // show telemetry
         telemetry.addLine(robot.getTelemetry());

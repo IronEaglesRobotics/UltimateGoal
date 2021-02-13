@@ -9,10 +9,11 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 
 import static org.firstinspires.ftc.teamcode.Constants.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_SHOOTER_POWER;
+import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_POWER;
 import static org.firstinspires.ftc.teamcode.Constants.WHEEL_CIRCUMFERENCE;
 
 // Main Autonomous Program
-@Autonomous(name = "Auto")
+@Autonomous(name = "Auto", group = "Competition", preselectTeleOp = "Manual")
 public class Auto extends LinearOpMode {
     private Robot robot;
     private Constants.StarterStack stack;
@@ -45,15 +46,16 @@ public class Auto extends LinearOpMode {
         robot.drive.setInput(0,0,0);
     }
 
-    // Shoot a ring
+    // Shoot rings at the powershots
     public void shootPowershots() {
         int ringsFired = 0;
         double timeout = getRuntime();
         Detection powershot;
         double z = 0;
         boolean aimedAtPowershots = false;
+        boolean powershotsKnockedDown = false;
 
-        while (ringsFired < 3 && getRuntime() < timeout + 15000) {
+        while (ringsFired < 3 && getRuntime() < timeout + 10000) {
             powershot = robot.camera.getPowershots().getLeftMost();
             if (powershot.isValid()) {
                 double px = powershot.getCenter().x+AUTO_AIM_OFFSET_X;
@@ -71,6 +73,7 @@ public class Auto extends LinearOpMode {
                 }
             } else {
                 aimedAtPowershots = false;
+                powershotsKnockedDown = true;
             }
             robot.drive.setInput(0, 0, z);
 
@@ -79,6 +82,53 @@ public class Auto extends LinearOpMode {
                 sleep(850);
                 robot.shooter.setPusher(Constants.ServoPosition.OPEN);
                 if (ringsFired++ < 2) {
+                    sleep(850);
+                }
+            } else if (powershotsKnockedDown) {
+                robot.shooter.setShooter(SHOOTER_POWER);
+                shootGoal(3-ringsFired);
+            }
+        }
+        robot.shooter.setShooter(0);
+    }
+
+    // Shoot rings at the goal
+    public void shootGoal(int ringsToFire) {
+        int ringsFired = 0;
+        double timeout = getRuntime();
+        Detection red;
+        double z = 0;
+        boolean aimedAtGoal = false;
+        boolean powershotsKnockedDown = false;
+
+        sleep(500);
+
+        while (ringsFired < ringsToFire && getRuntime() < timeout + 10000) {
+            red = robot.camera.getRed();
+            if (red.isValid()) {
+                double px = red.getCenter().x+AUTO_AIM_OFFSET_X;
+                if (Math.abs(px) < 50) {
+                    double zMaxSpeed = 0.7;
+                    double zErr = Math.abs(px);
+                    double zSpeed = (zErr / 50) * zMaxSpeed;
+                    if (zErr <= 0.5) {
+                        z = 0;
+                        aimedAtGoal = true;
+                    } else {
+                        z = Math.copySign(zSpeed, px);
+                        aimedAtGoal = false;
+                    }
+                }
+            } else {
+                aimedAtGoal = false;
+            }
+            robot.drive.setInput(0, 0, z);
+
+            if (aimedAtGoal) {
+                robot.shooter.setPusher(Constants.ServoPosition.CLOSED);
+                sleep(850);
+                robot.shooter.setPusher(Constants.ServoPosition.OPEN);
+                if (ringsFired++ < ringsToFire - 1) {
                     sleep(850);
                 }
             }
@@ -163,7 +213,7 @@ public class Auto extends LinearOpMode {
                 robot.camera.initTargetingCamera();
                 robot.shooter.setShooter(POWERSHOT_SHOOTER_POWER);
                 turn(178);
-                move(-39, -37, 0.5);
+                move(-39, -38, 0.5);
                 shootPowershots();
                 move(0, 8, 0.5);
         }

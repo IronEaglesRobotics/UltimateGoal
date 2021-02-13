@@ -55,19 +55,23 @@ public class Camera {
             public void onOpened()
             {
                 stackCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, WEBCAM_ROTATION);
+                stackCameraInitialized = true;
             }
         });
-        stackCameraInitialized = true;
     }
 
     // Close the StarterStack Camera
     public void stopStackCamera() {
-        stackCamera.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener()
-        {
-            @Override
-            public void onClose() {}
-        });
-        stackCameraInitialized = false;
+        if (stackCameraInitialized) {
+            stackCamera.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener()
+            {
+                @Override
+                public void onClose() {
+                    stackCameraInitialized = false;
+                    initTargetingCamera();
+                }
+            });
+        }
     }
 
     // Initiate the Targeting Camera
@@ -82,19 +86,22 @@ public class Camera {
             public void onOpened()
             {
                 targetingCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, WEBCAM_ROTATION);
+                targetingCameraInitialized = true;
             }
         });
-        targetingCameraInitialized = true;
     }
 
     // Close the Targeting Camera
     public void stopTargetingCamera() {
-        targetingCamera.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener()
-        {
-            @Override
-            public void onClose() {}
-        });
-        targetingCameraInitialized = false;
+        if (targetingCameraInitialized) {
+            targetingCamera.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener()
+            {
+                @Override
+                public void onClose() {
+                    targetingCameraInitialized = false;
+                }
+            });
+        }
     }
 
     // Initiate the Wobble Goal Camera
@@ -109,19 +116,22 @@ public class Camera {
             public void onOpened()
             {
                 wobbleGoalCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, WEBCAM_ROTATION);
+                wobbleGoalCameraInitialized = true;
             }
         });
-        wobbleGoalCameraInitialized = true;
     }
 
     // Close the Wobble Goal Camera
     public void stopWobbleGoalCamera() {
-        wobbleGoalCamera.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener()
-        {
-            @Override
-            public void onClose() {}
-        });
-        wobbleGoalCameraInitialized = false;
+        if (wobbleGoalCameraInitialized) {
+            wobbleGoalCamera.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener()
+            {
+                @Override
+                public void onClose() {
+                    wobbleGoalCameraInitialized = false;
+                }
+            });
+        }
     }
 
     // Check what StarterStack configuration is on the field
