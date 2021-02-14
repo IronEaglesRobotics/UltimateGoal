@@ -9,6 +9,8 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_SHOOTER_POWER;
+
 // Main Autonomous Program
 @Autonomous(name = "Auto New", group = "Competition", preselectTeleOp = "Manual")
 public class AutoNew extends LinearOpMode {
@@ -90,14 +92,15 @@ public class AutoNew extends LinearOpMode {
                         return false;
                     }
                 });
+                addMovement(0, -50, 0.5);
                 steps.add(new Step() {
                     @Override
                     public void start() {
-                        robot.drive.setTargetPositionRelative(0, 10, 0.5);
+                        robot.shooter.setShooter(POWERSHOT_SHOOTER_POWER);
                     }
                     @Override
                     public boolean isActive() {
-                        return robot.drive.isBusy();
+                        return false;
                     }
                 });
                 break;
@@ -126,4 +129,19 @@ public class AutoNew extends LinearOpMode {
                 });
         }
     }
+
+    private void addMovement(final double x, final double y, final double z) {
+        steps.add(new Step() {
+            @Override
+            public void start() {
+                robot.drive.setTargetPositionRelative(x, y, z);
+            }
+            @Override
+            public boolean isActive() {
+                return robot.drive.isBusy();
+            }
+        });
+    }
+
+    private void 
 }
