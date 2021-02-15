@@ -9,6 +9,7 @@ import org.opencv.imgproc.Imgproc;
 
 import static org.firstinspires.ftc.teamcode.CVHelpers.drawConvexHull;
 import static org.firstinspires.ftc.teamcode.CVHelpers.drawPoint;
+import static org.firstinspires.ftc.teamcode.CVHelpers.getBottomLeftOfContour;
 import static org.firstinspires.ftc.teamcode.CVHelpers.getCenterOfContour;
 import static org.firstinspires.ftc.teamcode.Constants.GREEN;
 import static org.firstinspires.ftc.teamcode.Constants.INVALID_AREA;
@@ -20,6 +21,7 @@ public class Detection {
     private final Size maxSizePx;
     private double areaPx =  INVALID_AREA;
     private Point centerPx = INVALID_POINT;
+    private Point bottomLeftPx = INVALID_POINT;
     private MatOfPoint contour;
 
     // Constructor
@@ -33,6 +35,7 @@ public class Detection {
         if (isValid()) {
             drawConvexHull(img, contour, color);
             drawPoint(img, centerPx, GREEN);
+            drawPoint(img, bottomLeftPx, GREEN);
         }
     }
 
@@ -46,7 +49,7 @@ public class Detection {
         return contour;
     }
 
-    // Set the area and center of the contour
+    // Set the values of the current contour
     public void setContour(MatOfPoint contour) {
         this.contour = contour;
 
@@ -54,9 +57,11 @@ public class Detection {
         if (contour != null && (area = Imgproc.contourArea(contour)) > minAreaPx) {
             this.areaPx = area;
             this.centerPx = getCenterOfContour(contour);
+            this.bottomLeftPx = getBottomLeftOfContour(contour);
         } else {
             this.areaPx = INVALID_AREA;
             this.centerPx = INVALID_POINT;
+            this.bottomLeftPx = INVALID_POINT;
         }
     }
 
@@ -84,5 +89,10 @@ public class Detection {
         }
 
         return (areaPx / (maxSizePx.width * maxSizePx.height)) * 100;
+    }
+
+    // Get the leftmost bottom corner of the detection
+    public Point getBottomLeftCornerPx() {
+        return bottomLeftPx;
     }
 }

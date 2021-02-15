@@ -45,11 +45,10 @@ public class Constants {
     public static final double MIN_STARTERSTACK_SINGLE_AREA = 0.15;
     public static final double MIN_STARTERSTACK_QUAD_AREA = 1.10;
     public static final double MIN_GOAL_AREA = 0.01;
-    public static final double MIN_POWERSHOT_AREA = 0.001 ; // 320 240
+    public static final double MIN_POWERSHOT_AREA = 0.0005; // 320 240 // 0.001
     public static final Rect STARTERSTACK_LOCATION = new Rect(90, 75, 140, 90);
-    public static final Size GOAL_DIMENSIONS_IN = new Size(24, 15.5);
-    public static final Point POWERSHOT_OFFSET_IN = new Point(-22, 12);
-    public static final Size POWERSHOT_DIMENSIONS_IN = new Size(26, 12);
+    public static final Point POWERSHOT_OFFSET = new Point(-3, -20);
+    public static final Size POWERSHOT_DIMENSIONS = new Size(125, 50);
 
     // CV Invalid Detection Constants
     public static final Point INVALID_POINT = new Point(Double.MIN_VALUE, Double.MIN_VALUE);
@@ -64,14 +63,15 @@ public class Constants {
     public static final double WHEEL_SPEED = 0.7;
     public static final double WHEEL_TURBO_SPEED = 1.0;
     public static final double ARM_SPEED = 0.25;
-    public static final int ARM_DOWN_POS = -700; // -756
+    public static final int ARM_DEFAULT_POS = 0;
+    public static final int ARM_DOWN_POS = -675; // -756
     public static final int ARM_UP_POS = -221;
     public static final double CLAW_MIN = 0.05;
     public static final double CLAW_MAX = 0.8;
     public static final double INTAKE_MAX_SPEED = 0.75;
     public static final double SECONDARY_INTAKE_RELATIVE_SPEED = 0.5;
     public static final double SHOOTER_POWER = 0.62;
-    public static final double POWERSHOT_SHOOTER_POWER = 0.57;
+    public static final double POWERSHOT_SHOOTER_POWER = 0.57; // 0.57
     public static final int AUTO_AIM_OFFSET_X = 8;
     public static final double PUSHER_MIN = 0.35;
     public static final double PUSHER_MAX = 0.55;
@@ -99,6 +99,6 @@ public class Constants {
         OPEN, CLOSED
     }
     public enum ArmPosition {
-        UP, DOWN, UNKNOWN
+        DEFAULT, UP, DOWN, UNKNOWN
     }
 }

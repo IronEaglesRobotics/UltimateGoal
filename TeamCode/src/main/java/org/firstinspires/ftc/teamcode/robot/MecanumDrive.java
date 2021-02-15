@@ -56,12 +56,13 @@ public class MecanumDrive {
         double ticksY = (y / WHEEL_CIRCUMFERENCE) * 615;
 
         this.setRunMode(RunMode.STOP_AND_RESET_ENCODER);
-        this.setRunMode(RunMode.RUN_TO_POSITION);
 
         this.frontLeft.setTargetPosition((int) (ticksY + ticksX));
         this.frontRight.setTargetPosition((int) (ticksY - ticksX));
         this.backLeft.setTargetPosition((int) (ticksY - ticksX));
         this.backRight.setTargetPosition((int) (ticksY + ticksX));
+
+        this.setRunMode(RunMode.RUN_TO_POSITION);
 
         this.setPower(power);
     }
@@ -72,12 +73,13 @@ public class MecanumDrive {
         double ticksY = (y / WHEEL_CIRCUMFERENCE) * 615;
 
         this.setRunMode(RunMode.STOP_AND_RESET_ENCODER);
-        this.setRunMode(RunMode.RUN_TO_POSITION);
 
         this.frontLeft.setTargetPosition((int) (ticksY + ticksX));
         this.frontRight.setTargetPosition((int) (ticksY - ticksX));
         this.backLeft.setTargetPosition((int) (ticksY - ticksX));
         this.backRight.setTargetPosition((int) (ticksY + ticksX));
+
+        this.setRunMode(RunMode.RUN_TO_POSITION);
 
         this.setPower(power);
     }

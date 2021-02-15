@@ -17,7 +17,7 @@ import static org.firstinspires.ftc.teamcode.Constants.WHEEL_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.WHEEL_TURBO_SPEED;
 
 // Main Driver Program
-@TeleOp(name = "Manual", group = "Competition")
+@TeleOp(name = "Competition TeleOp", group = "Competition")
 public class Manual extends OpMode {
     private Robot robot;
 
@@ -43,6 +43,8 @@ public class Manual extends OpMode {
     private boolean armDownPressedPrev;
     private boolean armUpPressed;
     private boolean armDownPressed;
+    private boolean armResetPressedPrev;
+    private boolean armResetPressed;
     private double armManual;
     private boolean clawPressedPrev;
     private boolean clawPressed;
@@ -68,6 +70,7 @@ public class Manual extends OpMode {
         robot = new Robot(hardwareMap);
         robot.arm.resetEncoder();
         robot.arm.setClaw(Constants.ServoPosition.OPEN);
+        robot.shooter.setPusher(Constants.ServoPosition.OPEN);
         robot.camera.initTargetingCamera();
     }
 
@@ -98,6 +101,7 @@ public class Manual extends OpMode {
         // update gamepad presses for driver 2
         armUpPressed = gamepad2.dpad_up;
         armDownPressed = gamepad2.dpad_down;
+        armResetPressed = gamepad2.dpad_left;
         armManual = -gamepad2.right_stick_y;
         clawPressed = gamepad2.b;
         autoaimPowershots = gamepad2.x;
@@ -162,8 +166,11 @@ public class Manual extends OpMode {
             robot.arm.setArm(Constants.ArmPosition.UP);
         } else if (armDownPressed && !armDownPressedPrev) {
             robot.arm.setArm(Constants.ArmPosition.DOWN);
-        } else if (!robot.arm.isBusy()){
+        } else if (Math.abs(armManual) > 0.1) {
             robot.arm.setArm(armManual * ARM_SPEED);
+        }
+        if (armResetPressed && !armResetPressedPrev) {
+            robot.arm.resetEncoder();
         }
 
         // open and close claw
@@ -214,6 +221,7 @@ public class Manual extends OpMode {
         // update previous state variables
         armUpPressedPrev = armUpPressed;
         armDownPressedPrev = armDownPressed;
+        armResetPressedPrev = armResetPressed;
         clawPressedPrev = clawPressed;
         powershotPowerPressedPrev = powershotPowerPressed;
         pusherPressedPrev = pusherPressed;

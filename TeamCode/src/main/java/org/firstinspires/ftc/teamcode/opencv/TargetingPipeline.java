@@ -19,13 +19,12 @@ import static org.firstinspires.ftc.teamcode.Constants.BLUE_LOWER;
 import static org.firstinspires.ftc.teamcode.Constants.BLUE_UPPER;
 import static org.firstinspires.ftc.teamcode.Constants.BLUR_SIZE;
 import static org.firstinspires.ftc.teamcode.Constants.ERODE_DILATE_ITERATIONS;
-import static org.firstinspires.ftc.teamcode.Constants.GOAL_DIMENSIONS_IN;
 import static org.firstinspires.ftc.teamcode.Constants.GREEN;
 import static org.firstinspires.ftc.teamcode.Constants.INVALID_POINT;
 import static org.firstinspires.ftc.teamcode.Constants.MIN_GOAL_AREA;
 import static org.firstinspires.ftc.teamcode.Constants.MIN_POWERSHOT_AREA;
-import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_DIMENSIONS_IN;
-import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_OFFSET_IN;
+import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_DIMENSIONS;
+import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_OFFSET;
 import static org.firstinspires.ftc.teamcode.Constants.RED;
 import static org.firstinspires.ftc.teamcode.Constants.RED_LOWER_1;
 import static org.firstinspires.ftc.teamcode.Constants.RED_LOWER_2;
@@ -110,17 +109,12 @@ public class TargetingPipeline extends OpenCvPipeline {
             return;
         }
 
-        // determine where the goal is to base off of
-        Point goalCenter = red.getCenterPx();
-        Rect goalBoundingBox = Imgproc.boundingRect(red.getContour());
-        double goalUnit = goalBoundingBox.width / GOAL_DIMENSIONS_IN.width;
-
         // create a rectangle based off of the goal of where to look for the powershots
         Rect powershotRect = new Rect(
-                (int) ((goalCenter.x + goalUnit * POWERSHOT_OFFSET_IN.x) - (goalUnit * POWERSHOT_DIMENSIONS_IN.width  / 2)),
-                (int) ((goalCenter.y + goalUnit * POWERSHOT_OFFSET_IN.y) - (goalUnit * POWERSHOT_DIMENSIONS_IN.height / 2)),
-                (int) (goalUnit * POWERSHOT_DIMENSIONS_IN.width),
-                (int) (goalUnit * POWERSHOT_DIMENSIONS_IN.height)
+                (int) (red.getBottomLeftCornerPx().x - POWERSHOT_DIMENSIONS.width + POWERSHOT_OFFSET.x),
+                (int) (red.getBottomLeftCornerPx().y + POWERSHOT_OFFSET.y),
+                (int) POWERSHOT_DIMENSIONS.width,
+                (int) POWERSHOT_DIMENSIONS.height
         );
 
         // take pixels that are in the color range and put them into a mask

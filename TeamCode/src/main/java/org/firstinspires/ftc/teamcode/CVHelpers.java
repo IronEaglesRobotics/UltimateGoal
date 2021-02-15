@@ -4,6 +4,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
@@ -24,6 +25,12 @@ public class CVHelpers {
     public static Point getCenterOfContour(MatOfPoint contour) {
         Moments moments = Imgproc.moments(contour);
         return new Point(moments.m10 / moments.m00, moments.m01/ moments.m00);
+    }
+
+    // Get the bottom left of a contour
+    public static Point getBottomLeftOfContour(MatOfPoint contour) {
+        Rect boundingRect = Imgproc.boundingRect(contour);
+        return new Point(boundingRect.x, boundingRect.y+boundingRect.height);
     }
 
     // Draw a contour

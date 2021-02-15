@@ -11,14 +11,21 @@ public abstract class Step {
     public double heading;
 
     // variables when shooting
+    public boolean powershotsKnockedDown;
     public int ringsFired;
     public Detection powershot;
+    public Detection red;
+    public double x;
+    public double y;
     public double z;
     public boolean aimedAtPowershots;
+    public boolean aimedAtGoal;
     public boolean firing;
     public boolean zig;
+    public boolean zag;
     public double zigTime;
     public double zagTime;
+    public double shooterSpeedUpTime;
 
     // Constructors
     public Step() {
@@ -31,6 +38,7 @@ public abstract class Step {
     // Abstract methods to be overrode
     public abstract void start();
     public abstract void whileRunning();
+    public abstract void end();
     public abstract boolean isActive();
 
     // Return the timeout for the step

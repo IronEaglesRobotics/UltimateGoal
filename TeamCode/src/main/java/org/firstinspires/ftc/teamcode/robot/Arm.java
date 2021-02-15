@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Constants;
 import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.Constants.ARM;
+import static org.firstinspires.ftc.teamcode.Constants.ARM_DEFAULT_POS;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_UP_POS;
 import static org.firstinspires.ftc.teamcode.Constants.CLAW;
@@ -52,7 +53,16 @@ public class Arm {
 
     // Set arm position (UP is straight up, DOWN is parallel to the ground)
     public void setArm(Constants.ArmPosition position) {
-        wobbler.setTargetPosition(position == Constants.ArmPosition.DOWN ? ARM_DOWN_POS : ARM_UP_POS);
+        switch (position) {
+            case DEFAULT:
+                wobbler.setTargetPosition(ARM_DEFAULT_POS);
+                break;
+            case UP:
+                wobbler.setTargetPosition(ARM_UP_POS);
+                break;
+            case DOWN:
+                wobbler.setTargetPosition(ARM_DOWN_POS);
+        }
         wobbler.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         wobbler.setPower(ARM_SPEED);
     }
@@ -63,9 +73,11 @@ public class Arm {
     }
 
     public Constants.ArmPosition getArm() {
-        if (ARM_UP_POS - 20 < wobbler.getCurrentPosition() && wobbler.getCurrentPosition() < ARM_UP_POS + 20) {
+        if (ARM_DEFAULT_POS - 10 < wobbler.getCurrentPosition()) {
+            return Constants.ArmPosition.DEFAULT;
+        } else if (ARM_UP_POS - 10 < wobbler.getCurrentPosition() && wobbler.getCurrentPosition() < ARM_UP_POS + 10) {
             return Constants.ArmPosition.UP;
-        } else if (ARM_DOWN_POS - 20 < wobbler.getCurrentPosition() && wobbler.getCurrentPosition() < ARM_DOWN_POS + 20) {
+        } else if (ARM_DOWN_POS - 10 < wobbler.getCurrentPosition() && wobbler.getCurrentPosition() < ARM_DOWN_POS + 10) {
             return Constants.ArmPosition.DOWN;
         }
         return Constants.ArmPosition.UNKNOWN;
