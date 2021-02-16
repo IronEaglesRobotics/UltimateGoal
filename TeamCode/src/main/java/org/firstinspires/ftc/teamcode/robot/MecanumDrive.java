@@ -20,6 +20,7 @@ public class MecanumDrive {
     private final DcMotor backLeft;
     private final DcMotor backRight;
     private final double ticksPerRev;
+    private double ticksToMove;
 
     // Constructor
     public MecanumDrive(HardwareMap hardwareMap) {
@@ -50,12 +51,18 @@ public class MecanumDrive {
                 || this.backRight.isBusy();
     }
 
-    // move in two directions a certain number of inches
+    // Move in two directions a certain number of inches
     public void setTargetPositionRelative(double x, double y, double power) {
         double ticksX = (x / WHEEL_CIRCUMFERENCE) * 615; // These numbers are magicc!!!
         double ticksY = (y / WHEEL_CIRCUMFERENCE) * 615;
 
         this.setRunMode(RunMode.STOP_AND_RESET_ENCODER);
+
+//        ticksToMove = frontLeft.getCurrentPosition()+(ticksY+ticksX); // get the final destination the motor should be at when it finishes
+        ticksToMove = Math.max(
+                Math.max(frontLeft.getCurrentPosition()+(ticksY+ticksX), frontRight.getCurrentPosition()+(ticksY+ticksX)),
+                Math.max(backLeft.getCurrentPosition()+(ticksY+ticksX), backRight.getCurrentPosition()+(ticksY+ticksX))
+        );
 
         this.frontLeft.setTargetPosition((int) (ticksY + ticksX));
         this.frontRight.setTargetPosition((int) (ticksY - ticksX));
@@ -67,21 +74,13 @@ public class MecanumDrive {
         this.setPower(power);
     }
 
-    // move in two directions and turn certain number of inches
-    public void setTargetPositionRelativeXXX(double x, double y, double power) {
-        double ticksX = (x / WHEEL_CIRCUMFERENCE) * 615; // These numbers are magicc!!!
-        double ticksY = (y / WHEEL_CIRCUMFERENCE) * 615;
-
-        this.setRunMode(RunMode.STOP_AND_RESET_ENCODER);
-
-        this.frontLeft.setTargetPosition((int) (ticksY + ticksX));
-        this.frontRight.setTargetPosition((int) (ticksY - ticksX));
-        this.backLeft.setTargetPosition((int) (ticksY - ticksX));
-        this.backRight.setTargetPosition((int) (ticksY + ticksX));
-
-        this.setRunMode(RunMode.RUN_TO_POSITION);
-
-        this.setPower(power);
+    // Get the number of ticks remaining for the motors to move
+    public double getTargetDistanceRemaining() {
+//        return Math.abs(ticksToMove - frontLeft.getCurrentPosition());
+        return Math.abs(Math.max(
+                Math.max(ticksToMove - frontLeft.getCurrentPosition(), ticksToMove - frontRight.getCurrentPosition()),
+                Math.max(ticksToMove - backLeft.getCurrentPosition(), ticksToMove - backRight.getCurrentPosition())
+        ));
     }
 
     // Set wheel power
@@ -100,7 +99,7 @@ public class MecanumDrive {
         this.backRight.setMode(runMode);
     }
 
-    // Get the runmode of the wheels (because they should all be the same, just getting the front left should tell what all of them are
+    // Get the runmode of the wheels (because they should all be the same, just getting the front left should tell what all of them are)
     public RunMode getRunMode() {
         return this.frontLeft.getMode();
     }

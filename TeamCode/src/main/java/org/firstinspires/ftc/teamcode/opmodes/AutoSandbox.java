@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.Constants.AUTO_AIM_OFFSET_X;
-import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_SHOOTER_POWER;
 import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_POWER;
 
 // Main Autonomous Program
@@ -36,7 +35,8 @@ public class AutoSandbox extends LinearOpMode {
         while (!(isStarted() || isStopRequested())) {
             stack = robot.camera.checkStack();
             telemetry.addLine("Initialized");
-            telemetry.addData("Stack", stack);
+            telemetry.addLine(String.format(Locale.US, "Stack: %s", robot.camera.checkStack()));
+            telemetry.addLine(String.format(Locale.US, "Size: %.4f", robot.camera.getStarterStack().getArea()));
             telemetry.update();
         }
 
@@ -61,7 +61,7 @@ public class AutoSandbox extends LinearOpMode {
         // run the remaining steps
         while(opModeIsActive() && !isStopRequested()) {
             // once a step finishes
-            if (!step.isActive() || getRuntime() > stepTimeout) {
+            if (step.isFinished() || getRuntime() > stepTimeout) {
                 // do the finishing move
                 step.end();
                 stepNumber++;
@@ -82,14 +82,21 @@ public class AutoSandbox extends LinearOpMode {
             telemetry.addLine(robot.getTelemetry());
             telemetry.update();
         }
+        robot.camera.shutdownCamera();
+        while(robot.camera.getFrameCount() > 0) {
+            telemetry.addLine("Shutting down robot...");
+            telemetry.update();
+        }
     }
 
     // Load up all of the steps for the autonomous
     private void initializeSteps(Constants.StarterStack stack) {
         steps = new ArrayList<>();
-        addTurn(150);
+        addSpeedyMovement(0, -60);
         addDelay(2);
-        addResetPositionBackwards();
+        addSpeedyMovement(-60, 0);
+        addDelay(2);
+        addSpeedyMovement(60, 60);
     }
 
     // Functions to add steps
@@ -101,8 +108,8 @@ public class AutoSandbox extends LinearOpMode {
             public void whileRunning() {}
             @Override
             public void end() {}
-            @Override public boolean isActive() {
-                return true;
+            @Override public boolean isFinished() {
+                return false;
             }
         });
     }
@@ -119,8 +126,44 @@ public class AutoSandbox extends LinearOpMode {
             public void whileRunning() {}
             @Override
             public void end() {}
-            @Override public boolean isActive() {
-                return robot.drive.isBusy();
+            @Override public boolean isFinished() {
+                return !robot.drive.isBusy();
+            }
+        });
+    }
+    private void addSpeedyMovement(final double xx, final double yy) {
+        steps.add(new Step() {
+            @Override
+            public void start() {
+                this.x = xx;
+                this.y = yy;
+                robot.drive.setTargetPositionRelative(x, y, 0.4);
+                this.ticks = robot.drive.getTargetDistanceRemaining();
+            }
+            @Override
+            public void whileRunning() {
+                ticksLeft = robot.drive.getTargetDistanceRemaining();
+                ticksTraveled = ticks - ticksLeft;
+                robot.drive.setPower(ticksTraveled < ticks/2
+                        ? Math.max(ticksTraveled/(ticks/2), 0.25)
+                        : Math.max(ticksLeft/(ticks/2), 0.25)
+                );
+//                double motorSpeed = 0;
+//                if (ticksLeft < 1500) {
+//                    robot.drive.setPower(Math.max(ticksLeft/1500, 0.25));
+//                    motorSpeed = ticksLeft/1500;
+//                } else if (ticksTraveled < 500) {
+//                    robot.drive.setPower(Math.max(ticksTraveled/500, 0.25));
+//                    motorSpeed = ticksTraveled/500;
+//                }
+//                telemetry.addData("Current Ticks Traveled", ticksTraveled);
+//                telemetry.addData("Current Ticks Left", ticksLeft);
+//                telemetry.addData("Motor Speed", motorSpeed);
+            }
+            @Override
+            public void end() {}
+            @Override public boolean isFinished() {
+                return !robot.drive.isBusy();
             }
         });
     }
@@ -142,8 +185,8 @@ public class AutoSandbox extends LinearOpMode {
                 robot.drive.setInput(0, 0, 0);
             }
             @Override
-            public boolean isActive() {
-                return heading < degreesToTurn - 4 || heading > 360 - 4;
+            public boolean isFinished() {
+                return !(heading < degreesToTurn - 4) && !(heading > 360 - 4);
             }
         });
     }
@@ -164,8 +207,8 @@ public class AutoSandbox extends LinearOpMode {
                 robot.drive.setInput(0, 0, 0);
             }
             @Override
-            public boolean isActive() {
-                return heading < 180 - 5;
+            public boolean isFinished() {
+                return !(heading < 180 - 5);
             }
         });
     }
@@ -180,8 +223,8 @@ public class AutoSandbox extends LinearOpMode {
             @Override
             public void end() {}
             @Override
-            public boolean isActive() {
-                return robot.arm.isBusy();
+            public boolean isFinished() {
+                return !robot.arm.isBusy();
             }
         });
     }
@@ -196,8 +239,8 @@ public class AutoSandbox extends LinearOpMode {
             @Override
             public void end() {}
             @Override
-            public boolean isActive() {
-                return true;
+            public boolean isFinished() {
+                return false;
             }
         });
     }
@@ -212,8 +255,8 @@ public class AutoSandbox extends LinearOpMode {
             @Override
             public void end() {}
             @Override
-            public boolean isActive() {
-                return true;
+            public boolean isFinished() {
+                return false;
             }
         });
     }
@@ -228,8 +271,8 @@ public class AutoSandbox extends LinearOpMode {
             @Override
             public void end() {}
             @Override
-            public boolean isActive() {
-                return false;
+            public boolean isFinished() {
+                return true;
             }
         });
     }
@@ -325,8 +368,8 @@ public class AutoSandbox extends LinearOpMode {
             @Override
             public void end() {}
             @Override
-            public boolean isActive() {
-                return ringsFired < 3;
+            public boolean isFinished() {
+                return ringsFired >= 3;
             }
         });
     }
@@ -341,8 +384,8 @@ public class AutoSandbox extends LinearOpMode {
             @Override
             public void end() {}
             @Override
-            public boolean isActive() {
-                return robot.camera.getFrameCount() < 1;
+            public boolean isFinished() {
+                return robot.camera.getFrameCount() >= 1;
             }
         });
     }
@@ -357,8 +400,8 @@ public class AutoSandbox extends LinearOpMode {
             @Override
             public void end() {}
             @Override
-            public boolean isActive() {
-                return robot.camera.getFrameCount() > 0;
+            public boolean isFinished() {
+                return robot.camera.getFrameCount() <= 0;
             }
         });
     }

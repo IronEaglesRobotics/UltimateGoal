@@ -5,22 +5,32 @@ import org.firstinspires.ftc.teamcode.opencv.Detection;
 // Class for every step that the autonomous program will take
 public abstract class Step {
     private final double timeout;
+    private String telemetry;
+
+    // step variables
+    public double ticks;
+    public double ticksTraveled;
+    public double ticksLeft;
 
     // variables when turning
     public double degreesToTurn;
     public double heading;
 
-    // variables when shooting
-    public boolean powershotsKnockedDown;
-    public int ringsFired;
-    public Detection powershot;
-    public Detection red;
+    // variables when moving
     public double x;
     public double y;
     public double z;
+    public double power;
+
+    // variables when shooting
+    public int ringsToFire;
+    public boolean powershotsKnockedDown;
+    public int ringsFired;
+    public boolean firing;
+    public Detection powershot;
+    public Detection red;
     public boolean aimedAtPowershots;
     public boolean aimedAtGoal;
-    public boolean firing;
     public boolean zig;
     public boolean zag;
     public double zigTime;
@@ -34,15 +44,28 @@ public abstract class Step {
     public Step(double timeout) {
         this.timeout = timeout;
     }
+    public Step(String telemetry) {
+        this.telemetry = telemetry;
+        this.timeout = -1;
+    }
+    public Step(String telemetry, double timeout) {
+        this.telemetry = telemetry;
+        this.timeout = timeout;
+    }
 
     // Abstract methods to be overrode
     public abstract void start();
     public abstract void whileRunning();
     public abstract void end();
-    public abstract boolean isActive();
+    public abstract boolean isFinished();
 
     // Return the timeout for the step
     public double getTimeout() {
         return timeout;
+    }
+
+    // Return the Telemetry for the stp
+    public String getTelemetry() {
+        return telemetry;
     }
 }

@@ -133,6 +133,17 @@ public class Camera {
         }
     }
 
+    // Shut down whatever camera is running if you are unsure if one is
+    public void shutdownCamera() {
+        if (stackCameraInitialized) {
+            stopStackCamera();
+        } else if (targetingCameraInitialized) {
+            stopTargetingCamera();
+        } else if (wobbleGoalCameraInitialized) {
+            stopWobbleGoalCamera();
+        }
+    }
+
     // Check what StarterStack configuration is on the field
     public Constants.StarterStack checkStack() {
         if (stackCameraInitialized) {
