@@ -92,9 +92,9 @@ public class ManualSolo extends OpMode {
         powershot = robot.camera.getPowershots().getLeftMost();
 
         // update gamepad presses for driver 1
-        x = gamepad1.left_stick_x;
-        y = -gamepad1.left_stick_y;
-        z = gamepad1.right_stick_x;
+        x = gamepad1.left_stick_x*WHEEL_SPEED;
+        y = -gamepad1.left_stick_y*WHEEL_SPEED;
+        z = gamepad1.right_stick_x*WHEEL_SPEED;
 
         // update gamepad presses for driver 2
         armUpPressed = gamepad1.dpad_up;

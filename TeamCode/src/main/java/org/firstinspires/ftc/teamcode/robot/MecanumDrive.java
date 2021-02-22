@@ -20,7 +20,10 @@ public class MecanumDrive {
     private final DcMotor backLeft;
     private final DcMotor backRight;
     private final double ticksPerRev;
+
+    // variables to track movement
     private double ticksToMove;
+    private boolean trackingFrontLeft;
 
     // Constructor
     public MecanumDrive(HardwareMap hardwareMap) {
@@ -58,11 +61,11 @@ public class MecanumDrive {
 
         this.setRunMode(RunMode.STOP_AND_RESET_ENCODER);
 
-//        ticksToMove = frontLeft.getCurrentPosition()+(ticksY+ticksX); // get the final destination the motor should be at when it finishes
-        ticksToMove = Math.max(
-                Math.max(frontLeft.getCurrentPosition()+(ticksY+ticksX), frontRight.getCurrentPosition()+(ticksY+ticksX)),
-                Math.max(backLeft.getCurrentPosition()+(ticksY+ticksX), backRight.getCurrentPosition()+(ticksY+ticksX))
-        );
+        // if the 2 directions to go in have the same sign, track the front left, otherwise the back left motor
+        // if either one of the directions are 0, then it doesn't matter so make it true just because
+        trackingFrontLeft = x * y >= 0;
+        // the ticks to move will be Y + X if it is the front left, otherwise the back left is calculated with Y - X
+        ticksToMove = Math.abs(trackingFrontLeft ? ticksY + ticksX : ticksY - ticksX);
 
         this.frontLeft.setTargetPosition((int) (ticksY + ticksX));
         this.frontRight.setTargetPosition((int) (ticksY - ticksX));
@@ -74,13 +77,14 @@ public class MecanumDrive {
         this.setPower(power);
     }
 
-    // Get the number of ticks remaining for the motors to move
+    // Get the total number of ticks for the current movement
+    public double getTargetDistance() {
+        return ticksToMove;
+    }
+
+    // Get the number of ticks remaining for the current movement
     public double getTargetDistanceRemaining() {
-//        return Math.abs(ticksToMove - frontLeft.getCurrentPosition());
-        return Math.abs(Math.max(
-                Math.max(ticksToMove - frontLeft.getCurrentPosition(), ticksToMove - frontRight.getCurrentPosition()),
-                Math.max(ticksToMove - backLeft.getCurrentPosition(), ticksToMove - backRight.getCurrentPosition())
-        ));
+        return ticksToMove - Math.abs(trackingFrontLeft ? frontLeft.getCurrentPosition() : backLeft.getCurrentPosition());
     }
 
     // Set wheel power
@@ -89,6 +93,11 @@ public class MecanumDrive {
         this.frontRight.setPower(power);
         this.backLeft.setPower(power);
         this.backRight.setPower(power);
+    }
+
+    // Get wheel power
+    public double getPower() {
+        return this.frontLeft.getPower();
     }
 
     // Set the runmode of all the wheels

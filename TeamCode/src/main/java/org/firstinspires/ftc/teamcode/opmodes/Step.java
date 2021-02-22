@@ -13,8 +13,14 @@ public abstract class Step {
     public double ticksLeft;
 
     // variables when turning
-    public double degreesToTurn;
-    public double heading;
+    public double destinationHeading;
+    public double currentHeading;
+    public double xErr;
+    public double yErr;
+    public double zErr;
+    public double zRuntime;
+    public double xRuntime;
+    public double yRuntime;
 
     // variables when moving
     public double x;
@@ -64,7 +70,10 @@ public abstract class Step {
         return timeout;
     }
 
-    // Return the Telemetry for the stp
+    public void setTelemetry(String telemetry) {
+        this.telemetry = telemetry;
+    }
+    // Return the Telemetry for the step
     public String getTelemetry() {
         return telemetry;
     }

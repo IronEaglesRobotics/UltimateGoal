@@ -22,14 +22,14 @@ public class MathHelpers {
     }
 
     // Changes the gyro result from [-179,180] to [0,359]
-    public static float piTo2Pi(float angle) {
+    public static double piTo2Pi(double angle) {
         return (angle + 360) % 360;
     }
 
     // Check if an angle is the range of the whole circle
-    public static boolean isInRange2pi(float angle, float target, float window) {
-        float min = piTo2Pi(target - window);
-        float max = piTo2Pi(target + window);
+    public static boolean isInRange2pi(double angle, double target, double window) {
+        double min = piTo2Pi(target - window);
+        double max = piTo2Pi(target + window);
         angle = piTo2Pi(angle);
 
         return angle > min && angle < max;

@@ -6,6 +6,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
@@ -126,6 +127,8 @@ public class TargetingPipeline extends OpenCvPipeline {
         Mat powershotMask = new Mat(hsv.size(), CvType.CV_8U);
         Imgproc.rectangle(powershotMask, powershotRect, WHITE, -1);
         Core.bitwise_and(redMask, powershotMask, powershotMask);
+        // erode it as slightly as possible, for some reason the bitwise_and leaves some pixels left outside of the box
+//        Imgproc.erode(powershotMask, powershotMask, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)), new Point(1.5f, 1.5f));
 
         // set the largest detection that was found to be the Powershots
         ArrayList<MatOfPoint> contours = new ArrayList<>();
@@ -134,7 +137,7 @@ public class TargetingPipeline extends OpenCvPipeline {
 
         // draw the Powershot detection as well as where was looked for it on the screen
         Imgproc.rectangle(input, powershotRect, WHITE, 2);
-        powershots.draw(input, GREEN);
+        powershots.draw(input, WHITE);
     }
 
     // Get the center of whatever goal is in sight

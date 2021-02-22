@@ -35,11 +35,12 @@ public class PowershotDetection {
         return count;
     }
 
-    //Gets powerShot of specified number.
+    // Gets powerShot of specified number.
     public Detection get(int i) {
         return powershots.get(i);
     }
 
+    // Get the left most powershot detection
     public Detection getLeftMost() {
         if (powershots.get(0).isValid()) {
             return powershots.get(0);
@@ -51,13 +52,13 @@ public class PowershotDetection {
         return powershots.get(0);
     }
 
-    //Sorts out the detected contours and sets `powerShots` accordingly.
+    // Sorts out the detected contours and sets `powershots` accordingly.
     public void setContours(List<MatOfPoint> contours) {
         //Sort detected contours by x values, presumably left to right.
         Collections.sort(contours, new Comparator<MatOfPoint>() {
             @Override
             public int compare(MatOfPoint a, MatOfPoint b) {
-                return (int) CVHelpers.getCenterOfContour(a).x - (int)CVHelpers.getCenterOfContour(b).x;
+                return (int) CVHelpers.getCenterOfContour(a).x - (int) CVHelpers.getCenterOfContour(b).x;
             }
         });
 
@@ -70,7 +71,7 @@ public class PowershotDetection {
         }
     }
 
-    //Draw all valid contours.
+    // Draw all valid contours.
     public void draw(Mat img, Scalar color) {
         for (Detection detection: powershots) {
             MatOfPoint contour = detection.getContour();

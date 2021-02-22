@@ -9,7 +9,7 @@ public class Robot {
     public Intake intake;
     public Shooter shooter;
     public Camera camera;
-    public IMU imu;
+    public Sensors sensors;
 
     // Constructor
     public Robot(HardwareMap hardwareMap) {
@@ -17,8 +17,8 @@ public class Robot {
         arm = new Arm(hardwareMap);
         intake = new Intake(hardwareMap);
         shooter = new Shooter(hardwareMap);
+        sensors = new Sensors(hardwareMap);
         camera = new Camera(hardwareMap);
-        imu = new IMU(hardwareMap);
     }
 
     // Get Telemetry for the robot
@@ -27,7 +27,7 @@ public class Robot {
                 arm.getTelemetry() + "\n" +
                 intake.getTelemetry() + "\n" +
                 shooter.getTelemetry() + "\n" +
-                camera.getTelemetry() + "\n" +
-                imu.getTelemetry();
+                sensors.getTelemetry() + "\n\n" +
+                camera.getTelemetry();
     }
 }

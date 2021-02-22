@@ -19,9 +19,9 @@ public class Constants {
     public static final Scalar WHITE = new Scalar(255, 255, 255);
 
     // CV Color Threshold Constants
-    public static final Scalar RED_LOWER_1 = new Scalar(0, 85, 40);
+    public static final Scalar RED_LOWER_1 = new Scalar(0, 40, 130);
     public static final Scalar RED_UPPER_1 = new Scalar(15, 255, 255);
-    public static final Scalar RED_LOWER_2 = new Scalar(165, 85, 90);
+    public static final Scalar RED_LOWER_2 = new Scalar(165, 40, 130);
     public static final Scalar RED_UPPER_2 = new Scalar(180, 255, 255);
     public static final Scalar BLUE_LOWER = new Scalar(75, 85, 100);
     public static final Scalar BLUE_UPPER = new Scalar(120, 255, 255);
@@ -45,10 +45,11 @@ public class Constants {
     public static final double MIN_STARTERSTACK_SINGLE_AREA = 0.15;
     public static final double MIN_STARTERSTACK_QUAD_AREA = 1.10;
     public static final double MIN_GOAL_AREA = 0.01;
-    public static final double MIN_POWERSHOT_AREA = 0.0005; // 320 240 // 0.001
+    public static final double MIN_POWERSHOT_AREA = 0.001; // 320 240 // 0.001
     public static final Rect STARTERSTACK_LOCATION = new Rect(75, 75, 140, 90);
+    // offset from the bottom left of the goal to the top right of the powershot box
     public static final Point POWERSHOT_OFFSET = new Point(-3, -20);
-    public static final Size POWERSHOT_DIMENSIONS = new Size(125, 50);
+    public static final Size POWERSHOT_DIMENSIONS = new Size(100, 50);
 
     // CV Invalid Detection Constants
     public static final Point INVALID_POINT = new Point(Double.MIN_VALUE, Double.MIN_VALUE);
@@ -90,6 +91,7 @@ public class Constants {
     public static final String STACK_WEBCAM = "Stack Webcam";
     public static final String TARGETING_WEBCAM = "Targeting Webcam";
     public static final String IMU_SENSOR = "imu";
+    public static final String COLOR_SENSOR = "color";
 
     // Enums for StarterStack, Motor, and Servo Positions
     public enum StarterStack {

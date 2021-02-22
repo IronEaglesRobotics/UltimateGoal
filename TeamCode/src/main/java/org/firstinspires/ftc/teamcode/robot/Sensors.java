@@ -1,25 +1,31 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.MathHelpers;
 
+import java.util.Arrays;
 import java.util.Locale;
 
+import static org.firstinspires.ftc.teamcode.Constants.COLOR_SENSOR;
 import static org.firstinspires.ftc.teamcode.Constants.IMU_SENSOR;
 
 // Class for the IMU Sensor on the Control Hub
-public class IMU {
-    private BNO055IMU imu;
-    private float baseGyroHeading;
-    private float initialGyroHeading;
+public class Sensors {
+    private final BNO055IMU imu;
+    private final RevColorSensorV3 colorSensor;
+    private final double initialGyroHeading;
+    private double baseGyroHeading;
 
     // Constructor
-    public IMU(HardwareMap hardwareMap) {
+    public Sensors(HardwareMap hardwareMap) {
+        // initialize imu
         this.imu = hardwareMap.get(BNO055IMU.class, IMU_SENSOR);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.mode                 = BNO055IMU.SensorMode.IMU;
@@ -30,6 +36,9 @@ public class IMU {
 
         resetGyroHeading();
         this.initialGyroHeading = baseGyroHeading;
+
+        // initialize color sensor
+        this.colorSensor = hardwareMap.get(RevColorSensorV3.class, COLOR_SENSOR);
     }
 
     // Reset the Gyro heading
@@ -43,17 +52,27 @@ public class IMU {
     }
 
     // Get the heading out of 360 degrees (0 is default, counterclockwise is increasing from 0 to 360, clockwise is decreasing from 359 to 0)
-    public float getGyroHeading360() {
-        float euler =  getGyroHeading180();
+    public double getGyroHeading360() {
+        double euler =  getGyroHeading180();
         return MathHelpers.piTo2Pi(euler);
     }
 
     // Get the heading out of 180 degrees (0 is default, counterclockwise is increasing from 0 to 180, clockwise is decreasing from to 0 to -180)
-    public float getGyroHeading180() {
+    public double getGyroHeading180() {
         return imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle - baseGyroHeading;
     }
 
+    // Get the reading from the color sensor
+    public double getColor() {
+        return colorSensor.getLightDetected();
+    }
+
+    public int[] getRGBA() {
+        return new int[] {colorSensor.red(), colorSensor.green(), colorSensor.blue(), colorSensor.alpha()};
+    }
+
+    // Get Telemetry for the current heading
     public String getTelemetry() {
-        return String.format(Locale.US, "Heading: %.4f", getGyroHeading360());
+        return String.format(Locale.US, "Heading: %.2f\nColor: %.2f %s", getGyroHeading360(), getColor(), Arrays.toString(getRGBA()));
     }
 }
