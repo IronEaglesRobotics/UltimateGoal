@@ -65,8 +65,8 @@ public class Constants {
     public static final double WHEEL_TURBO_SPEED = 1.0;
     public static final double ARM_SPEED = 0.25;
     public static final int ARM_DEFAULT_POS = 0;
-    public static final int ARM_DOWN_POS = -740; // -756
-    public static final int ARM_UP_POS = -221;
+    public static final int ARM_DOWN_POS = 740; // 756
+    public static final int ARM_UP_POS = 221;
     public static final double CLAW_MIN = 0.05;
     public static final double CLAW_MAX = 0.8;
     public static final double INTAKE_MAX_SPEED = 0.75;

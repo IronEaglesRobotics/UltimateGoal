@@ -7,7 +7,9 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.opencv.Detection;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
+import static org.firstinspires.ftc.teamcode.Constants.ARM_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_SPEED;
+import static org.firstinspires.ftc.teamcode.Constants.ARM_UP_POS;
 import static org.firstinspires.ftc.teamcode.Constants.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.Constants.INTAKE_MAX_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_SHOOTER_POWER;
@@ -40,11 +42,12 @@ public class Manual extends OpMode {
     private boolean autoaimGoal;
 
     private boolean armUpPressedPrev;
-    private boolean armDownPressedPrev;
     private boolean armUpPressed;
+    private boolean armDownPressedPrev;
     private boolean armDownPressed;
     private boolean armResetPressedPrev;
     private boolean armResetPressed;
+    private int armPosition;
     private double armManual;
     private boolean clawPressedPrev;
     private boolean clawPressed;
@@ -68,10 +71,10 @@ public class Manual extends OpMode {
         telemetry.addLine("Initializing Robot...");
         telemetry.update();
         robot = new Robot(hardwareMap);
+        robot.camera.initTargetingCamera();
         robot.arm.resetEncoder();
         robot.arm.setClaw(Constants.ServoPosition.OPEN);
         robot.shooter.setPusher(Constants.ServoPosition.OPEN);
-        robot.camera.initTargetingCamera();
     }
 
     // Wait for the first frame after the init button was pressed
@@ -163,12 +166,13 @@ public class Manual extends OpMode {
 
         // move arm up and down
         if (armUpPressed && !armUpPressedPrev) {
-            robot.arm.setArm(Constants.ArmPosition.UP);
+            armPosition = ARM_UP_POS;
         } else if (armDownPressed && !armDownPressedPrev) {
-            robot.arm.setArm(Constants.ArmPosition.DOWN);
+            armPosition = ARM_DOWN_POS;
         } else if (Math.abs(armManual) > 0.1) {
-            robot.arm.setArm(armManual * ARM_SPEED);
+            armPosition += armManual*20;
         }
+        robot.arm.setArm(armPosition);
         if (armResetPressed && !armResetPressedPrev) {
             robot.arm.resetEncoder();
         }

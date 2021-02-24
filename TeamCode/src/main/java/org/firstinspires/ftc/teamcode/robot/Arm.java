@@ -28,8 +28,8 @@ public class Arm {
         claw = hardwareMap.get(Servo.class, CLAW);
 
         // set the wobble arm to move forward with encoders and hold it's position when stopped
-        wobbler.setDirection(DcMotor.Direction.FORWARD);
-        wobbler.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        wobbler.setDirection(DcMotor.Direction.REVERSE);
+        wobbler.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         wobbler.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // set the range of the claw to the min the max
@@ -63,33 +63,26 @@ public class Arm {
             case DOWN:
                 wobbler.setTargetPosition(ARM_DOWN_POS);
         }
-        wobbler.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         wobbler.setPower(ARM_SPEED);
     }
 
-    public void setArm(double power) {
-        wobbler.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        wobbler.setPower(power);
+    public void setArm(int position) {
+        wobbler.setTargetPosition(position);
+        wobbler.setPower(ARM_SPEED);
     }
 
-    public Constants.ArmPosition getArm() {
-        if (ARM_DEFAULT_POS - 10 < wobbler.getCurrentPosition()) {
-            return Constants.ArmPosition.DEFAULT;
-        } else if (ARM_UP_POS - 10 < wobbler.getCurrentPosition() && wobbler.getCurrentPosition() < ARM_UP_POS + 10) {
-            return Constants.ArmPosition.UP;
-        } else if (ARM_DOWN_POS - 10 < wobbler.getCurrentPosition() && wobbler.getCurrentPosition() < ARM_DOWN_POS + 10) {
-            return Constants.ArmPosition.DOWN;
-        }
-        return Constants.ArmPosition.UNKNOWN;
+    public int getArm() {
+        return wobbler.getCurrentPosition();
     }
 
     // Reset arm encoder because the movement is based on the number of ticks from the starting position
     public void resetEncoder() {
         wobbler.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        wobbler.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     // Get Telemetry for the arm and claw
     public String getTelemetry() {
-        return String.format(Locale.US, "Arm: %.2f %s\nClaw: %s", wobbler.getPower(), getArm(), getClaw());
+        return String.format(Locale.US, "Arm: %.2f \nClaw: %s", wobbler.getPower(), getClaw());
     }
 }
