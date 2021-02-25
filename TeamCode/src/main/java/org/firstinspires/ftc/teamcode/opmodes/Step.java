@@ -7,38 +7,27 @@ public abstract class Step {
     private final double timeout;
     private String telemetry;
 
-    public boolean centeredZ;
-    public boolean centeredY;
-    public boolean movingY;
-
-    // step variables
-    public double ticks;
-    public double ticksTraveled;
-    public double ticksLeft;
-
-    // variables when turning
+    // variables when moving
     public double destinationHeading;
     public double currentHeading;
+    public double x;
+    public double y;
+    public double z;
     public double xErr;
     public double yErr;
     public double zErr;
     public double zRuntime;
     public double xRuntime;
     public double yRuntime;
-
-    // variables when moving
-    public double x;
-    public double y;
-    public double z;
     public double power;
 
     // variables when shooting
-    public int ringsToFire;
-    public boolean powershotsKnockedDown;
-    public int ringsFired;
-    public boolean firing;
     public Detection powershot;
     public Detection red;
+    public int ringsToFire;
+    public int ringsFired;
+    public boolean firing;
+    public boolean powershotsKnockedDown;
     public boolean aimedAtPowershots;
     public boolean aimedAtGoal;
     public boolean zig;
@@ -48,12 +37,6 @@ public abstract class Step {
     public double shooterSpeedUpTime;
 
     // Constructors
-    public Step() {
-        this.timeout = -1;
-    }
-    public Step(double timeout) {
-        this.timeout = timeout;
-    }
     public Step(String telemetry) {
         this.telemetry = telemetry;
         this.timeout = -1;

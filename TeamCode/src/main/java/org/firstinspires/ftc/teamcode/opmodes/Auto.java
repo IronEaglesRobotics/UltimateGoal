@@ -12,7 +12,6 @@ import java.util.Locale;
 import static org.firstinspires.ftc.teamcode.Constants.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.Constants.ArmPosition.DEFAULT;
 import static org.firstinspires.ftc.teamcode.Constants.ArmPosition.DOWN;
-import static org.firstinspires.ftc.teamcode.Constants.ArmPosition.UP;
 import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_SHOOTER_POWER;
 import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_POWER;
 import static org.firstinspires.ftc.teamcode.Constants.WHEEL_SPEED;
@@ -49,17 +48,18 @@ public class Auto extends LinearOpMode {
         resetStartTime();
 
         // switch from stack camera to targeting camera
-        robot.camera.stopStackCamera();
-        initializeSteps(stack);
-        while(robot.camera.getFrameCount() > 0) {
-            idle();
-        }
-        robot.camera.initTargetingCamera();
-        while(robot.camera.getFrameCount() < 1) {
-            idle();
-        }
+//        robot.camera.stopStackCamera();
+//        initializeSteps(stack);
+//        while(robot.camera.getFrameCount() > 0) {
+//            idle();
+//        }
+//        robot.camera.initTargetingCamera();
+//        while(robot.camera.getFrameCount() < 1) {
+//            idle();
+//        }
 
         // start up the first step
+        initializeSteps(stack);
         int stepNumber = 0;
         double stepTimeout;
         Step step = steps.get(stepNumber);
@@ -109,109 +109,99 @@ public class Auto extends LinearOpMode {
     private void initializeSteps(Constants.StarterStack stack) {
         steps = new ArrayList<>();
         // reset servos
+        addStopStackCamera();
+        addStartTargetingCamera();
         addClaw(0, Constants.ServoPosition.OPEN);
         addPusher(0, Constants.ServoPosition.OPEN);
         // move depending on the starter stack
         switch(stack) {
             case NONE:
-                // move to wobble goal square
+                // drop off the first wobble goal
                 addMovement(-4, -54, 1);
                 addIntake(1, 0.5);
                 addIntake(0, 0);
                 addMovement(0, 4, 1);
-                // release wobble goal and start up the shooter
-//                addArm(0, UP);
+                // shoot the powershots
                 addShooter(0, POWERSHOT_SHOOTER_POWER);
-                // turn and head to shoot powershots
                 addTurnAbsoluteFast(180);
                 addMovement(-52, 4, 1);
-                // shoot the powershots
                 addShootPowershots(10);
                 addShooter(0, 0);
-                // get in position to pick up second wobble goal
+                // pick up and drop off the second wobble goal
                 addTurnAbsolute(180);
                 addArm(0, DOWN);
-                addMoveToGoal();
-                // move back and pick up the second wobble goal
+                addMovementToGoal();
                 addMovement(0, -27, 1);
                 addClaw(0.4, Constants.ServoPosition.CLOSED);
                 addArm(0, Constants.ArmPosition.UP);
-                // drop off the second wobble goal while parking on the white line
                 addTurnAbsoluteFast(270);
                 addMovementWithArm(53, -9, 1);
-                // reset arm at the end
+                // reset arm and park on white line
                 addArm(0, DEFAULT);
                 addMovement(-2, 12, 0.5);
                 break;
             case SINGLE:
-                // move to wobble goal square
+                // drop off the first wobble goal
                 addMovement(18, -78, 1);
                 addIntake(1, 0.5);
                 addIntake(0, 0);
                 addMovement(0, 4, 1);
-                // release wobble goal and start up the shooter
+                // shoot the goal
                 addShooter(0, SHOOTER_POWER);
-                // turn and head to shoot powershots
                 addTurnAbsoluteFast(180);
                 addMovement(0, -17, 1);
                 addShootGoal(10, 3);
-                // get in position to pick up second wobble goal
+                // pick up and drop off the second wobble goal while firing the starter ring
                 addTurnAbsolute(180);
                 addArm(0, DOWN);
-                addMoveToGoal();
-                // move back and pick up the rings and second wobble goal
+                addMovementToGoal();
                 addIntake(0, 0.5);
                 addMovement(0, -30, 1);
                 addClaw(0.4, Constants.ServoPosition.CLOSED);
                 addArm(3, Constants.ArmPosition.UP);
-                // move up to shoot ring into goal
                 addMovement(0, 26, 1);
                 addShootGoal(5, 1);
                 addIntake(0, 0);
                 addShooter(0, 0);
-                // drop off second wobble goal
                 addTurnAbsoluteFast(0);
                 addMovementWithArm(10, -20, 1);
+                // reset arm and park on white line
                 addArm(3, Constants.ArmPosition.DEFAULT);
                 break;
             case QUAD:
-                // move to wobble goal squares
+                // drop off the first wobble goal
                 addMovement(-4, -98, 1);
                 addIntake(1, 0.5);
                 addIntake(0, 0);
                 addMovement(0, 4, 1);
-                // set down wobble goal
+                // shoot the goal
                 addShooter(0, SHOOTER_POWER);
-                // turn and head to shoot powershots
                 addTurnAbsoluteFast(180);
                 addMovement(-18, -41, 1);
                 addShootGoal(8, 3);
+                // fire the first starter ring
                 addTurnAbsolute(180);
-                // strafe to goal
                 addArm(0, DOWN);
-                addMoveToGoal();
-                // pick up and fire one ring
+                addMovementToGoal();
                 addMovement(0, -11, 1);
                 addIntake(0, 0.5);
                 addMovement(0, -2, 1);
                 addMovement(0, 15, 1);
                 addShootGoal(4, 1);
+                // pick up and drop off the second wobble goal while firing the remaining starter rings
                 addTurnAbsolute(180);
-                // pick up remaining rings and wobble goal
                 addMovement(0, -26, 0.1);
                 addClaw(0.4, Constants.ServoPosition.CLOSED);
                 addArm(3, Constants.ArmPosition.UP);
-                // move up to shoot rings into goal
                 addMovement(0, 27, 1);
                 addShootGoal(7, 3);
                 addIntake(0, 0);
                 addShooter(0, 0);
-                // drop off second wobble goal
                 addTurnAbsoluteFast(0);
                 addMovementWithArm(-16, -36, 1);
+                // reset arm and park on white line
                 addArm(0, Constants.ArmPosition.DEFAULT);
                 addMovement(16, 28, 1);
-                addDelay(5);
         }
         // stop the targeting camera
         addStopTargetingCamera();
@@ -265,6 +255,118 @@ public class Auto extends LinearOpMode {
             @Override
             public boolean isFinished() {
                 return !robot.drive.isBusy() || robot.drive.getTargetDistanceRemaining() < 15;
+            }
+        });
+    }
+    private void addMovementWithArm(final double xMovement, final double yMovement, final double speed) {
+        String status = "Moving ";
+        if (Math.abs(xMovement) > 0) {
+            status += xMovement > 0 ? xMovement + " right" : Math.abs(xMovement) + " left";
+            if (Math.abs(yMovement) > 0) {
+                status += " and ";
+            }
+        }
+        if (Math.abs(yMovement) > 0) {
+            status += yMovement > 0 ? yMovement + " forward" : Math.abs(yMovement) + " back";
+        }
+        steps.add(new Step(status) {
+            @Override
+            public void start() {
+                this.x = xMovement;
+                this.y = yMovement;
+                this.power = speed;
+                robot.drive.setTargetPositionRelative(x, y, power);
+            }
+            @Override
+            public void whileRunning() {
+                if (robot.drive.getTargetDistance() - robot.drive.getTargetDistanceRemaining() < 500 ||
+                        robot.drive.getTargetDistanceRemaining() < 1250) {
+                    robot.drive.setPower(0.5);
+                } else if (robot.drive.getTargetDistanceRemaining() > 500) {
+                    robot.drive.setPower(1);
+                }
+
+                if (robot.drive.getTargetDistanceRemaining() < 1750) {
+                    robot.arm.setArm(Constants.ArmPosition.DOWN);
+                }
+                if (robot.drive.getTargetDistanceRemaining() < 500) {
+                    robot.arm.setClaw(Constants.ServoPosition.OPEN);
+                }
+            }
+            @Override
+            public void end() {}
+            @Override
+            public boolean isFinished() {
+                return !robot.drive.isBusy() || robot.drive.getTargetDistanceRemaining() < 15;
+            }
+        });
+    }
+    private void addMovementToGoal() {
+        steps.add(new Step("Moving to Goal") {
+            @Override
+            public void start() {
+                robot.sensors.resetGyroHeadingToInitial();
+                destinationHeading = 180;
+                xRuntime = -1;
+                yRuntime = -1;
+                zRuntime = -1;
+            }
+            @Override
+            public void whileRunning() {
+                red = robot.camera.getRed();
+                // x movement
+                if (red.isValid()) {
+                    xErr = red.getCenter().x - 9.5;
+                    if (Math.abs(xErr) <= 0.5) {
+                        x = 0;
+                        if (xRuntime == -1) {
+                            xRuntime = currentRuntime;
+                        }
+                    } else {
+                        xRuntime = -1;
+                        x = Math.abs(xErr) > 12 ? Math.copySign(0.5, xErr) : Math.copySign(0.15, xErr);
+                    }
+                } else {
+                    x = 0;
+                }
+                // y movement
+                if (robot.sensors.getColor() < 0.9) {
+                    y = 0.3;
+                    yRuntime = -1;
+                } else {
+                    y = 0;
+                    if (yRuntime == -1) {
+                        yRuntime = currentRuntime;
+                    }
+                }
+                // z movement
+                currentHeading = robot.sensors.getGyroHeading360();
+                if (currentHeading > 180 && currentHeading > destinationHeading + 180) {
+                    zErr = 360 - currentHeading + destinationHeading;
+                } else {
+                    zErr = (destinationHeading - currentHeading + 180) % 360 - 180;
+                }
+                if (Math.abs(zErr) <= 1) {
+                    z = 0;
+                    if (zRuntime == -1) {
+                        zRuntime = currentRuntime;
+                    }
+                } else {
+                    zRuntime = -1;
+                    z = Math.copySign(Math.max(Math.abs(zErr / 180) * WHEEL_SPEED, 0.15), -zErr);
+                }
+                // actually move
+                robot.drive.setInput(x, y, z);
+            }
+            @Override
+            public void end() {
+                robot.drive.setInput(0, 0, 0);
+            }
+            @Override
+            public boolean isFinished() {
+                return currentRuntime > xRuntime + 1 && xRuntime != -1 &&
+                        currentRuntime > yRuntime + 1 && yRuntime != -1 &&
+                        currentRuntime > zRuntime + 1 && zRuntime != -1;
             }
         });
     }
@@ -600,6 +702,38 @@ public class Auto extends LinearOpMode {
             }
         });
     }
+    private void addStartStackCamera() {
+        steps.add(new Step("Starting Stack Camera") {
+            @Override
+            public void start() {
+                robot.camera.initStackCamera();
+            }
+            @Override
+            public void whileRunning() {}
+            @Override
+            public void end() {}
+            @Override
+            public boolean isFinished() {
+                return robot.camera.getFrameCount() >= 1;
+            }
+        });
+    }
+    private void addStopStackCamera() {
+        steps.add(new Step("Stopping Stack Camera") {
+            @Override
+            public void start() {
+                robot.camera.stopStackCamera();
+            }
+            @Override
+            public void whileRunning() {}
+            @Override
+            public void end() {}
+            @Override
+            public boolean isFinished() {
+                return robot.camera.getFrameCount() <= 0;
+            }
+        });
+    }
     private void addStartTargetingCamera() {
         steps.add(new Step("Starting Targeting Camera") {
             @Override
@@ -632,132 +766,4 @@ public class Auto extends LinearOpMode {
             }
         });
     }
-
-    // Functions to add specific steps
-    private void addMovementWithArm(final double xMovement, final double yMovement, final double speed) {
-        String status = "Moving ";
-        if (Math.abs(xMovement) > 0) {
-            status += xMovement > 0 ? xMovement + " right" : Math.abs(xMovement) + " left";
-            if (Math.abs(yMovement) > 0) {
-                status += " and ";
-            }
-        }
-        if (Math.abs(yMovement) > 0) {
-            status += yMovement > 0 ? yMovement + " forward" : Math.abs(yMovement) + " back";
-        }
-        steps.add(new Step(status) {
-            @Override
-            public void start() {
-                this.x = xMovement;
-                this.y = yMovement;
-                this.power = speed;
-                robot.drive.setTargetPositionRelative(x, y, power);
-            }
-            @Override
-            public void whileRunning() {
-                if (robot.drive.getTargetDistance() - robot.drive.getTargetDistanceRemaining() < 500 ||
-                        robot.drive.getTargetDistanceRemaining() < 1250) {
-                    robot.drive.setPower(0.5);
-                } else if (robot.drive.getTargetDistanceRemaining() > 500) {
-                    robot.drive.setPower(1);
-                }
-
-                if (robot.drive.getTargetDistanceRemaining() < 1750) {
-                    robot.arm.setArm(Constants.ArmPosition.DOWN);
-                }
-                if (robot.drive.getTargetDistanceRemaining() < 500) {
-                    robot.arm.setClaw(Constants.ServoPosition.OPEN);
-                }
-            }
-            @Override
-            public void end() {}
-            @Override
-            public boolean isFinished() {
-                return !robot.drive.isBusy() || robot.drive.getTargetDistanceRemaining() < 15;
-            }
-        });
-    }
-    private void addMoveToGoal() {
-        steps.add(new Step("Moving to Goal") {
-            @Override
-            public void start() {
-                robot.sensors.resetGyroHeadingToInitial();
-                destinationHeading = 180;
-                xRuntime = -1;
-                yRuntime = -1;
-                zRuntime = -1;
-                centeredZ = false;
-                centeredY = false;
-                movingY = false;
-            }
-            @Override
-            public void whileRunning() {
-                if (!centeredZ) {
-                    // z movement
-                    currentHeading = robot.sensors.getGyroHeading360();
-                    if (currentHeading > 180 && currentHeading > destinationHeading + 180) {
-                        zErr = 360 - currentHeading + destinationHeading;
-                    } else {
-                        zErr = (destinationHeading - currentHeading + 180) % 360 - 180;
-                    }
-                    if (Math.abs(zErr) <= 1) {
-                        z = 0;
-                        if (zRuntime == -1) {
-                            zRuntime = currentRuntime;
-                        }
-                    } else {
-                        zRuntime = -1;
-                        z = Math.copySign(Math.max(Math.abs(zErr / 180) * WHEEL_SPEED, 0.15), -zErr);
-                    }
-                    // set the motor speed
-                    robot.drive.setInput(x, y, z);
-                } else if (!centeredY) {
-                    if (robot.sensors.getColor() < 0.8) {
-                        y = 0.3;
-                        yRuntime = -1;
-                    } else {
-                        y = 0;
-                        if (yRuntime == -1) {
-                            yRuntime = currentRuntime;
-                        }
-                    }
-                    robot.drive.setInput(0, 0.3, 0);
-                } else if (movingY && !robot.drive.isBusy()) {
-                    movingY = false;
-                } else {
-                    red = robot.camera.getRed();
-                    if (red.isValid()) {
-                        xErr = red.getCenter().x - 9.5;
-                        if (Math.abs(xErr) <= 0.5) {
-                            x = 0;
-                            if (xRuntime == -1) {
-                                xRuntime = currentRuntime;
-                            }
-                        } else {
-                            xRuntime = -1;
-//                        x = Math.copySign(Math.max(Math.abs(xErr / 50) * WHEEL_SPEED, 0.15), xErr);
-                            x = Math.abs(xErr) > 12 ? Math.copySign(0.5, xErr) : Math.copySign(0.15, xErr);
-                        }
-                    }
-                }
-
-                if (!centeredZ &&  currentRuntime > zRuntime + 1) {
-                    centeredZ = true;
-                }
-                if (!centeredY &&  currentRuntime > yRuntime + 1) {
-                    centeredY = true;
-                    movingY = true;
-                    robot.drive.setTargetPositionRelative(0, -3, 0.5);
-                }
-            }
-            @Override
-            public void end() {
-                robot.drive.setInput(0, 0, 0);
-            }
-            @Override
-            public boolean isFinished() {
-                return currentRuntime > xRuntime + 1 && xRuntime != -1;
-            }
-        });
-    };
 }
