@@ -7,6 +7,10 @@ public abstract class Step {
     private final double timeout;
     private String telemetry;
 
+    public boolean centeredZ;
+    public boolean centeredY;
+    public boolean movingY;
+
     // step variables
     public double ticks;
     public double ticksTraveled;

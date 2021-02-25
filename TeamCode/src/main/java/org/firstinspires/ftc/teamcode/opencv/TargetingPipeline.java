@@ -26,6 +26,10 @@ import static org.firstinspires.ftc.teamcode.Constants.MIN_GOAL_AREA;
 import static org.firstinspires.ftc.teamcode.Constants.MIN_POWERSHOT_AREA;
 import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_DIMENSIONS;
 import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_OFFSET;
+import static org.firstinspires.ftc.teamcode.Constants.P_RED_LOWER_1;
+import static org.firstinspires.ftc.teamcode.Constants.P_RED_LOWER_2;
+import static org.firstinspires.ftc.teamcode.Constants.P_RED_UPPER_1;
+import static org.firstinspires.ftc.teamcode.Constants.P_RED_UPPER_2;
 import static org.firstinspires.ftc.teamcode.Constants.RED;
 import static org.firstinspires.ftc.teamcode.Constants.RED_LOWER_1;
 import static org.firstinspires.ftc.teamcode.Constants.RED_LOWER_2;
@@ -80,7 +84,7 @@ public class TargetingPipeline extends OpenCvPipeline {
 
         // set the largest detection that was found to be the Red Goal detection
         ArrayList<MatOfPoint> contours = new ArrayList<>();
-        Imgproc.findContours(redMask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgproc.findContours(redMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
         red.setContour(getLargestContour(contours));
 
         // draw the Red Goal detection
@@ -96,7 +100,7 @@ public class TargetingPipeline extends OpenCvPipeline {
 
         // set the largest detection that was found to be the Red Goal detection
         ArrayList<MatOfPoint> contours = new ArrayList<>();
-        Imgproc.findContours(blueMask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgproc.findContours(blueMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
         blue.setContour(getLargestContour(contours));
 
         // draw the Blue Goal detection
@@ -127,12 +131,13 @@ public class TargetingPipeline extends OpenCvPipeline {
         Mat powershotMask = new Mat(hsv.size(), CvType.CV_8U);
         Imgproc.rectangle(powershotMask, powershotRect, WHITE, -1);
         Core.bitwise_and(redMask, powershotMask, powershotMask);
+//        return input;
         // erode it as slightly as possible, for some reason the bitwise_and leaves some pixels left outside of the box
 //        Imgproc.erode(powershotMask, powershotMask, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3)), new Point(1.5f, 1.5f));
 
         // set the largest detection that was found to be the Powershots
         ArrayList<MatOfPoint> contours = new ArrayList<>();
-        Imgproc.findContours(powershotMask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgproc.findContours(powershotMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
         powershots.setContours(getLargestContours(contours, 3));
 
         // draw the Powershot detection as well as where was looked for it on the screen

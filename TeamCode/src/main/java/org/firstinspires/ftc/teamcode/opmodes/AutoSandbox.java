@@ -324,39 +324,6 @@ public class AutoSandbox extends LinearOpMode {
             }
         });
     }
-    private void addArm(double timeout, final double power) {
-        steps.add(new Step("Setting arm power to " + power, timeout) {
-            @Override
-            public void start() {
-                robot.arm.setArm(power);
-            }
-            @Override
-            public void whileRunning() {}
-            @Override
-            public void end() {}
-            @Override
-            public boolean isFinished() {
-                return false;
-            }
-        });
-    }
-    private void addResetArm() {
-        steps.add(new Step("Resetting arm to default position") {
-            @Override
-            public void start() {
-                robot.arm.setArm(0);
-                robot.arm.resetEncoder();
-            }
-            @Override
-            public void whileRunning() {}
-            @Override
-            public void end() {}
-            @Override
-            public boolean isFinished() {
-                return true;
-            }
-        });
-    }
     private void addClaw(double timeout, final Constants.ServoPosition position) {
         steps.add(new Step("Moving claw " + position, timeout) {
             @Override

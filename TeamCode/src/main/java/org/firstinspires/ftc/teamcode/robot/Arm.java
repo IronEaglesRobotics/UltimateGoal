@@ -29,6 +29,7 @@ public class Arm {
 
         // set the wobble arm to move forward with encoders and hold it's position when stopped
         wobbler.setDirection(DcMotor.Direction.REVERSE);
+        wobbler.setTargetPosition(0);
         wobbler.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         wobbler.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
