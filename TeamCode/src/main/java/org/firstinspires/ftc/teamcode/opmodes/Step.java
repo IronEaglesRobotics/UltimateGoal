@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.opencv.Detection;
 
 // Class for every step that the autonomous program will take
@@ -20,6 +21,7 @@ public abstract class Step {
     public double xRuntime;
     public double yRuntime;
     public double power;
+    public boolean centeredLeftRight;
 
     // variables when shooting
     public Detection powershot;

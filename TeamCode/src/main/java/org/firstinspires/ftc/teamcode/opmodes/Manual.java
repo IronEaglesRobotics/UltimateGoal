@@ -73,7 +73,6 @@ public class Manual extends OpMode {
         robot = new Robot(hardwareMap);
         robot.camera.initTargetingCamera();
         robot.arm.resetEncoder();
-        robot.arm.setClaw(Constants.ServoPosition.OPEN);
         robot.shooter.setPusher(Constants.ServoPosition.OPEN);
     }
 

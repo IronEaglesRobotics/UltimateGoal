@@ -6,12 +6,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
+import java.nio.file.OpenOption;
 import java.util.ArrayList;
 import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.Constants.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.Constants.ArmPosition.DEFAULT;
 import static org.firstinspires.ftc.teamcode.Constants.ArmPosition.DOWN;
+import static org.firstinspires.ftc.teamcode.Constants.ArmPosition.UP;
 import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_SHOOTER_POWER;
 import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_POWER;
 import static org.firstinspires.ftc.teamcode.Constants.WHEEL_SPEED;
@@ -48,15 +50,15 @@ public class Auto extends LinearOpMode {
         resetStartTime();
 
         // switch from stack camera to targeting camera
-//        robot.camera.stopStackCamera();
-//        initializeSteps(stack);
-//        while(robot.camera.getFrameCount() > 0) {
-//            idle();
-//        }
-//        robot.camera.initTargetingCamera();
-//        while(robot.camera.getFrameCount() < 1) {
-//            idle();
-//        }
+        robot.camera.stopStackCamera();
+        initializeSteps(stack);
+        while(robot.camera.getFrameCount() > 0) {
+            idle();
+        }
+        robot.camera.initTargetingCamera();
+        while(robot.camera.getFrameCount() < 1) {
+            idle();
+        }
 
         // start up the first step
         initializeSteps(stack);
@@ -109,68 +111,68 @@ public class Auto extends LinearOpMode {
     private void initializeSteps(Constants.StarterStack stack) {
         steps = new ArrayList<>();
         // reset servos
-        addStopStackCamera();
-        addStartTargetingCamera();
-        addClaw(0, Constants.ServoPosition.OPEN);
         addPusher(0, Constants.ServoPosition.OPEN);
         // move depending on the starter stack
         switch(stack) {
             case NONE:
                 // drop off the first wobble goal
-                addMovement(-4, -54, 1);
+                addMovementWithArm(-5, -56, 1, UP);
                 addIntake(1, 0.5);
                 addIntake(0, 0);
                 addMovement(0, 4, 1);
                 // shoot the powershots
                 addShooter(0, POWERSHOT_SHOOTER_POWER);
                 addTurnAbsoluteFast(180);
-                addMovement(-52, 4, 1);
+                addMovement(-51, 0, 1);
                 addShootPowershots(10);
                 addShooter(0, 0);
                 // pick up and drop off the second wobble goal
                 addTurnAbsolute(180);
                 addArm(0, DOWN);
                 addMovementToGoal();
-                addMovement(0, -27, 1);
-                addClaw(0.4, Constants.ServoPosition.CLOSED);
-                addArm(0, Constants.ArmPosition.UP);
+                addMovement(0, -31, 1);
+                addClaw(0.7, Constants.ServoPosition.CLOSED);
                 addTurnAbsoluteFast(270);
-                addMovementWithArm(53, -9, 1);
+                addMovement(55, -9, 1);
+                addClaw(0.3, Constants.ServoPosition.OPEN);
                 // reset arm and park on white line
-                addArm(0, DEFAULT);
-                addMovement(-2, 12, 0.5);
+                addMovement(-6, 12, 0.5);
+                addClaw(0.3, Constants.ServoPosition.CLOSED);
+                addArm(2, DEFAULT);
                 break;
             case SINGLE:
                 // drop off the first wobble goal
-                addMovement(18, -78, 1);
+                addMovementWithArm(18, -78, 1, UP);
                 addIntake(1, 0.5);
                 addIntake(0, 0);
                 addMovement(0, 4, 1);
                 // shoot the goal
                 addShooter(0, SHOOTER_POWER);
                 addTurnAbsoluteFast(180);
-                addMovement(0, -17, 1);
+                addMovement(0, -20, 1);
                 addShootGoal(10, 3);
                 // pick up and drop off the second wobble goal while firing the starter ring
                 addTurnAbsolute(180);
                 addArm(0, DOWN);
                 addMovementToGoal();
                 addIntake(0, 0.5);
-                addMovement(0, -30, 1);
-                addClaw(0.4, Constants.ServoPosition.CLOSED);
-                addArm(3, Constants.ArmPosition.UP);
+                addMovement(0, -31, 1);
+                addClaw(0.7, Constants.ServoPosition.CLOSED);
                 addMovement(0, 26, 1);
                 addShootGoal(5, 1);
                 addIntake(0, 0);
                 addShooter(0, 0);
                 addTurnAbsoluteFast(0);
-                addMovementWithArm(10, -20, 1);
+                addMovement(10, -18, 1);
+                addClaw(0.3, Constants.ServoPosition.OPEN);
                 // reset arm and park on white line
-                addArm(3, Constants.ArmPosition.DEFAULT);
+                addArm(2, UP);
+                addClaw(0.3, Constants.ServoPosition.CLOSED);
+                addArm(1, DEFAULT);
                 break;
             case QUAD:
                 // drop off the first wobble goal
-                addMovement(-4, -98, 1);
+                addMovementWithArm(-4, -98, 1, UP);
                 addIntake(1, 0.5);
                 addIntake(0, 0);
                 addMovement(0, 4, 1);
@@ -192,16 +194,17 @@ public class Auto extends LinearOpMode {
                 addTurnAbsolute(180);
                 addMovement(0, -26, 0.1);
                 addClaw(0.4, Constants.ServoPosition.CLOSED);
-                addArm(3, Constants.ArmPosition.UP);
                 addMovement(0, 27, 1);
                 addShootGoal(7, 3);
                 addIntake(0, 0);
                 addShooter(0, 0);
                 addTurnAbsoluteFast(0);
-                addMovementWithArm(-16, -36, 1);
+                addMovement(-16, -36, 1);
                 // reset arm and park on white line
-                addArm(0, Constants.ArmPosition.DEFAULT);
+                addClaw(0.3, Constants.ServoPosition.OPEN);
                 addMovement(16, 28, 1);
+                addClaw(0.3, Constants.ServoPosition.CLOSED);
+                addArm(2, DEFAULT);
         }
         // stop the targeting camera
         addStopTargetingCamera();
@@ -258,7 +261,7 @@ public class Auto extends LinearOpMode {
             }
         });
     }
-    private void addMovementWithArm(final double xMovement, final double yMovement, final double speed) {
+    private void addMovementWithArm(final double xMovement, final double yMovement, final double speed, final Constants.ArmPosition position) {
         String status = "Moving ";
         if (Math.abs(xMovement) > 0) {
             status += xMovement > 0 ? xMovement + " right" : Math.abs(xMovement) + " left";
@@ -287,7 +290,7 @@ public class Auto extends LinearOpMode {
                 }
 
                 if (robot.drive.getTargetDistanceRemaining() < 1750) {
-                    robot.arm.setArm(Constants.ArmPosition.DOWN);
+                    robot.arm.setArm(position);
                 }
                 if (robot.drive.getTargetDistanceRemaining() < 500) {
                     robot.arm.setClaw(Constants.ServoPosition.OPEN);
@@ -310,18 +313,20 @@ public class Auto extends LinearOpMode {
                 xRuntime = -1;
                 yRuntime = -1;
                 zRuntime = -1;
+                centeredLeftRight = true;
             }
             @Override
             public void whileRunning() {
                 red = robot.camera.getRed();
                 // x movement
                 if (red.isValid()) {
-                    xErr = red.getCenter().x - 9.5;
-                    if (Math.abs(xErr) <= 0.5) {
+                    xErr = red.getCenter().x - 12;//10.5
+                    if (Math.abs(xErr) <= 1) {
                         x = 0;
                         if (xRuntime == -1) {
                             xRuntime = currentRuntime;
                         }
+                        centeredLeftRight = true;
                     } else {
                         xRuntime = -1;
                         x = Math.abs(xErr) > 12 ? Math.copySign(0.5, xErr) : Math.copySign(0.15, xErr);
@@ -330,13 +335,15 @@ public class Auto extends LinearOpMode {
                     x = 0;
                 }
                 // y movement
-                if (robot.sensors.getColor() < 0.9) {
-                    y = 0.3;
-                    yRuntime = -1;
-                } else {
-                    y = 0;
-                    if (yRuntime == -1) {
-                        yRuntime = currentRuntime;
+                if (centeredLeftRight) {
+                    if (robot.sensors.getColor() < 0.9) {
+                        y = 0.1;
+                        yRuntime = -1;
+                    } else {
+                        y = 0;
+                        if (yRuntime == -1) {
+                            yRuntime = currentRuntime;
+                        }
                     }
                 }
                 // z movement
@@ -699,38 +706,6 @@ public class Auto extends LinearOpMode {
             @Override
             public boolean isFinished() {
                 return ringsFired >= ringsToFire;
-            }
-        });
-    }
-    private void addStartStackCamera() {
-        steps.add(new Step("Starting Stack Camera") {
-            @Override
-            public void start() {
-                robot.camera.initStackCamera();
-            }
-            @Override
-            public void whileRunning() {}
-            @Override
-            public void end() {}
-            @Override
-            public boolean isFinished() {
-                return robot.camera.getFrameCount() >= 1;
-            }
-        });
-    }
-    private void addStopStackCamera() {
-        steps.add(new Step("Stopping Stack Camera") {
-            @Override
-            public void start() {
-                robot.camera.stopStackCamera();
-            }
-            @Override
-            public void whileRunning() {}
-            @Override
-            public void end() {}
-            @Override
-            public boolean isFinished() {
-                return robot.camera.getFrameCount() <= 0;
             }
         });
     }
