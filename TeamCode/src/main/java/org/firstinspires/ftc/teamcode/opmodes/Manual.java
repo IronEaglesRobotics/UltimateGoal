@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.opencv.Detection;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
+import static org.firstinspires.ftc.teamcode.Constants.ARM_DEFAULT_POS;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_UP_POS;
@@ -41,6 +42,8 @@ public class Manual extends OpMode {
     private boolean autoaimPowershots;
     private boolean autoaimGoal;
 
+    private boolean armDefaultPressedPrev;
+    private boolean armDefaultPressed;
     private boolean armUpPressedPrev;
     private boolean armUpPressed;
     private boolean armDownPressedPrev;
@@ -74,6 +77,7 @@ public class Manual extends OpMode {
         robot.camera.initTargetingCamera();
         robot.arm.resetEncoder();
         robot.shooter.setPusher(Constants.ServoPosition.OPEN);
+        robot.arm.setClaw(Constants.ServoPosition.CLOSED);
     }
 
     // Wait for the first frame after the init button was pressed
@@ -101,6 +105,7 @@ public class Manual extends OpMode {
         slow = gamepad1.right_trigger;
 
         // update gamepad presses for driver 2
+        armDefaultPressed = gamepad2.dpad_right;
         armUpPressed = gamepad2.dpad_up;
         armDownPressed = gamepad2.dpad_down;
         armResetPressed = gamepad2.dpad_left;
@@ -164,12 +169,14 @@ public class Manual extends OpMode {
         robot.drive.setInput(x, y, z);
 
         // move arm up and down
-        if (armUpPressed && !armUpPressedPrev) {
+        if (armDefaultPressed && !armDefaultPressedPrev) {
+            armPosition = ARM_DEFAULT_POS;
+        } else if (armUpPressed && !armUpPressedPrev) {
             armPosition = ARM_UP_POS;
         } else if (armDownPressed && !armDownPressedPrev) {
             armPosition = ARM_DOWN_POS;
         } else if (Math.abs(armManual) > 0.1) {
-            armPosition += armManual*20;
+            armPosition -= armManual*20;
         }
         robot.arm.setArm(armPosition);
         if (armResetPressed && !armResetPressedPrev) {
@@ -222,6 +229,7 @@ public class Manual extends OpMode {
         // ------------------------------------------------------------ //
 
         // update previous state variables
+        armDefaultPressedPrev = armDefaultPressed;
         armUpPressedPrev = armUpPressed;
         armDownPressedPrev = armDownPressed;
         armResetPressedPrev = armResetPressed;

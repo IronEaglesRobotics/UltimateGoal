@@ -10,6 +10,8 @@ import java.nio.file.OpenOption;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static org.firstinspires.ftc.teamcode.Constants.ARM_ALMOST_DOWN_POS;
+import static org.firstinspires.ftc.teamcode.Constants.ARM_DEFAULT_POS;
 import static org.firstinspires.ftc.teamcode.Constants.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.Constants.ArmPosition.DEFAULT;
 import static org.firstinspires.ftc.teamcode.Constants.ArmPosition.DOWN;
@@ -116,7 +118,7 @@ public class Auto extends LinearOpMode {
         switch(stack) {
             case NONE:
                 // drop off the first wobble goal
-                addMovementWithArm(-5, -56, 1, UP);
+                addMovementWithArm(-2, -56, 1, UP);
                 addIntake(1, 0.5);
                 addIntake(0, 0);
                 addMovement(0, 4, 1);
@@ -124,21 +126,22 @@ public class Auto extends LinearOpMode {
                 addShooter(0, POWERSHOT_SHOOTER_POWER);
                 addTurnAbsoluteFast(180);
                 addMovement(-51, 0, 1);
-                addShootPowershots(10);
+                addShootPowershots(8);
                 addShooter(0, 0);
                 // pick up and drop off the second wobble goal
                 addTurnAbsolute(180);
                 addArm(0, DOWN);
                 addMovementToGoal();
-                addMovement(0, -31, 1);
-                addClaw(0.7, Constants.ServoPosition.CLOSED);
+                addMovement(0, -32, 1);
+                addClaw(1, Constants.ServoPosition.CLOSED);
+                addArm(0.3, ARM_ALMOST_DOWN_POS);
                 addTurnAbsoluteFast(270);
-                addMovement(55, -9, 1);
+                addMovement(52, -7, 1);
                 addClaw(0.3, Constants.ServoPosition.OPEN);
                 // reset arm and park on white line
-                addMovement(-6, 12, 0.5);
-                addClaw(0.3, Constants.ServoPosition.CLOSED);
-                addArm(2, DEFAULT);
+                addMovementWithReset(-6, 12, 0.5);
+//                addClaw(0.3, Constants.ServoPosition.CLOSED);
+//                addArm(2, DEFAULT);
                 break;
             case SINGLE:
                 // drop off the first wobble goal
@@ -149,62 +152,57 @@ public class Auto extends LinearOpMode {
                 // shoot the goal
                 addShooter(0, SHOOTER_POWER);
                 addTurnAbsoluteFast(180);
-                addMovement(0, -20, 1);
-                addShootGoal(10, 3);
+                addMovement(-3, -20, 1);
+                addShootGoal(8, 3);
                 // pick up and drop off the second wobble goal while firing the starter ring
                 addTurnAbsolute(180);
                 addArm(0, DOWN);
                 addMovementToGoal();
                 addIntake(0, 0.5);
-                addMovement(0, -31, 1);
-                addClaw(0.7, Constants.ServoPosition.CLOSED);
+                addMovement(0, -32, 1);
+                addClaw(1, Constants.ServoPosition.CLOSED);
+                addArm(0.3, ARM_ALMOST_DOWN_POS);
                 addMovement(0, 26, 1);
                 addShootGoal(5, 1);
                 addIntake(0, 0);
                 addShooter(0, 0);
                 addTurnAbsoluteFast(0);
-                addMovement(10, -18, 1);
+                addMovement(6, -14, 1);
                 addClaw(0.3, Constants.ServoPosition.OPEN);
                 // reset arm and park on white line
-                addArm(2, UP);
-                addClaw(0.3, Constants.ServoPosition.CLOSED);
-                addArm(1, DEFAULT);
+                addArm(1, UP);
+                addClaw(0, Constants.ServoPosition.CLOSED);
+                addArm(1.5, DEFAULT);
                 break;
             case QUAD:
                 // drop off the first wobble goal
-                addMovementWithArm(-4, -98, 1, UP);
+                addMovementWithArm(-2, -99, 1, UP);
                 addIntake(1, 0.5);
                 addIntake(0, 0);
                 addMovement(0, 4, 1);
                 // shoot the goal
                 addShooter(0, SHOOTER_POWER);
                 addTurnAbsoluteFast(180);
-                addMovement(-18, -41, 1);
+                addMovement(-18, -42, 1);
                 addShootGoal(8, 3);
+                addShooter(0, 0);
                 // fire the first starter ring
                 addTurnAbsolute(180);
                 addArm(0, DOWN);
                 addMovementToGoal();
-                addMovement(0, -11, 1);
-                addIntake(0, 0.5);
-                addMovement(0, -2, 1);
-                addMovement(0, 15, 1);
-                addShootGoal(4, 1);
-                // pick up and drop off the second wobble goal while firing the remaining starter rings
-                addTurnAbsolute(180);
-                addMovement(0, -26, 0.1);
-                addClaw(0.4, Constants.ServoPosition.CLOSED);
-                addMovement(0, 27, 1);
-                addShootGoal(7, 3);
+                addIntake(0, -0.5);
+                addMovement(0, -32, 1);
                 addIntake(0, 0);
-                addShooter(0, 0);
+                // pick up and drop off the second wobble goal while firing the remaining starter rings
+                addClaw(1, Constants.ServoPosition.CLOSED);
+                addArm(0.3, ARM_ALMOST_DOWN_POS);
                 addTurnAbsoluteFast(0);
-                addMovement(-16, -36, 1);
-                // reset arm and park on white line
+                addMovement(-21, -63, 1);
                 addClaw(0.3, Constants.ServoPosition.OPEN);
-                addMovement(16, 28, 1);
-                addClaw(0.3, Constants.ServoPosition.CLOSED);
-                addArm(2, DEFAULT);
+                // reset arm and park on white line
+                addMovementWithReset(20, 24, 1);
+//                addClaw(0.3, Constants.ServoPosition.CLOSED);
+//                addArm(2, DEFAULT);
         }
         // stop the targeting camera
         addStopTargetingCamera();
@@ -304,6 +302,49 @@ public class Auto extends LinearOpMode {
             }
         });
     }
+    private void addMovementWithReset(final double xMovement, final double yMovement, final double speed) {
+        String status = "Moving ";
+        if (Math.abs(xMovement) > 0) {
+            status += xMovement > 0 ? xMovement + " right" : Math.abs(xMovement) + " left";
+            if (Math.abs(yMovement) > 0) {
+                status += " and ";
+            }
+        }
+        if (Math.abs(yMovement) > 0) {
+            status += yMovement > 0 ? yMovement + " forward" : Math.abs(yMovement) + " back";
+        }
+        steps.add(new Step(status) {
+            @Override
+            public void start() {
+                this.x = xMovement;
+                this.y = yMovement;
+                this.power = speed;
+                robot.drive.setTargetPositionRelative(x, y, power);
+            }
+            @Override
+            public void whileRunning() {
+                if (robot.drive.getTargetDistance() - robot.drive.getTargetDistanceRemaining() < 500 ||
+                        robot.drive.getTargetDistanceRemaining() < 1250) {
+                    robot.drive.setPower(0.5);
+                } else if (robot.drive.getTargetDistanceRemaining() > 500) {
+                    robot.drive.setPower(1);
+                }
+
+                if (robot.drive.getTargetDistance() - robot.drive.getTargetDistanceRemaining() > 500) {
+                    robot.arm.setClaw(Constants.ServoPosition.CLOSED);
+                }
+                if (robot.drive.getTargetDistanceRemaining() < 1750) {
+                    robot.arm.setArm(ARM_DEFAULT_POS);
+                }
+            }
+            @Override
+            public void end() {}
+            @Override
+            public boolean isFinished() {
+                return !robot.drive.isBusy() || robot.drive.getTargetDistanceRemaining() < 15;
+            }
+        });
+    }
     private void addMovementToGoal() {
         steps.add(new Step("Moving to Goal") {
             @Override
@@ -320,8 +361,8 @@ public class Auto extends LinearOpMode {
                 red = robot.camera.getRed();
                 // x movement
                 if (red.isValid()) {
-                    xErr = red.getCenter().x - 12;//10.5
-                    if (Math.abs(xErr) <= 1) {
+                    xErr = red.getCenter().x - 5;//10.5
+                    if (Math.abs(xErr) <= 0.5) {
                         x = 0;
                         if (xRuntime == -1) {
                             xRuntime = currentRuntime;
@@ -329,16 +370,16 @@ public class Auto extends LinearOpMode {
                         centeredLeftRight = true;
                     } else {
                         xRuntime = -1;
-                        x = Math.abs(xErr) > 12 ? Math.copySign(0.5, xErr) : Math.copySign(0.15, xErr);
+                        x = Math.abs(xErr) > 12 ? Math.copySign(0.5, xErr) : Math.copySign(0.075, xErr);
                     }
                 } else {
                     x = 0;
                 }
                 // y movement
                 if (centeredLeftRight) {
-                    if (robot.sensors.getColor() < 0.9) {
+                    if (robot.sensors.getColor() < 0.9 && yRuntime == -1) {
                         y = 0.1;
-                        yRuntime = -1;
+//                        yRuntime = -1;
                     } else {
                         y = 0;
                         if (yRuntime == -1) {
@@ -360,7 +401,7 @@ public class Auto extends LinearOpMode {
                     }
                 } else {
                     zRuntime = -1;
-                    z = Math.copySign(Math.max(Math.abs(zErr / 180) * WHEEL_SPEED, 0.15), -zErr);
+                    z = Math.copySign(Math.max(Math.abs(zErr / 180) * WHEEL_SPEED, 0.1), -zErr);
                 }
                 // actually move
                 robot.drive.setInput(x, y, z);
@@ -371,9 +412,9 @@ public class Auto extends LinearOpMode {
             }
             @Override
             public boolean isFinished() {
-                return currentRuntime > xRuntime + 1 && xRuntime != -1 &&
-                        currentRuntime > yRuntime + 1 && yRuntime != -1 &&
-                        currentRuntime > zRuntime + 1 && zRuntime != -1;
+                return currentRuntime > xRuntime + 0.5 && xRuntime != -1 &&
+                        currentRuntime > yRuntime + 0.5 && yRuntime != -1 &&
+                        currentRuntime > zRuntime + 0.5 && zRuntime != -1;
             }
         });
     }
@@ -463,7 +504,67 @@ public class Auto extends LinearOpMode {
             }
         });
     }
+    private void addTurnWithWobbleGoal() {
+        steps.add(new Step("Turning 180 degrees with the wobble goal") {
+            @Override
+            public void start() {
+                robot.sensors.resetGyroHeadingToInitial();
+                destinationHeading = 180;
+                zRuntime = -1;
+                robot.drive.setInput(0, 0, 0.5);
+            }
+            @Override
+            public void whileRunning() {
+                currentHeading = robot.sensors.getGyroHeading360();
+                // determine the error (special case because the heading resets to 0 instead of 360)
+                // the logic works, but in the future making it clearer and more efficient would be nice
+                if (currentHeading > 180 && currentHeading > destinationHeading + 180) {
+                    zErr = 360 - currentHeading + destinationHeading;
+                } else {
+                    zErr = (destinationHeading - currentHeading + 180) % 360 - 180;
+                }
+
+                // determine whether to turn or not
+                if (Math.abs(zErr) <= 3) {
+                    z = 0;
+                    if (zRuntime == -1) {
+                        zRuntime = currentRuntime;
+                    }
+                } else {
+                    zRuntime = -1;
+                    // set the speed proportionally to the error the robot is off by, with a minimum speed of 0.15
+                    z = Math.copySign(Math.abs(zErr) > 45 ? 0.7 : 0.15, -zErr);
+                }
+                robot.drive.setInput(0, 0, z);
+            }
+            @Override
+            public void end() {
+                robot.drive.setInput(0, 0, 0);
+            }
+            @Override
+            public boolean isFinished() {
+                // if the robot is within a degree of the target position for more than 1 second
+                return z == 0;
+            }
+        });
+    }
     private void addArm(double timeout, final Constants.ArmPosition position) {
+        steps.add(new Step("Moving arm " + position, timeout) {
+            @Override
+            public void start() {
+                robot.arm.setArm(position);
+            }
+            @Override
+            public void whileRunning() {}
+            @Override
+            public void end() {}
+            @Override
+            public boolean isFinished() {
+                return !robot.arm.isBusy(); // this essentially is always returning false I think...
+            }
+        });
+    }
+    private void addArm(double timeout, final int position) {
         steps.add(new Step("Moving arm " + position, timeout) {
             @Override
             public void start() {
@@ -551,7 +652,6 @@ public class Auto extends LinearOpMode {
                 powershotsKnockedDown = false;
                 ringsFired = 0;
                 z = 0;
-//                zRuntime = -1;
                 aimedAtPowershots = false;
                 aimedAtGoal = false;
                 firing = false;
@@ -567,15 +667,11 @@ public class Auto extends LinearOpMode {
                                 double zMaxSpeed = 0.7;
                                 double zErr = Math.abs(px);
                                 double zSpeed = (zErr / 50) * zMaxSpeed;
-                                if (zErr <= 0.5) {
+                                if (zErr <= 0.3) {
                                     z = 0;
-//                                    if (zRuntime == -1) {
-//                                        zRuntime = currentRuntime;
-//                                    }
                                     aimedAtPowershots = true;
                                 } else {
-                                    z = Math.copySign(zSpeed, px);
-//                                    zRuntime = -1;
+                                    z = Math.copySign(Math.max(Math.abs(zSpeed), 0.05), px);
                                     aimedAtPowershots = false;
                                 }
                             }
@@ -668,11 +764,11 @@ public class Auto extends LinearOpMode {
                             double zMaxSpeed = 0.7;
                             double zErr = Math.abs(px);
                             double zSpeed = (zErr / 50) * zMaxSpeed;
-                            if (zErr <= 1) {
+                            if (zErr <= 0.75) {
                                 z = 0;
                                 aimedAtGoal = true;
                             } else {
-                                z = Math.copySign(zSpeed, px);
+                                z = Math.copySign(Math.max(Math.abs(zSpeed), 0.05), px);
                                 aimedAtGoal = false;
                             }
                         }
@@ -690,12 +786,12 @@ public class Auto extends LinearOpMode {
                     aimedAtGoal = false;
                 }
                 if (firing) {
-                    if (zig && getRuntime() > zigTime + 0.4) {
+                    if (zig && getRuntime() > zigTime + 0.35) {
                         robot.shooter.setPusher(Constants.ServoPosition.OPEN);
                         zig = false;
                         zag = true;
                         zagTime = getRuntime();
-                    } else if (zag && getRuntime() > zagTime + 0.4) {
+                    } else if (zag && getRuntime() > zagTime + 0.35) {
                         firing = false;
                         ringsFired++;
                     }
