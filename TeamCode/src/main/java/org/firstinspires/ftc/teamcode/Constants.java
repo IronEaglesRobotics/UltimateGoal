@@ -67,10 +67,10 @@ public class Constants {
     public static final int ARM_DOWN_POS = 750; // 756
     public static final int ARM_UP_POS = 221;
     public static final int ARM_ALMOST_DOWN_POS = 680;
-    public static final double CLAW_MIN = 0.01;//0.3
+    public static final double CLAW_MIN = 0.13;//0.3
     public static final double CLAW_MAX = 0.7;
     public static final double INTAKE_MAX_SPEED = 0.75;
-    public static final double SECONDARY_INTAKE_RELATIVE_SPEED = 0.5;
+    public static final double SECONDARY_INTAKE_RELATIVE_SPEED = 0.3;// 0.5
     public static final double SHOOTER_POWER = 0.62;
     public static final double POWERSHOT_SHOOTER_POWER = 0.57;
     public static final int AUTO_AIM_OFFSET_X = 7;
