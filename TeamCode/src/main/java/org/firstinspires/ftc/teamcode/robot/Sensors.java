@@ -1,13 +1,17 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.MathHelpers;
 
 import java.util.Arrays;
@@ -20,6 +24,7 @@ import static org.firstinspires.ftc.teamcode.Constants.IMU_SENSOR;
 public class Sensors {
     private final BNO055IMU imu;
     private final RevColorSensorV3 colorSensor;
+//    private final DistanceSensor distanceSensor;
     private final double initialGyroHeading;
     private double baseGyroHeading;
 
@@ -39,6 +44,10 @@ public class Sensors {
 
         // initialize color sensor
         this.colorSensor = hardwareMap.get(RevColorSensorV3.class, COLOR_SENSOR);
+
+        // initialize distance sensor
+//        this.distanceSensor = hardwareMap.get(DistanceSensor.class, "distance");
+//        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)distanceSensor;
     }
 
     // Reset the Gyro heading
@@ -71,8 +80,23 @@ public class Sensors {
         return new int[] {colorSensor.red(), colorSensor.green(), colorSensor.blue(), colorSensor.alpha()};
     }
 
+//    public double getDistance() {
+//        return distanceSensor.getDistance(DistanceUnit.CM);
+//    }
+
+//    public double getRawLight() {
+//        return distanceSensor.getRawLightDetected();
+//    }
+//
+//    public double getLight() {
+//        return distanceSensor.getLightDetected();
+//    }
+
     // Get Telemetry for the current heading
     public String getTelemetry() {
         return String.format(Locale.US, "Heading: %.2f\nColor: %.2f %s", getGyroHeading360(), getColor(), Arrays.toString(getRGBA()));
+//        return String.format(Locale.US, "Heading: %.2f\nDistance: %.2f", getGyroHeading360(), getDistance());
+//        return String.format(Locale.US, "Heading: %.2f\nDistance: %.2f %.2f", getGyroHeading360(), getRawLight(), getLight());
+
     }
 }

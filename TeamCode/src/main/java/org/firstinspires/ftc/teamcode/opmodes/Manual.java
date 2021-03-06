@@ -78,6 +78,7 @@ public class Manual extends OpMode {
         robot.arm.resetEncoder();
         robot.shooter.setPusher(Constants.ServoPosition.OPEN);
         robot.arm.setClaw(Constants.ServoPosition.CLOSED);
+        armPosition = ARM_UP_POS;
     }
 
     // Wait for the first frame after the init button was pressed
@@ -192,9 +193,9 @@ public class Manual extends OpMode {
 
         // intake
         if (intakeReversePressed) {
-            robot.intake.setIntake(-intakePower * INTAKE_MAX_SPEED);
+            robot.intake.setIntake(-intakePower);
         } else {
-            robot.intake.setIntake(intakePower * INTAKE_MAX_SPEED);
+            robot.intake.setIntake(intakePower);
         }
 
         // shooter
@@ -210,14 +211,14 @@ public class Manual extends OpMode {
         // move pusher in and out
         if (pusherPressed && !pusherPressedPrev) {
             robot.shooter.setPusher(Constants.ServoPosition.CLOSED);
-            finishTime = getRuntime() + 0.35;
+            finishTime = getRuntime() + 0.3;
             checkPusher = true;
             zig = true;
         }
         if (checkPusher && getRuntime() > finishTime) {
             if (zig) {
                 robot.shooter.setPusher(Constants.ServoPosition.OPEN);
-                finishTime += 0.35;
+                finishTime += 0.3;
                 zig = false;
             } else {
                 zig = true;

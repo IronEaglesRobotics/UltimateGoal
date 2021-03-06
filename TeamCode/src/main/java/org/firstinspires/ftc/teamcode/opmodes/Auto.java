@@ -117,10 +117,10 @@ public class Auto extends LinearOpMode {
         switch(stack) {
             case NONE:
                 // drop off the first wobble goal
-                addMovementWithArm(-2, -56, 1, UP);
+                addMovementWithArm(-7, -56, 1, UP);
                 addIntake(1, 0.5);
                 addIntake(0, 0);
-                addMovement(0, 4, 1);
+                addMovement(5, 5, 1);
                 // shoot the powershots
                 addShooter(0, POWERSHOT_SHOOTER_POWER);
                 addTurnAbsoluteFast(180);
@@ -175,14 +175,14 @@ public class Auto extends LinearOpMode {
                 break;
             case QUAD:
                 // drop off the first wobble goal
-                addMovementWithArm(-2, -99, 1, UP);
+                addMovementWithArm(-7, -99, 1, UP);
                 addIntake(1, 0.5);
                 addIntake(0, 0);
-                addMovement(0, 4, 1);
+                addMovement(5, 5, 1);
                 // shoot the goal
                 addShooter(0, SHOOTER_POWER);
+                addMovement(17, 41, 1);
                 addTurnAbsoluteFast(180);
-                addMovement(-18, -42, 1);
                 addShootGoal(8, 3);
                 addShooter(0, 0);
                 // fire the first starter ring
@@ -190,12 +190,18 @@ public class Auto extends LinearOpMode {
                 addArm(0, DOWN);
                 addMovementToGoal();
                 addIntake(0, -0.5);
-                addMovement(0, -32, 1);
-                addIntake(0, 0);
+                addMovement(0, -18, 1);
+                addIntake(0, 0.5);
+                addMovement(0, -14, 0.5);
+//                addIntake(0, -0.5);
+//                addMovement(0, -10, 1);
+//                addMovement(0, -32, 1);
+//                addIntake(0, 0);
                 // pick up and drop off the second wobble goal while firing the remaining starter rings
                 addClaw(1, Constants.ServoPosition.CLOSED);
                 addArm(0.3, ARM_ALMOST_DOWN_POS);
                 addTurnAbsoluteFast(0);
+                addIntake(0, 0);
                 addMovement(-21, -63, 1);
                 addClaw(0.3, Constants.ServoPosition.OPEN);
                 // reset arm and park on white line
@@ -360,7 +366,7 @@ public class Auto extends LinearOpMode {
                 red = robot.camera.getRed();
                 // x movement
                 if (red.isValid()) {
-                    xErr = red.getCenter().x - 5;//10.5
+                    xErr = red.getCenter().x - 4;// 5
                     if (Math.abs(xErr) <= 0.5) {
                         x = 0;
                         if (xRuntime == -1) {
@@ -723,12 +729,12 @@ public class Auto extends LinearOpMode {
                     }
                 }
                 if (firing) {
-                    if (zig && getRuntime() > zigTime + 0.5) {
+                    if (zig && getRuntime() > zigTime + 0.3) {
                         robot.shooter.setPusher(Constants.ServoPosition.OPEN);
                         zig = false;
                         zag = true;
                         zagTime = getRuntime();
-                    } else if (zag && getRuntime() > zagTime + 0.5) {
+                    } else if (zag && getRuntime() > zagTime + 0.3) {
                         firing = false;
                         ringsFired++;
                     }
@@ -785,12 +791,12 @@ public class Auto extends LinearOpMode {
                     aimedAtGoal = false;
                 }
                 if (firing) {
-                    if (zig && getRuntime() > zigTime + 0.35) {
+                    if (zig && getRuntime() > zigTime + 0.3) {
                         robot.shooter.setPusher(Constants.ServoPosition.OPEN);
                         zig = false;
                         zag = true;
                         zagTime = getRuntime();
-                    } else if (zag && getRuntime() > zagTime + 0.35) {
+                    } else if (zag && getRuntime() > zagTime + 0.3) {
                         firing = false;
                         ringsFired++;
                     }

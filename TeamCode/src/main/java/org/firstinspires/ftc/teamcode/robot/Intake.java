@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.Constants.INTAKE;
+import static org.firstinspires.ftc.teamcode.Constants.INTAKE_MAX_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.SECONDARY_INTAKE;
 import static org.firstinspires.ftc.teamcode.Constants.SECONDARY_INTAKE_RELATIVE_SPEED;
 
@@ -28,8 +29,8 @@ public class Intake {
 
     // Set power
     public void setIntake(double power) {
-        intake.setPower(power);
-        secondary.setPower(power*SECONDARY_INTAKE_RELATIVE_SPEED);
+        intake.setPower(power * INTAKE_MAX_SPEED);
+        secondary.setPower(power * INTAKE_MAX_SPEED * 0.25);
     }
 
     // Get Telemetry for the intake
