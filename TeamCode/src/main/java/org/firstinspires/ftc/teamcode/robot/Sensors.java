@@ -23,7 +23,7 @@ import static org.firstinspires.ftc.teamcode.Constants.IMU_SENSOR;
 // Class for the IMU Sensor on the Control Hub
 public class Sensors {
     private final BNO055IMU imu;
-    private final RevColorSensorV3 colorSensor;
+//    private final RevColorSensorV3 colorSensor;
 //    private final DistanceSensor distanceSensor;
     private final double initialGyroHeading;
     private double baseGyroHeading;
@@ -43,7 +43,7 @@ public class Sensors {
         this.initialGyroHeading = baseGyroHeading;
 
         // initialize color sensor
-        this.colorSensor = hardwareMap.get(RevColorSensorV3.class, COLOR_SENSOR);
+//        this.colorSensor = hardwareMap.get(RevColorSensorV3.class, COLOR_SENSOR);
 
         // initialize distance sensor
 //        this.distanceSensor = hardwareMap.get(DistanceSensor.class, "distance");
@@ -72,13 +72,13 @@ public class Sensors {
     }
 
     // Get the reading from the color sensor
-    public double getColor() {
-        return colorSensor.getLightDetected();
-    }
-
-    public int[] getRGBA() {
-        return new int[] {colorSensor.red(), colorSensor.green(), colorSensor.blue(), colorSensor.alpha()};
-    }
+//    public double getColor() {
+//        return colorSensor.getLightDetected();
+//    }
+//
+//    public int[] getRGBA() {
+//        return new int[] {colorSensor.red(), colorSensor.green(), colorSensor.blue(), colorSensor.alpha()};
+//    }
 
 //    public double getDistance() {
 //        return distanceSensor.getDistance(DistanceUnit.CM);
@@ -94,9 +94,9 @@ public class Sensors {
 
     // Get Telemetry for the current heading
     public String getTelemetry() {
-        return String.format(Locale.US, "Heading: %.2f\nColor: %.2f %s", getGyroHeading360(), getColor(), Arrays.toString(getRGBA()));
+//        return String.format(Locale.US, "Heading: %.2f\nColor: %.2f %s", getGyroHeading360(), getColor(), Arrays.toString(getRGBA()));
 //        return String.format(Locale.US, "Heading: %.2f\nDistance: %.2f", getGyroHeading360(), getDistance());
 //        return String.format(Locale.US, "Heading: %.2f\nDistance: %.2f %.2f", getGyroHeading360(), getRawLight(), getLight());
-
+        return "";
     }
 }

@@ -383,15 +383,15 @@ public class Auto extends LinearOpMode {
                 }
                 // y movement
                 if (centeredLeftRight) {
-                    if (robot.sensors.getColor() < 0.9 && yRuntime == -1) {
-                        y = 0.1;
-//                        yRuntime = -1;
-                    } else {
-                        y = 0;
-                        if (yRuntime == -1) {
-                            yRuntime = currentRuntime;
-                        }
-                    }
+//                    if (robot.sensors.getColor() < 0.9 && yRuntime == -1) {
+//                        y = 0.1;
+////                        yRuntime = -1;
+//                    } else {
+//                        y = 0;
+//                        if (yRuntime == -1) {
+//                            yRuntime = currentRuntime;
+//                        }
+//                    }
                 }
                 // z movement
                 currentHeading = robot.sensors.getGyroHeading360();
