@@ -117,20 +117,20 @@ public class Auto extends LinearOpMode {
         switch(stack) {
             case NONE:
                 // drop off the first wobble goal
-                addMovementWithArm(-7, -56, 1, UP);
+                addMovement(-9, -56, 1);
                 addIntake(1, 0.5);
                 addIntake(0, 0);
                 addMovement(5, 5, 1);
                 // shoot the powershots
                 addShooter(0, POWERSHOT_SHOOTER_POWER);
-                addTurnAbsoluteFast(180);
+                addTurnAbsolute(180);
                 addMovement(-51, 0, 1);
+                addArm(0, DOWN);
                 addShootPowershots(8);
                 addShooter(0, 0);
                 // pick up and drop off the second wobble goal
-                addTurnAbsolute(180);
-                addArm(0, DOWN);
                 addMovementToGoal();
+                addClaw(0, Constants.ServoPosition.OPEN);
                 addMovement(0, -32, 1);
                 addClaw(1, Constants.ServoPosition.CLOSED);
                 addArm(0.3, ARM_ALMOST_DOWN_POS);
@@ -150,10 +150,10 @@ public class Auto extends LinearOpMode {
                 addMovement(0, 4, 1);
                 // shoot the goal
                 addShooter(0, SHOOTER_POWER);
+                addMovement(3, 20, 1);
                 addTurnAbsoluteFast(180);
-                addMovement(-3, -20, 1);
                 addShootGoal(8, 3);
-                // pick up and drop off the second wobble goal while firing the starter ring
+                // pick up and drop off the second wobble goal while firin g the starter ring
                 addTurnAbsolute(180);
                 addArm(0, DOWN);
                 addMovementToGoal();
@@ -175,7 +175,7 @@ public class Auto extends LinearOpMode {
                 break;
             case QUAD:
                 // drop off the first wobble goal
-                addMovementWithArm(-7, -99, 1, UP);
+                addMovement(-9, -99, 1);
                 addIntake(1, 0.5);
                 addIntake(0, 0);
                 addMovement(5, 5, 1);
@@ -183,12 +183,13 @@ public class Auto extends LinearOpMode {
                 addShooter(0, SHOOTER_POWER);
                 addMovement(17, 41, 1);
                 addTurnAbsoluteFast(180);
+                addArm(0, DOWN);
                 addShootGoal(8, 3);
                 addShooter(0, 0);
                 // fire the first starter ring
                 addTurnAbsolute(180);
-                addArm(0, DOWN);
                 addMovementToGoal();
+                addClaw(0, Constants.ServoPosition.OPEN);
                 addIntake(0, -0.5);
                 addMovement(0, -18, 1);
                 addIntake(0, 0.5);

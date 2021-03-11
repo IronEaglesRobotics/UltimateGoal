@@ -170,9 +170,9 @@ public class Manual extends OpMode {
         robot.drive.setInput(x, y, z);
 
         // move arm up and down
-        if (armDefaultPressed && !armDefaultPressedPrev) {
-            armPosition = ARM_DEFAULT_POS;
-        } else if (armUpPressed && !armUpPressedPrev) {
+//        if (armDefaultPressed && !armDefaultPressedPrev) {
+//            armPosition = ARM_DEFAULT_POS;
+        if (armUpPressed && !armUpPressedPrev) {
             armPosition = ARM_UP_POS;
         } else if (armDownPressed && !armDownPressedPrev) {
             armPosition = ARM_DOWN_POS;
@@ -180,9 +180,9 @@ public class Manual extends OpMode {
             armPosition -= armManual*20;
         }
         robot.arm.setArm(armPosition);
-        if (armResetPressed && !armResetPressedPrev) {
-            robot.arm.resetEncoder();
-        }
+//        if (armResetPressed && !armResetPressedPrev) {
+//            robot.arm.resetEncoder();
+//        }
 
         // open and close claw
         if (clawPressed && !clawPressedPrev) {
@@ -239,6 +239,7 @@ public class Manual extends OpMode {
         pusherPressedPrev = pusherPressed;
 
         // show telemetry
+        telemetry.addLine(String.valueOf(armPosition));
         telemetry.addLine(robot.getTelemetry());
         telemetry.update();
     }

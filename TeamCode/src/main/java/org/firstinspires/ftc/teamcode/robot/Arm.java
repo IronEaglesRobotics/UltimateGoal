@@ -67,7 +67,7 @@ public class Arm {
         wobbler.setPower(ARM_SPEED);
     }
 
-    public void setArm(int position) {
+    public void  setArm(int position) {
         wobbler.setTargetPosition(position);
         wobbler.setPower(ARM_SPEED);
     }
@@ -84,6 +84,6 @@ public class Arm {
 
     // Get Telemetry for the arm and claw
     public String getTelemetry() {
-        return String.format(Locale.US, "Arm: %.2f \nClaw: %s", wobbler.getPower(), getClaw());
+        return String.format(Locale.US, "Arm: %.2f %s \nClaw: %s", wobbler.getPower(), wobbler.getCurrentPosition(), getClaw());
     }
 }
