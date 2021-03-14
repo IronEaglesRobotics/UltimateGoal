@@ -39,7 +39,8 @@ public class MecanumDrive {
         frontRight.setDirection(DcMotor.Direction.FORWARD);
 
         // set motors to use encoders and keep their position when stopped
-        this.setRunMode(RunMode.RUN_USING_ENCODER);
+//        this.setRunMode(RunMode.RUN_USING_ENCODER);
+        this.setRunMode(RunMode.RUN_WITHOUT_ENCODER);
         this.setBrakeMode(ZeroPowerBehavior.BRAKE);
 
         ticksPerRev = frontLeft.getMotorType().getTicksPerRev();
@@ -123,7 +124,7 @@ public class MecanumDrive {
 
     // Set the input for the wheels
     public void setInput(double x, double y, double z) {
-        this.setRunMode(RunMode.RUN_USING_ENCODER);
+//        this.setRunMode(RunMode.RUN_USING_ENCODER);
 
         double flPower, frPower, blPower, brPower;
 

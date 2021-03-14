@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.opencv.Detection;
 import org.firstinspires.ftc.teamcode.opencv.PowershotDetection;
 import org.firstinspires.ftc.teamcode.opencv.StarterStackPipeline;
 import org.firstinspires.ftc.teamcode.opencv.TargetingPipeline;
-import org.firstinspires.ftc.teamcode.opencv.WobbleGoalPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 
@@ -29,14 +28,11 @@ public class Camera {
     private HardwareMap hardwareMap;
     private OpenCvCamera stackCamera;
     private OpenCvCamera targetingCamera;
-    private OpenCvCamera wobbleGoalCamera;
     private StarterStackPipeline stackPipeline;
     private TargetingPipeline targetingPipeline;
-    private WobbleGoalPipeline wobbleGoalPipeline;
 
     private boolean stackCameraInitialized;
     private boolean targetingCameraInitialized;
-    private boolean wobbleGoalCameraInitialized;
 
     // Constructor
     public Camera(HardwareMap hardwareMap) {
@@ -103,44 +99,12 @@ public class Camera {
         }
     }
 
-    // Initiate the Wobble Goal Camera
-    public void initWobbleGoalCamera() {
-        int wobbleGoalCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        this.wobbleGoalCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, STACK_WEBCAM), wobbleGoalCameraMonitorViewId);
-        this.wobbleGoalPipeline = new WobbleGoalPipeline();
-        wobbleGoalCamera.setPipeline(wobbleGoalPipeline);
-        wobbleGoalCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                wobbleGoalCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, WEBCAM_ROTATION);
-                wobbleGoalCameraInitialized = true;
-            }
-        });
-    }
-
-    // Close the Wobble Goal Camera
-    public void stopWobbleGoalCamera() {
-        if (wobbleGoalCameraInitialized) {
-            wobbleGoalCamera.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener()
-            {
-                @Override
-                public void onClose() {
-                    wobbleGoalCameraInitialized = false;
-                }
-            });
-        }
-    }
-
     // Shut down whatever camera is running if you are unsure if one is
     public void shutdownCamera() {
         if (stackCameraInitialized) {
             stopStackCamera();
         } else if (targetingCameraInitialized) {
             stopTargetingCamera();
-        } else if (wobbleGoalCameraInitialized) {
-            stopWobbleGoalCamera();
         }
     }
 
@@ -183,8 +147,6 @@ public class Camera {
             return stackCamera.getFrameCount();
         } else if (targetingCameraInitialized) {
             return targetingCamera.getFrameCount();
-        } else if (wobbleGoalCameraInitialized) {
-            return wobbleGoalCamera.getFrameCount();
         } else {
             return 0;
         }

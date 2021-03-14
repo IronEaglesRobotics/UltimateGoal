@@ -21,8 +21,8 @@ import static org.firstinspires.ftc.teamcode.Constants.WHEEL_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.WHEEL_TURBO_SPEED;
 
 // Main Driver Program
-@TeleOp(name = "Competition TeleOp", group = "Competition")
-public class Manual extends OpMode {
+@TeleOp(name = "Dev", group = "Competition")
+public class ManualSolo extends OpMode {
     private Robot robot;
 
     // detection values
@@ -36,10 +36,7 @@ public class Manual extends OpMode {
     private double x;
     private double y;
     private double z;
-    private double turbo;
-    private double slow;
 
-    // button presses for driver 2
     private boolean autoaimPowershots;
     private boolean autoaimGoal;
 
@@ -48,7 +45,6 @@ public class Manual extends OpMode {
     private boolean armDownPressedPrev;
     private boolean armDownPressed;
     private int armPosition;
-    private double armManual;
     private boolean clawPressedPrev;
     private boolean clawPressed;
 
@@ -99,32 +95,21 @@ public class Manual extends OpMode {
         x = gamepad1.left_stick_x;
         y = -gamepad1.left_stick_y;
         z = gamepad1.right_stick_x;
-        turbo = gamepad1.left_trigger;
-        slow = gamepad1.right_trigger;
 
-        // update gamepad presses for driver 2
-        armUpPressed = gamepad2.dpad_up;
-        armDownPressed = gamepad2.dpad_down;
-        armManual = -gamepad2.right_stick_y;
-        clawPressed = gamepad2.b;
-        autoaimPowershots = gamepad2.x;
-        autoaimGoal = gamepad2.y;
+        armUpPressed = gamepad1.dpad_up;
+        armDownPressed = gamepad1.dpad_down;
+        clawPressed = gamepad1.dpad_right;
+        autoaimPowershots = gamepad1.left_bumper;
+        autoaimGoal = gamepad1.right_bumper;
 
-        intakeReversePressed = gamepad2.left_bumper;
-        intakePower = gamepad2.left_trigger;
+        intakeReversePressed = gamepad1.x;
+        intakePower = gamepad1.left_trigger;
 
-        powershotPowerPressed = gamepad2.right_bumper;
-        shooterPower = gamepad2.right_trigger;
-        pusherPressed = gamepad2.a;
+        powershotPowerPressed = gamepad1.y;
+        shooterPower = gamepad1.right_trigger;
+        pusherPressed = gamepad1.a;
 
         // ------------------------- driver 1 ------------------------- //
-
-        // base control (left trigger adds speed for turbo mode, right trigger removes speed for slow mode)
-        x += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), x) - Math.copySign(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), x);
-        y += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), y) - Math.copySign(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), y);
-        z += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), z) - Math.copySign(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), z);
-
-        // ------------------------- driver 2 ------------------------- //
 
         // auto aim at powershots
         if ((autoaimPowershots) && powershot.isValid()) {
@@ -169,8 +154,6 @@ public class Manual extends OpMode {
             armPosition = ARM_UP_POS;
         } else if (armDownPressed && !armDownPressedPrev) {
             armPosition = ARM_DOWN_POS;
-        } else if (Math.abs(armManual) > 0.1) {
-            armPosition -= armManual*20;
         }
         robot.arm.setArm(armPosition);
 
