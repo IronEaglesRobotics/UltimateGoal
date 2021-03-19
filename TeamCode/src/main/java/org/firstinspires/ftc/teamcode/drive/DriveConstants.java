@@ -34,8 +34,7 @@ public class DriveConstants {
      * from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = true;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
-      getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(15, 0, 6, 13);
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -74,19 +73,23 @@ public class DriveConstants {
      * This is only 85% of the theoretical maximum velocity of the bot, following the recommendation above.
      * This is capped at 85% because there are a number of variables that will prevent your bot from actually
      * reaching this maximum velocity: voltage dropping over the game, bot weight, general mechanical inefficiencies, etc.
-     * However, you can push this higher yourself if you'd like. Perhaps raise it to 90-95% of the theoretically 
+     * However, you can push this higher yourself if you'd like. Perhaps raise it to 90-95% of the theoretically
      * max velocity. The theoretically maximum velocity is 61.74330378369762 in/s.
      * Just make sure that your bot can actually reach this maximum velocity. Path following will be detrimentally
      * affected if it is aiming for a velocity not actually possible.
-     * 
+     *
      * The maximum acceleration is somewhat arbitrary and it is recommended that you tweak this yourself based on
      * actual testing. Just set it at a reasonable value and keep increasing until your path following starts
      * to degrade. As of now, it simply mirrors the velocity, resulting in 52.48180821614297 in/s/s
      *
      * Maximum Angular Velocity is calculated as: maximum velocity / trackWidth * (180 / Math.PI) but capped at 360°/s.
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
-     
+
      */
+    //Max Velocity: 61.070916155482514
+    //Voltage Compensated kF: 13.023484543055988
+    //Max Angular Velocity (deg): 20.753804708197837
+    //Max Angular Velocity (rad): 0.36222222447395325
     public static double MAX_VEL = 52.48180821614297;
     public static double MAX_ACCEL = 52.48180821614297;
     public static double MAX_ANG_VEL = Math.toRadians(184.02607784577722);
@@ -102,7 +105,7 @@ public class DriveConstants {
     }
 
     public static double getMotorVelocityF(double ticksPerSecond) {
-      // see https://docs.google.com/document/d/1tyWrXDfMidwYyP_5H4mZyVgaEswhOC35gvdmP-V-5hA/edit#heading=h.61g9ixenznbx
-      return 32767 / ticksPerSecond;
+        // see https://docs.google.com/document/d/1tyWrXDfMidwYyP_5H4mZyVgaEswhOC35gvdmP-V-5hA/edit#heading=h.61g9ixenznbx
+        return 32767 / ticksPerSecond;
     }
 }
