@@ -112,11 +112,11 @@ public class Camera {
     public Constants.StarterStack checkStack() {
         if (stackCameraInitialized) {
             double area = stackPipeline.getStarterStack().getArea();
-//            if (area > MIN_STARTERSTACK_QUAD_AREA) {
-//                return Constants.StarterStack.QUAD;
-//            } else if (area > MIN_STARTERSTACK_SINGLE_AREA){
-//                return Constants.StarterStack.SINGLE;
-//            }
+            if (area > MIN_STARTERSTACK_QUAD_AREA) {
+                return Constants.StarterStack.QUAD;
+            } else if (area > MIN_STARTERSTACK_SINGLE_AREA){
+                return Constants.StarterStack.SINGLE;
+            }
         }
         return Constants.StarterStack.NONE;
     }

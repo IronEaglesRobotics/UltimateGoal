@@ -41,7 +41,7 @@ public class Constants {
 
     // CV Detection Constants
     public static final double MIN_STARTERSTACK_AREA = 0;
-    public static final double MIN_STARTERSTACK_SINGLE_AREA = 0.1;
+    public static final double MIN_STARTERSTACK_SINGLE_AREA = 0.08;
     public static final double MIN_STARTERSTACK_QUAD_AREA = 1.10;
     public static final double MIN_GOAL_AREA = 0.01;
     public static final double MIN_POWERSHOT_AREA = 0.0005; // 320 240 // 0.001
@@ -68,9 +68,9 @@ public class Constants {
     public static final int ARM_ALMOST_DOWN_POS = 650;//650
     public static final double CLAW_MIN = 0.13;//0.3
     public static final double CLAW_MAX = 0.7;
-    public static final double CLAW_WAIT = 0.2;
+    public static final double CLAW_WAIT = 0.15;
     public static final double INTAKE_MAX_SPEED = 0.75;
-    public static final double SECONDARY_INTAKE_RELATIVE_SPEED = 0.3;// 0.5
+    public static final double SECONDARY_INTAKE_RELATIVE_SPEED = 0.25;
     public static final double SHOOTER_POWER = 0.62;
     public static final double POWERSHOT_SHOOTER_POWER = 0.57;
     public static final int AUTO_AIM_OFFSET_X = 7;
