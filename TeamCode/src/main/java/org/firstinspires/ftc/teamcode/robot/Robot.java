@@ -2,32 +2,33 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+
 // Robot class that contains everything on the robot
 public class Robot {
-    public MecanumDrive drive;
+    public SampleMecanumDrive drive;
     public Arm arm;
     public Intake intake;
     public Shooter shooter;
     public Camera camera;
-    public Sensors sensors;
+//    public Sensors sensors;
 
     // Constructor
     public Robot(HardwareMap hardwareMap) {
-        drive = new MecanumDrive(hardwareMap);
+        drive = new SampleMecanumDrive(hardwareMap);
         arm = new Arm(hardwareMap);
         intake = new Intake(hardwareMap);
         shooter = new Shooter(hardwareMap);
-        sensors = new Sensors(hardwareMap);
+//        sensors = new Sensors(hardwareMap);
         camera = new Camera(hardwareMap);
     }
 
     // Get Telemetry for the robot
     public String getTelemetry() {
-        return drive.getTelemetry() + "\n" +
-                arm.getTelemetry() + "\n" +
+        return arm.getTelemetry() + "\n" +
                 intake.getTelemetry() + "\n" +
                 shooter.getTelemetry() + "\n" +
-                sensors.getTelemetry() + "\n\n" +
+//                sensors.getTelemetry() + "\n\n" +
                 camera.getTelemetry();
     }
 }

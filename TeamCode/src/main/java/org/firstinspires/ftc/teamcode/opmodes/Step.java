@@ -32,6 +32,7 @@ public abstract class Step {
     public boolean powershotsKnockedDown;
     public boolean aimedAtPowershots;
     public boolean aimedAtGoal;
+    public boolean aimedAtTarget;
     public boolean zig;
     public boolean zag;
     public double zigTime;
