@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.opencv.Detection;
 
 // Class for every step that the autonomous program will take
@@ -9,19 +8,10 @@ public abstract class Step {
     private String telemetry;
 
     // variables when moving
-    public double destinationHeading;
-    public double currentHeading;
     public double x;
     public double y;
     public double z;
-    public double xErr;
-    public double yErr;
-    public double zErr;
-    public double zRuntime;
-    public double xRuntime;
-    public double yRuntime;
     public double power;
-    public boolean centeredLeftRight;
 
     // variables when shooting
     public Detection powershot;
@@ -30,14 +20,18 @@ public abstract class Step {
     public int ringsFired;
     public boolean firing;
     public boolean powershotsKnockedDown;
-    public boolean aimedAtPowershots;
-    public boolean aimedAtGoal;
     public boolean aimedAtTarget;
     public boolean zig;
     public boolean zag;
     public double zigTime;
     public double zagTime;
-    public double shooterSpeedUpTime;
+
+    // variables for intake jamming
+    public double currentIntakePosition;
+    public double lastIntakePosition;
+    public double intakeJammedTime;
+    public double checkForJam;
+    public boolean unJamming;
 
     // Constructors
     public Step(String telemetry) {

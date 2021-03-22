@@ -50,5 +50,10 @@ public class DashboardUtil {
         double x1 = pose.getX() + v.getX() / 2, y1 = pose.getY() + v.getY() / 2;
         double x2 = pose.getX() + v.getX(), y2 = pose.getY() + v.getY();
         canvas.strokeLine(x1, y1, x2, y2);
+        // draw square
+//        Vector2d v2 = v.rotated(-90);
+//        double[] xPoints = {pose.getX() - v2.getX(), pose.getX() - v2.getX(), pose.getX() + v2.getX(), pose.getX() + v2.getX(), pose.getX() - v2.getX()};
+//        double[] yPoints = {pose.getY() - v.getY(), pose.getY() + v.getY(), pose.getY() + v.getY(), pose.getY() - v.getY(), pose.getY() - v.getY()};
+//        canvas.strokePolygon(xPoints, yPoints);
     }
 }

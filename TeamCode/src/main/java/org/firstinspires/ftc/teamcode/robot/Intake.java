@@ -32,6 +32,13 @@ public class Intake {
         secondary.setPower(power * SECONDARY_INTAKE_RELATIVE_SPEED);
     }
 
+    public double getIntakePower() {
+        return intake.getPower();
+    }
+    public double getIntakePosition() {
+        return intake.getCurrentPosition();
+    }
+
     // Get Telemetry for the intake
     public String getTelemetry() {
         return String.format(Locale.US, "Intake: %.2f %.2f", intake.getPower(), secondary.getPower());

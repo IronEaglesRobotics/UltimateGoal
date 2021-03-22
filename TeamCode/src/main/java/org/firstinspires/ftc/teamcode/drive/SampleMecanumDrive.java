@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_ACCEL;
@@ -420,5 +421,9 @@ public class SampleMecanumDrive extends MecanumDrive {
         // flat on a surface
 
         return (double) imu.getAngularVelocity().xRotationRate;
+    }
+
+    public String getTelemetry() {
+        return String.format(Locale.US, "fl: %.2f fr: %.2f bl: %.2f br: %.2f", getWheelVelocities().get(0), getWheelVelocities().get(1), getWheelVelocities().get(2), getWheelVelocities().get(3));
     }
 }

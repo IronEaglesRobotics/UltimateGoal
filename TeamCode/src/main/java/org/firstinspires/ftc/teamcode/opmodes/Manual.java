@@ -8,10 +8,12 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.opencv.Detection;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
+import static org.firstinspires.ftc.teamcode.Constants.ARM_DEFAULT_POS;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_UP_POS;
 import static org.firstinspires.ftc.teamcode.Constants.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.Constants.CLAW_WAIT;
+import static org.firstinspires.ftc.teamcode.Constants.INTAKE_MAX_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_SHOOTER_POWER;
 import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_POWER;
 import static org.firstinspires.ftc.teamcode.Constants.WHEEL_SLOW_SPEED;
@@ -71,9 +73,9 @@ public class Manual extends OpMode {
         robot = new Robot(hardwareMap);
         robot.camera.initTargetingCamera();
         robot.arm.resetEncoder();
-        robot.shooter.setPusher(Constants.ServoPosition.CLOSED);
+        robot.shooter.setPusher(Constants.ServoPosition.OPEN);
         robot.arm.setClaw(Constants.ServoPosition.CLOSED);
-        armPosition = ARM_UP_POS;
+        armPosition = ARM_DEFAULT_POS;
     }
 
     // Wait for the first frame after the init button was pressed
@@ -94,9 +96,9 @@ public class Manual extends OpMode {
         powershot = robot.camera.getPowershots().getLeftMost();
 
         // update gamepad presses for driver 1
-        x = gamepad1.left_stick_x;
-        y = -gamepad1.left_stick_y;
-        z = gamepad1.right_stick_x;
+        x = -gamepad1.left_stick_y;
+        y = -gamepad1.left_stick_x;
+        z = -gamepad1.right_stick_x;
         turbo = gamepad1.left_trigger;
         slow = gamepad1.right_trigger;
 
@@ -118,9 +120,18 @@ public class Manual extends OpMode {
         // ------------------------- driver 1 ------------------------- //
 
         // base control (left trigger adds speed for turbo mode, right trigger removes speed for slow mode)
-        x += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), x) - Math.copySign(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), x);
-        y += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), y) - Math.copySign(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), y);
-        z += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), z) - Math.copySign(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), z);
+        if (Math.abs(x) >= 0.1) {
+            x += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), x);
+            x += Math.copySign(Math.min(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), Math.abs(x)), x);
+        }
+        if (Math.abs(y) >= 0.1) {
+            y += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), y);
+            y += Math.copySign(Math.min(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), Math.abs(x)), y);
+        }
+        if (Math.abs(z) >= 0.1) {
+            z += Math.copySign(turbo * (WHEEL_TURBO_SPEED - WHEEL_SPEED), z);
+            z += Math.copySign(Math.min(slow * (WHEEL_SPEED - WHEEL_SLOW_SPEED), Math.abs(x)), z);
+        }
 
         // ------------------------- driver 2 ------------------------- //
 
@@ -135,7 +146,7 @@ public class Manual extends OpMode {
                     z = 0;
                     aimedAtPowershots = true;
                 } else if (zErr > 1) {
-                    z = Math.copySign(zSpeed, px);
+                    z = Math.copySign(Math.max(zSpeed, 0.1), -px);
                     aimedAtPowershots = false;
                 }
             }
@@ -153,14 +164,14 @@ public class Manual extends OpMode {
                     z = 0;
                     aimedAtGoal = true;
                 } else if (zErr > 1) {
-                    z = Math.copySign(zSpeed, gx);
+                    z = Math.copySign(Math.max(zSpeed, 0.1), -gx);
                     aimedAtGoal = false;
                 }
             }
         } else {
             aimedAtGoal = false;
         }
-        robot.drive.setWeightedDrivePower(new Pose2d(x, y, -z));
+        robot.drive.setWeightedDrivePower(new Pose2d(x, y, z));
         robot.drive.update();
 
         // move arm up and down
@@ -182,9 +193,9 @@ public class Manual extends OpMode {
 
         // intake
         if (intakeReversePressed) {
-            robot.intake.setIntake(-intakePower);
+            robot.intake.setIntake(-intakePower * INTAKE_MAX_SPEED);
         } else {
-            robot.intake.setIntake(intakePower);
+            robot.intake.setIntake(intakePower * INTAKE_MAX_SPEED);
         }
 
         // shooter

@@ -11,7 +11,6 @@ public class Robot {
     public Intake intake;
     public Shooter shooter;
     public Camera camera;
-//    public Sensors sensors;
 
     // Constructor
     public Robot(HardwareMap hardwareMap) {
@@ -19,16 +18,15 @@ public class Robot {
         arm = new Arm(hardwareMap);
         intake = new Intake(hardwareMap);
         shooter = new Shooter(hardwareMap);
-//        sensors = new Sensors(hardwareMap);
         camera = new Camera(hardwareMap);
     }
 
     // Get Telemetry for the robot
     public String getTelemetry() {
-        return arm.getTelemetry() + "\n" +
+        return drive.getTelemetry() + "\n" +
+                arm.getTelemetry() + "\n" +
                 intake.getTelemetry() + "\n" +
                 shooter.getTelemetry() + "\n" +
-//                sensors.getTelemetry() + "\n\n" +
                 camera.getTelemetry();
     }
 }
