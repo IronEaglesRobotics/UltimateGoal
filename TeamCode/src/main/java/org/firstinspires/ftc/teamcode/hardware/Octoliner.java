@@ -11,6 +11,11 @@ import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.util.TypeConversion;
 
+/*
+ * Created by Scott Barnes
+ *
+ * Driver for Amperka's Octoliner sensor. (https://my.amperka.com/modules/octoliner)
+ */
 @SuppressWarnings({"WeakerAccess", "unused"}) // Ignore access and unused warnings
 @I2cDeviceType
 @DeviceProperties(name = "Octoliner", description = "Array of infrared sensors from Amperka", xmlTag = "Octoliner")
