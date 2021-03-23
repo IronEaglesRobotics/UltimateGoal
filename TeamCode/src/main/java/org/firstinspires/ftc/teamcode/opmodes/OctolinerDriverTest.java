@@ -2,10 +2,6 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
-import com.qualcomm.robotcore.hardware.I2cDeviceSynchDevice;
-import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.hardware.Octoliner;
 
@@ -23,9 +19,9 @@ public class OctolinerDriverTest extends OpMode {
 
     @Override
     public void loop() {
-        this.telemetry.addData("Analog", octoliner.analogReadAllString());
-        this.telemetry.addData("Digital", octoliner.digitalReadAllString());
-        this.telemetry.addData("Ring Count", octolinerToRingCount(octoliner.digitalCount()));
+        this.telemetry.addData("Analog", octoliner.analogReadString());
+        this.telemetry.addData("Digital", octoliner.digitalReadString());
+        this.telemetry.addData("Ring Count", octolinerToRingCount(octoliner.digitalSum()));
         this.telemetry.update();
     }
 
