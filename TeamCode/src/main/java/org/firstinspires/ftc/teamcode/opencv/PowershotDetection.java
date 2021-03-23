@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opencv;
 
-import org.firstinspires.ftc.teamcode.CVHelpers;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Scalar;
@@ -8,7 +7,6 @@ import org.opencv.core.Size;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 // Class for the Powershot Detection
@@ -55,12 +53,7 @@ public class PowershotDetection {
     // Sorts out the detected contours and sets `powershots` accordingly.
     public void setContours(List<MatOfPoint> contours) {
         //Sort detected contours by x values, presumably left to right.
-        Collections.sort(contours, new Comparator<MatOfPoint>() {
-            @Override
-            public int compare(MatOfPoint a, MatOfPoint b) {
-                return (int) CVHelpers.getCenterOfContour(a).x - (int) CVHelpers.getCenterOfContour(b).x;
-            }
-        });
+        Collections.sort(contours, (a, b) -> (int) CVHelpers.getCenterOfContour(a).x - (int) CVHelpers.getCenterOfContour(b).x);
 
         for (int i = 0; i < 3; i++) {
             if (i >= contours.size()) {

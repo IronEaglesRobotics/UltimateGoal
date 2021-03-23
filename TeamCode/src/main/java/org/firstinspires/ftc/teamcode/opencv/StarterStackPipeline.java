@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opencv;
 
-import org.firstinspires.ftc.teamcode.CVHelpers;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import static org.firstinspires.ftc.teamcode.Constants.ANCHOR;
 import static org.firstinspires.ftc.teamcode.Constants.BLUR_SIZE;
 import static org.firstinspires.ftc.teamcode.Constants.ERODE_DILATE_ITERATIONS;
-import static org.firstinspires.ftc.teamcode.Constants.INVALID_DETECTION;
 import static org.firstinspires.ftc.teamcode.Constants.MIN_STARTERSTACK_AREA;
 import static org.firstinspires.ftc.teamcode.Constants.ORANGE_LOWER;
 import static org.firstinspires.ftc.teamcode.Constants.ORANGE_UPPER;

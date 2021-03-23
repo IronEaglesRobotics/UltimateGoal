@@ -23,8 +23,7 @@ public class Robot {
 
     // Get Telemetry for the robot
     public String getTelemetry() {
-        return drive.getTelemetry() + "\n" +
-                arm.getTelemetry() + "\n" +
+        return arm.getTelemetry() + "\n" +
                 intake.getTelemetry() + "\n" +
                 shooter.getTelemetry() + "\n" +
                 camera.getTelemetry();

@@ -21,11 +21,13 @@ import java.util.Locale;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_ALMOST_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_DEFAULT_POS;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_DOWN_POS;
-import static org.firstinspires.ftc.teamcode.Constants.AUTO_AIM_OFFSET_X;
-import static org.firstinspires.ftc.teamcode.Constants.CLAW_WAIT;
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_MAX_SPEED;
-import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_POWER;
+import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SPEED;
+import static org.firstinspires.ftc.teamcode.Constants.PUSHER_DELAY;
+import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_AUTO_AIM_OFFSET_X;
+import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_GOAL_POWER;
+import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_POWERSHOT_POWER;
 
+// Main Autonomous Program
 @Autonomous(name = "Autonomous", group = "Competition", preselectTeleOp = "TeleOp")
 public class Auto extends LinearOpMode {
     private Robot robot;
@@ -76,8 +78,7 @@ public class Auto extends LinearOpMode {
         while (!(isStarted() || isStopRequested())) {
             stack = robot.camera.checkStack();
             telemetry.addLine("Initialized");
-            telemetry.addLine(String.format(Locale.US, "Stack: %s", stack));
-            telemetry.addLine(String.format(Locale.US, "Size: %.4f", robot.camera.getStarterStack().getArea()));
+            telemetry.addLine(robot.camera.getTelemetry());
             telemetry.update();
         }
         if (isStopRequested()) return;
@@ -138,7 +139,7 @@ public class Auto extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(0, -55.75, Math.toRadians(135)))
                 .build();
         noneDriveToPowershots = robot.drive.trajectoryBuilder(noneDropOffFirstWobbleGoal.end())
-                .addTemporalMarker(0, () -> robot.shooter.setShooter(SHOOTER_POWER))
+                .addTemporalMarker(0, () -> robot.shooter.setShooter(SHOOTER_POWERSHOT_POWER))
                 .addTemporalMarker(0, () -> robot.arm.setArm(ARM_DOWN_POS))
                 .splineTo(new Vector2d(-6, -6), Math.toRadians(0))
                 .build();
@@ -174,7 +175,7 @@ public class Auto extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(19, -42), Math.toRadians(0))
                 .build();
         singleDriveToPowershots = robot.drive.trajectoryBuilder(singleDropOffFirstWobbleGoal.end())
-                .addTemporalMarker(0, () -> robot.shooter.setShooter(SHOOTER_POWER))
+                .addTemporalMarker(0, () -> robot.shooter.setShooter(SHOOTER_POWERSHOT_POWER))
                 .addTemporalMarker(0, () -> robot.arm.setArm(ARM_DOWN_POS))
                 .lineToLinearHeading(new Pose2d(-6, -6, Math.toRadians(0)))
                 .build();
@@ -183,8 +184,8 @@ public class Auto extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-8, -39, Math.toRadians(0)))
                 .build();
         singlePickUpSecondWobbleGoal = robot.drive.trajectoryBuilder(singleDriveToRing.end())
-                .addTemporalMarker(0, () -> robot.shooter.setShooter(SHOOTER_POWER))
-                .addTemporalMarker(0, () -> robot.intake.setIntake(INTAKE_MAX_SPEED))
+                .addTemporalMarker(0, () -> robot.shooter.setShooter(SHOOTER_GOAL_POWER))
+                .addTemporalMarker(0, () -> robot.intake.setIntake(INTAKE_SPEED))
                 .addTemporalMarker(1, () -> robot.arm.setClaw(Constants.ServoPosition.CLOSED))
                 .lineToLinearHeading(new Pose2d(-36,-34.5, Math.toRadians(0)))
                 .build();
@@ -210,21 +211,21 @@ public class Auto extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(44, -55.75, Math.toRadians(135)))
                 .build();
         quadDriveToGoal = robot.drive.trajectoryBuilder(quadDropOffFirstWobbleGoal.end())
-                .addTemporalMarker(0, () -> robot.shooter.setShooter(SHOOTER_POWER))
+                .addTemporalMarker(0, () -> robot.shooter.setShooter(SHOOTER_GOAL_POWER))
                 .addTemporalMarker(0, () -> robot.arm.setArm(ARM_DOWN_POS))
                 .lineToLinearHeading(new Pose2d(-6, -45, Math.toRadians(0)))
                 .build();
         quadDriveToRings = robot.drive.trajectoryBuilder(quadDriveToGoal.end())
                 .addTemporalMarker(0, () -> robot.arm.setClaw(Constants.ServoPosition.OPEN))
-                .lineToLinearHeading(new Pose2d(-15, -40, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(-18, -38, Math.toRadians(0)))
                 .build();
         quadPickUpSomeRings = robot.drive.trajectoryBuilder(quadDriveToRings.end())
-                .addTemporalMarker(0, () -> robot.shooter.setShooter(SHOOTER_POWER))
-                .addTemporalMarker(0, () -> robot.intake.setIntake(INTAKE_MAX_SPEED))
-                .back(5.5, new MinVelocityConstraint(
+                .addTemporalMarker(0, () -> robot.shooter.setShooter(SHOOTER_GOAL_POWER))
+                .addTemporalMarker(0, () -> robot.intake.setIntake(INTAKE_SPEED))
+                .back(10, new MinVelocityConstraint(
                         Arrays.asList(
                                 new AngularVelocityConstraint(DriveConstants.MAX_ANG_VEL),
-                                new MecanumVelocityConstraint(1, DriveConstants.TRACK_WIDTH)
+                                new MecanumVelocityConstraint(15, DriveConstants.TRACK_WIDTH)
                         )
                 ), new ProfileAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -232,11 +233,11 @@ public class Auto extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(-6, -45, Math.toRadians(0)))
                 .build();
         quadPickUpSecondWobbleGoal = robot.drive.trajectoryBuilder(quadDriveToGoalAgain.end())
-                .addTemporalMarker(4, () -> robot.arm.setClaw(Constants.ServoPosition.CLOSED))
-                .lineToLinearHeading(new Pose2d(-38,-35, Math.toRadians(0)), new MinVelocityConstraint(
+                .addTemporalMarker(2.75, () -> robot.arm.setClaw(Constants.ServoPosition.CLOSED))
+                .lineToLinearHeading(new Pose2d(-39,-35, Math.toRadians(0)), new MinVelocityConstraint(
                         Arrays.asList(
                                 new AngularVelocityConstraint(DriveConstants.MAX_ANG_VEL),
-                                new MecanumVelocityConstraint(10, DriveConstants.TRACK_WIDTH)
+                                new MecanumVelocityConstraint(15, DriveConstants.TRACK_WIDTH)
                         )
                 ), new ProfileAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -267,7 +268,7 @@ public class Auto extends LinearOpMode {
                 setIntake(0.5, 0.5);
                 setIntake(0, 0);
                 followTrajectory(noneDriveToPowershots);
-                shootRings(8, false, 3);
+                shootRings(8, true, 3);
                 followTrajectory(noneDriveToSecondWobbleGoal);
                 followTrajectory(nonePickUpSecondWobbleGoal);
                 followTrajectory(noneDropOffSecondWobbleGoal);
@@ -278,7 +279,7 @@ public class Auto extends LinearOpMode {
                 setIntake(0.5, 0.5);
                 setIntake(0, 0);
                 followTrajectory(singleDriveToPowershots);
-                shootRings(8, false, 3);
+                shootRings(8, true, 3);
                 followTrajectory(singleDriveToRing);
                 followTrajectory(singlePickUpSecondWobbleGoal);
                 followTrajectory(singleDriveToGoal);
@@ -291,25 +292,25 @@ public class Auto extends LinearOpMode {
                 setIntake(0.5, 0.5);
                 setIntake(0, 0);
                 followTrajectory(quadDriveToGoal);
-                setPusher(CLAW_WAIT, Constants.ServoPosition.CLOSED);
-                setPusher(CLAW_WAIT, Constants.ServoPosition.OPEN);
-                setPusher(CLAW_WAIT, Constants.ServoPosition.CLOSED);
-                setPusher(CLAW_WAIT, Constants.ServoPosition.OPEN);
-                setPusher(CLAW_WAIT, Constants.ServoPosition.CLOSED);
-                setPusher(CLAW_WAIT, Constants.ServoPosition.OPEN);
+                setPusher(PUSHER_DELAY, Constants.ServoPosition.CLOSED);
+                setPusher(PUSHER_DELAY, Constants.ServoPosition.OPEN);
+                setPusher(PUSHER_DELAY, Constants.ServoPosition.CLOSED);
+                setPusher(PUSHER_DELAY, Constants.ServoPosition.OPEN);
+                setPusher(PUSHER_DELAY, Constants.ServoPosition.CLOSED);
+                setPusher(PUSHER_DELAY, Constants.ServoPosition.OPEN);
                 followTrajectory(quadDriveToRings);
                 followTrajectory(quadPickUpSomeRings);
                 followTrajectory(quadDriveToGoalAgain);
-                setPusher(CLAW_WAIT, Constants.ServoPosition.CLOSED);
-                setPusher(CLAW_WAIT, Constants.ServoPosition.OPEN);
+                setPusher(PUSHER_DELAY, Constants.ServoPosition.CLOSED);
+                setPusher(PUSHER_DELAY, Constants.ServoPosition.OPEN);
                 followTrajectory(quadPickUpSecondWobbleGoal);
                 followTrajectory(quadDriveToGoalOnceMore);
-                setPusher(CLAW_WAIT, Constants.ServoPosition.CLOSED);
-                setPusher(CLAW_WAIT, Constants.ServoPosition.OPEN);
-                setPusher(CLAW_WAIT, Constants.ServoPosition.CLOSED);
-                setPusher(CLAW_WAIT, Constants.ServoPosition.OPEN);
-                setPusher(CLAW_WAIT, Constants.ServoPosition.CLOSED);
-                setPusher(CLAW_WAIT, Constants.ServoPosition.OPEN);
+                setPusher(PUSHER_DELAY, Constants.ServoPosition.CLOSED);
+                setPusher(PUSHER_DELAY, Constants.ServoPosition.OPEN);
+                setPusher(PUSHER_DELAY, Constants.ServoPosition.CLOSED);
+                setPusher(PUSHER_DELAY, Constants.ServoPosition.OPEN);
+                setPusher(PUSHER_DELAY, Constants.ServoPosition.CLOSED);
+                setPusher(PUSHER_DELAY, Constants.ServoPosition.OPEN);
                 followTrajectory(quadDropOffSecondWobbleGoal);
                 followTrajectory(quadPark);
         }
@@ -368,30 +369,10 @@ public class Auto extends LinearOpMode {
             @Override
             public void start() {
                 robot.drive.followTrajectoryAsync(trajectory);
-                intakeJammedTime = Double.MAX_VALUE;
-                checkForJam = currentRuntime;
-                lastIntakePosition = robot.intake.getIntakePosition();
-                unJamming = false;
             }
             @Override
             public void whileRunning() {
                 robot.drive.update();
-                // check for jams
-                if (Math.abs(robot.intake.getIntakePower()) > 0.1 && currentRuntime > checkForJam + 0.25 && !unJamming) {
-                    currentIntakePosition = robot.intake.getIntakePosition();
-                    if (Math.abs(currentIntakePosition - lastIntakePosition) < 10) {
-                        robot.intake.setIntake(-0.5);
-                        lastIntakePosition = currentIntakePosition;
-                        intakeJammedTime = currentRuntime;
-                        unJamming = true;
-                    }
-                    checkForJam = currentRuntime;
-                }
-                if (currentRuntime > intakeJammedTime + 0.5) {
-                    robot.intake.setIntake(0.5);
-                    intakeJammedTime = Double.MAX_VALUE;
-                    unJamming = false;
-                }
             }
             @Override
             public void end() {}
@@ -424,33 +405,28 @@ public class Auto extends LinearOpMode {
             @Override
             public void start() {
                 ringsToFire = rings;
-                ringsFired = 0;
-                firing = false;
                 powershotsKnockedDown = !shootPowershots;
-                aimedAtTarget = false;
-                z = 0;
             }
             @Override
             public void whileRunning() {
                 if (!firing) {
                     // determine offset of target
-                    double px = 0;
                     if (!powershotsKnockedDown) {
                         powershot = robot.camera.getPowershots().getLeftMost();
                         if (powershot.isValid()) {
-                            px = powershot.getCenter().x + AUTO_AIM_OFFSET_X;
+                            targetPos = powershot.getCenter().x + SHOOTER_AUTO_AIM_OFFSET_X;
                         } else {
                             powershotsKnockedDown = true;
-                            robot.shooter.setShooter(SHOOTER_POWER);
+                            robot.shooter.setShooter(SHOOTER_GOAL_POWER);
                         }
                     } else {
                         red = robot.camera.getRed();
                         if (red.isValid()) {
-                            px = red.getCenter().x + AUTO_AIM_OFFSET_X;
+                            targetPos = red.getCenter().x + SHOOTER_AUTO_AIM_OFFSET_X;
                         }
                     }
                     // either start firing or move towards target
-                    if (Math.abs(px) <= 0.5) {
+                    if (Math.abs(targetPos) <= 0.7) {
                         z = 0;
                         firing = true;
                         robot.shooter.setPusher(Constants.ServoPosition.CLOSED);
@@ -458,16 +434,16 @@ public class Auto extends LinearOpMode {
                         zag = false;
                         zigTime = getRuntime();
                     } else {
-                        z = Math.copySign(Math.max(Math.abs((px / 50) * 0.7), 0.1), -px);
+                        z = Math.copySign(Math.max(Math.abs((targetPos / 50) * 0.7), 0.12), -targetPos);
                     }
                 } else {
                     // wait while servo is moving
-                    if (zig && getRuntime() > zigTime + 0.2) {
+                    if (zig && getRuntime() > zigTime + PUSHER_DELAY) {
                         robot.shooter.setPusher(Constants.ServoPosition.OPEN);
                         zig = false;
                         zag = true;
                         zagTime = getRuntime();
-                    } else if (zag && getRuntime() > zagTime + (powershotsKnockedDown ? 0.2 : 0.8)) {
+                    } else if (zag && getRuntime() > zagTime + (powershotsKnockedDown ? PUSHER_DELAY : PUSHER_DELAY * 2)) {
                         firing = false;
                         ringsFired++;
                     }

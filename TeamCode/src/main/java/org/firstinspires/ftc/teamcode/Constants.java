@@ -44,7 +44,7 @@ public class Constants {
     public static final double MIN_STARTERSTACK_SINGLE_AREA = 0.08;
     public static final double MIN_STARTERSTACK_QUAD_AREA = 1.10;
     public static final double MIN_GOAL_AREA = 0.01;
-    public static final double MIN_POWERSHOT_AREA = 0.0005; // 320 240 // 0.001
+    public static final double MIN_POWERSHOT_AREA = 0.0005;
     public static final Rect STARTERSTACK_LOCATION = new Rect(75, 75, 140, 90);
     public static final Point POWERSHOT_OFFSET = new Point(-3, -20); // offset from the bottom left of the goal to the top right of the powershot box
     public static final Size POWERSHOT_DIMENSIONS = new Size(100, 50);
@@ -56,26 +56,24 @@ public class Constants {
     public static final PowershotDetection INVALID_POWERSHOT_DETECTION = new PowershotDetection(new Size(0, 0), 0);
 
     // Robot Constants
-    public static final double WHEEL_DIAMETER = 4.0;
-    public static final double WHEEL_CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
     public static final double WHEEL_SLOW_SPEED = 0.3;
     public static final double WHEEL_SPEED = 0.7;
     public static final double WHEEL_TURBO_SPEED = 1.0;
     public static final double ARM_SPEED = 0.2;
     public static final int ARM_DEFAULT_POS = 0;
-    public static final int ARM_DOWN_POS = 750; // 750
-    public static final int ARM_UP_POS = 221;//221
-    public static final int ARM_ALMOST_DOWN_POS = 650;//650
-    public static final double CLAW_MIN = 0.13;//0.3
-    public static final double CLAW_MAX = 0.7;
-    public static final double CLAW_WAIT = 0.15;
-    public static final double INTAKE_MAX_SPEED = 0.75;
-    public static final double SECONDARY_INTAKE_RELATIVE_SPEED = 0.25;
-    public static final double SHOOTER_POWER = 0.62;
-    public static final double POWERSHOT_SHOOTER_POWER = 0.57;
-    public static final int AUTO_AIM_OFFSET_X = 7;
-    public static final double PUSHER_MIN = 0.35;
-    public static final double PUSHER_MAX = 0.55;
+    public static final int ARM_UP_POS = 221;
+    public static final int ARM_ALMOST_DOWN_POS = 650;
+    public static final int ARM_DOWN_POS = 750;
+    public static final double CLAW_CLOSED = 0.13;
+    public static final double CLAW_OPEN = 0.7;
+    public static final double INTAKE_SPEED = 0.75;
+    public static final double INTAKE_SECONDARY_RELATIVE_SPEED = 0.25;
+    public static final double SHOOTER_GOAL_POWER = 0.62;
+    public static final double SHOOTER_POWERSHOT_POWER = 0.57;
+    public static final double SHOOTER_AUTO_AIM_OFFSET_X = 7;
+    public static final double PUSHER_CLOSED = 0.45; // pusher_max -> 0.55
+    public static final double PUSHER_OPEN = 0.65; // pusher_min -> 0.35
+    public static final double PUSHER_DELAY = 0.15;
 
     // Hardware Name Constants
     public static final String WHEEL_FRONT_LEFT = "frontLeft";
@@ -85,22 +83,18 @@ public class Constants {
     public static final String ARM = "wobbler";
     public static final String CLAW = "claw";
     public static final String INTAKE = "intake";
-    public static final String SECONDARY_INTAKE = "secondary";
+    public static final String INTAKE_SECONDARY = "secondary";
     public static final String SHOOTER = "wheel";
     public static final String PUSHER = "pusher";
     public static final String STACK_WEBCAM = "Stack Webcam";
     public static final String TARGETING_WEBCAM = "Targeting Webcam";
     public static final String IMU_SENSOR = "imu";
-    public static final String COLOR_SENSOR = "color";
 
-    // Enums for StarterStack, Motor, and Servo Positions
+    // Enums for StarterStack and Servo Positions
     public enum StarterStack {
         NONE, SINGLE, QUAD
     }
     public enum ServoPosition {
         OPEN, CLOSED
-    }
-    public enum ArmPosition {
-        DEFAULT, UP, DOWN
     }
 }

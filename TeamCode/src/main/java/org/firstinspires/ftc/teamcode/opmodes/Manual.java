@@ -11,11 +11,11 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_DEFAULT_POS;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_UP_POS;
-import static org.firstinspires.ftc.teamcode.Constants.AUTO_AIM_OFFSET_X;
-import static org.firstinspires.ftc.teamcode.Constants.CLAW_WAIT;
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_MAX_SPEED;
-import static org.firstinspires.ftc.teamcode.Constants.POWERSHOT_SHOOTER_POWER;
-import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_POWER;
+import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SPEED;
+import static org.firstinspires.ftc.teamcode.Constants.PUSHER_DELAY;
+import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_AUTO_AIM_OFFSET_X;
+import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_GOAL_POWER;
+import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_POWERSHOT_POWER;
 import static org.firstinspires.ftc.teamcode.Constants.WHEEL_SLOW_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.WHEEL_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.WHEEL_TURBO_SPEED;
@@ -70,12 +70,13 @@ public class Manual extends OpMode {
     public void init() {
         telemetry.addLine("Initializing Robot...");
         telemetry.update();
+
         robot = new Robot(hardwareMap);
         robot.camera.initTargetingCamera();
         robot.arm.resetEncoder();
-        robot.shooter.setPusher(Constants.ServoPosition.OPEN);
         robot.arm.setClaw(Constants.ServoPosition.CLOSED);
         armPosition = ARM_DEFAULT_POS;
+        robot.shooter.setPusher(Constants.ServoPosition.OPEN);
     }
 
     // Wait for the first frame after the init button was pressed
@@ -137,7 +138,7 @@ public class Manual extends OpMode {
 
         // auto aim at powershots
         if ((autoaimPowershots) && powershot.isValid()) {
-            double px = powershot.getCenter().x+AUTO_AIM_OFFSET_X;
+            double px = powershot.getCenter().x+ SHOOTER_AUTO_AIM_OFFSET_X;
             if (Math.abs(px) < 50) {
                 double zMaxSpeed = 0.7;
                 double zErr = Math.abs(px);
@@ -155,7 +156,7 @@ public class Manual extends OpMode {
         }
         // auto aim at goal
         if ((autoaimGoal) && red.isValid()) {
-            double gx = red.getCenter().x+AUTO_AIM_OFFSET_X;
+            double gx = red.getCenter().x+ SHOOTER_AUTO_AIM_OFFSET_X;
             if (Math.abs(gx) < 50) {
                 double zMaxSpeed = 0.7;
                 double zErr = Math.abs(gx);
@@ -193,9 +194,9 @@ public class Manual extends OpMode {
 
         // intake
         if (intakeReversePressed) {
-            robot.intake.setIntake(-intakePower * INTAKE_MAX_SPEED);
+            robot.intake.setIntake(-intakePower * INTAKE_SPEED);
         } else {
-            robot.intake.setIntake(intakePower * INTAKE_MAX_SPEED);
+            robot.intake.setIntake(intakePower * INTAKE_SPEED);
         }
 
         // shooter
@@ -203,22 +204,22 @@ public class Manual extends OpMode {
             inPowerShotShooterMode = !inPowerShotShooterMode;
         }
         if (inPowerShotShooterMode) {
-            robot.shooter.setShooter(shooterPower * POWERSHOT_SHOOTER_POWER);
+            robot.shooter.setShooter(shooterPower * SHOOTER_POWERSHOT_POWER);
         } else {
-            robot.shooter.setShooter(shooterPower * SHOOTER_POWER);
+            robot.shooter.setShooter(shooterPower * SHOOTER_GOAL_POWER);
         }
 
         // move pusher in and out
         if (pusherPressed && !pusherPressedPrev) {
             robot.shooter.setPusher(Constants.ServoPosition.CLOSED);
-            finishTime = getRuntime() + CLAW_WAIT;
+            finishTime = getRuntime() + PUSHER_DELAY;
             checkPusher = true;
             zig = true;
         }
         if (checkPusher && getRuntime() > finishTime) {
             if (zig) {
                 robot.shooter.setPusher(Constants.ServoPosition.OPEN);
-                finishTime += CLAW_WAIT;
+                finishTime += PUSHER_DELAY;
                 zig = false;
             } else {
                 zig = true;

@@ -12,6 +12,10 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.firstinspires.ftc.teamcode.Constants.WHEEL_BACK_RIGHT;
+import static org.firstinspires.ftc.teamcode.Constants.WHEEL_FRONT_LEFT;
+import static org.firstinspires.ftc.teamcode.Constants.WHEEL_FRONT_RIGHT;
+
 /*
  * Sample tracking wheel localizer implementation assuming the standard configuration:
  *
@@ -45,13 +49,12 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
                 new Pose2d(FORWARD_OFFSET, 0, Math.toRadians(90)) // front
         ));
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontLeft"));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backRight"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, WHEEL_FRONT_LEFT));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, WHEEL_FRONT_RIGHT));
+        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, WHEEL_BACK_RIGHT));
 
-        // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
         rightEncoder.setDirection(Encoder.Direction.REVERSE);
-    } //87.717, 87.830 --> 87.78
+    }
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
@@ -70,10 +73,6 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     @NonNull
     @Override
     public List<Double> getWheelVelocities() {
-        // TODO: If your encoder velocity can exceed 32767 counts / second (such as the REV Through Bore and other
-        //  competing magnetic encoders), change Encoder.getRawVelocity() to Encoder.getCorrectedVelocity() to enable a
-        //  compensation method
-
         return Arrays.asList(
                 encoderTicksToInches(leftEncoder.getCorrectedVelocity()) * X_MULTIPLIER,
                 encoderTicksToInches(rightEncoder.getCorrectedVelocity()) * X_MULTIPLIER,

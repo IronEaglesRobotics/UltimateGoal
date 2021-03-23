@@ -45,27 +45,16 @@ public class Camera {
         this.stackCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, STACK_WEBCAM), stackCameraMonitorViewId);
         this.stackPipeline = new StarterStackPipeline();
         stackCamera.setPipeline(stackPipeline);
-        stackCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                stackCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, WEBCAM_ROTATION);
-                stackCameraInitialized = true;
-            }
+        stackCamera.openCameraDeviceAsync(() -> {
+            stackCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, WEBCAM_ROTATION);
+            stackCameraInitialized = true;
         });
     }
 
     // Close the StarterStack Camera
     public void stopStackCamera() {
         if (stackCameraInitialized) {
-            stackCamera.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener()
-            {
-                @Override
-                public void onClose() {
-                    stackCameraInitialized = false;
-                }
-            });
+            stackCamera.closeCameraDeviceAsync(() -> stackCameraInitialized = false);
         }
     }
 
@@ -75,36 +64,16 @@ public class Camera {
         this.targetingCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, TARGETING_WEBCAM), targetingCameraMonitorViewId);
         this.targetingPipeline = new TargetingPipeline();
         targetingCamera.setPipeline(targetingPipeline);
-        targetingCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                targetingCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, WEBCAM_ROTATION);
-                targetingCameraInitialized = true;
-            }
+        targetingCamera.openCameraDeviceAsync(() -> {
+            targetingCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, WEBCAM_ROTATION);
+            targetingCameraInitialized = true;
         });
     }
 
     // Close the Targeting Camera
     public void stopTargetingCamera() {
         if (targetingCameraInitialized) {
-            targetingCamera.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener()
-            {
-                @Override
-                public void onClose() {
-                    targetingCameraInitialized = false;
-                }
-            });
-        }
-    }
-
-    // Shut down whatever camera is running if you are unsure if one is
-    public void shutdownCamera() {
-        if (stackCameraInitialized) {
-            stopStackCamera();
-        } else if (targetingCameraInitialized) {
-            stopTargetingCamera();
+            targetingCamera.closeCameraDeviceAsync(() -> targetingCameraInitialized = false);
         }
     }
 
@@ -155,7 +124,7 @@ public class Camera {
     // Get Telemetry for the current active camera
     public String getTelemetry() {
         if (stackCameraInitialized) {
-            return String.format(Locale.US, "Stack: %s", checkStack());
+            return String.format(Locale.US, "Stack: %s\nSize: %.4f", checkStack(), getStarterStack().getArea());
         } else if (targetingCameraInitialized) {
             return String.format(Locale.US, "PowerShots: (%.1f,%.1f) (%.1f,%.1f) (%.1f,%.1f)\n" +
                                                     "Red Goal:  Area: %.2f Center: (%.2f,%.2f)\n" +

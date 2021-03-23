@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.Constants.INTAKE;
-import static org.firstinspires.ftc.teamcode.Constants.SECONDARY_INTAKE;
-import static org.firstinspires.ftc.teamcode.Constants.SECONDARY_INTAKE_RELATIVE_SPEED;
+import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SECONDARY;
+import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SECONDARY_RELATIVE_SPEED;
 
 // Class for the intake
 public class Intake {
@@ -17,29 +17,22 @@ public class Intake {
     // Constructor
     public Intake(HardwareMap hardwareMap) {
         intake = hardwareMap.get(DcMotor.class, INTAKE);
-        secondary = hardwareMap.get(DcMotor.class, SECONDARY_INTAKE);
+        secondary = hardwareMap.get(DcMotor.class, INTAKE_SECONDARY);
 
-        // set intake and secondary to opposite directions in order for them to work together
         intake.setDirection(DcMotor.Direction.REVERSE);
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         secondary.setDirection(DcMotor.Direction.FORWARD);
         secondary.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    // Set power
+    // Set intake power
     public void setIntake(double power) {
         intake.setPower(power);
-        secondary.setPower(power * SECONDARY_INTAKE_RELATIVE_SPEED);
+        secondary.setPower(power * INTAKE_SECONDARY_RELATIVE_SPEED);
     }
 
-    public double getIntakePower() {
-        return intake.getPower();
-    }
-    public double getIntakePosition() {
-        return intake.getCurrentPosition();
-    }
-
-    // Get Telemetry for the intake
+    // Get telemetry for the intake
     public String getTelemetry() {
         return String.format(Locale.US, "Intake: %.2f %.2f", intake.getPower(), secondary.getPower());
     }

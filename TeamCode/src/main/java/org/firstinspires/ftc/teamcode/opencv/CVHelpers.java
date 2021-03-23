@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opencv;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
@@ -10,7 +10,6 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 // CV Helper Functions
@@ -70,12 +69,7 @@ public class CVHelpers {
 
     // Get the top largest contours
     public static List<MatOfPoint> getLargestContours(List<MatOfPoint> contours, int numContours) {
-        Collections.sort(contours, new Comparator<MatOfPoint>() {
-            @Override
-            public int compare(MatOfPoint a, MatOfPoint b) {
-                return (int) Imgproc.contourArea(b) - (int) Imgproc.contourArea(a);
-            }
-        });
+        Collections.sort(contours, (a, b) -> (int) Imgproc.contourArea(b) - (int) Imgproc.contourArea(a));
         return contours.subList(0, Math.min(numContours, contours.size()));
     }
 }

@@ -44,6 +44,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import static org.firstinspires.ftc.teamcode.Constants.IMU_SENSOR;
+import static org.firstinspires.ftc.teamcode.Constants.WHEEL_BACK_LEFT;
+import static org.firstinspires.ftc.teamcode.Constants.WHEEL_BACK_RIGHT;
+import static org.firstinspires.ftc.teamcode.Constants.WHEEL_FRONT_LEFT;
+import static org.firstinspires.ftc.teamcode.Constants.WHEEL_FRONT_RIGHT;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_ACCEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_VEL;
@@ -132,20 +137,15 @@ public class SampleMecanumDrive extends MecanumDrive {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
-        // TODO: adjust the names of the following hardware devices to match your configuration
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu = hardwareMap.get(BNO055IMU.class, IMU_SENSOR);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
 
-        // TODO: if your hub is mounted vertically, remap the IMU axes so that the z-axis points
-        // upward (normal to the floor) using a command like the following:
-//         BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
-
-        leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
-        rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
-        rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
+        leftFront = hardwareMap.get(DcMotorEx.class, WHEEL_FRONT_LEFT);
+        leftRear = hardwareMap.get(DcMotorEx.class, WHEEL_BACK_LEFT);
+        rightRear = hardwareMap.get(DcMotorEx.class, WHEEL_BACK_RIGHT);
+        rightFront = hardwareMap.get(DcMotorEx.class, WHEEL_FRONT_RIGHT);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -165,12 +165,9 @@ public class SampleMecanumDrive extends MecanumDrive {
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
         }
 
-        // TODO: reverse any motors using DcMotor.setDirection()
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        // TODO: if desired, use setLocalizer() to change the localization method
-        // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
         setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
     }
 
@@ -402,7 +399,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public Double getExternalHeadingVelocity() {
-        // TODO: This must be changed to match your configuration
+        // This must be changed to match your configuration
         //                           | Z axis
         //                           |
         //     (Motor Port Side)     |   / X axis
@@ -421,9 +418,5 @@ public class SampleMecanumDrive extends MecanumDrive {
         // flat on a surface
 
         return (double) imu.getAngularVelocity().xRotationRate;
-    }
-
-    public String getTelemetry() {
-        return String.format(Locale.US, "fl: %.2f fr: %.2f bl: %.2f br: %.2f", getWheelVelocities().get(0), getWheelVelocities().get(1), getWheelVelocities().get(2), getWheelVelocities().get(3));
     }
 }

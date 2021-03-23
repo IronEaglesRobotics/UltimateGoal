@@ -1,13 +1,12 @@
 # 3708 Iron Eagles Robotics Teamcode
 
 ## How the code is structured:  
-- All of the code that we work on is underneath the teamcode folder, everything else is a magical black box that makes the app work
+- All of the code that we work on is underneath the teamcode folder, everything else can be thought of as magical extra files that make the app work (although reading through what is available to get an understanding of how it works is great too)
 - The [drive](drive) and [util](util) folders both contain roadrunner helper files and opmodes
-- In the [opmodes](opmodes) folder there are different opmodes for autonomous and driver controlled
-- The opmodes use the classes that make up the robot from the [robot](robot) folder to direct the robot to make certain movements
-- the [opencv](opencv) folders contains classes for detections, and the pipelines contain methods that run every time a frame is received from the cameras
-- the [CVHelpers](CVHelpers.java) contain helper methods for the rest of the code
-- the [Constants](Constants.java) class contains a list of all the major constants that don't change
+- In the [opmodes](opmodes) folder there are different opmodes for autonomous and driver control periods
+- The [robot](robot) folder houses all the different sub classes for the robot such as the arm and intake
+- The [opencv](opencv) folders contains classes for detections and pipelines that run every time a frame is received from the cameras
+- The [Constants](Constants.java) class contains a list of all the major constants that don't change
 
 ## Viewing the Dashboard:
 1. First connect to the FTC-prN network (password is password)
@@ -26,7 +25,7 @@
 4. Open your code to upload in Android Studio
 5. Press `Shift + F10` or click the green triangle to upload your code
 
-## Adding your own code:  
+## Creating your own code:  
 1. download android studio and clone (copy) this current git repository to somewhere local on your computer  
 2. ask Senor Scott or Mr. Thurlow to give you your own branch if you don't already have one so we don't all try to change the same branch of code  
 3. add your own code (try to add comments, make it readable, and make it something that you think will work / be an improvement over what was there before)  

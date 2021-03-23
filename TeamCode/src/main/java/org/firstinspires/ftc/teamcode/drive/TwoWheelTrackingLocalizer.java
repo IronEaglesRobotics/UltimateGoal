@@ -13,6 +13,9 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.firstinspires.ftc.teamcode.Constants.WHEEL_BACK_RIGHT;
+import static org.firstinspires.ftc.teamcode.Constants.WHEEL_FRONT_RIGHT;
+
 /*
  * Sample tracking wheel localizer implementation assuming the standard configuration:
  *
@@ -62,10 +65,9 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         this.drive = drive;
 
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backRight"));
-        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, WHEEL_BACK_RIGHT));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, WHEEL_FRONT_RIGHT));
 
-        // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
         parallelEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
@@ -95,10 +97,6 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     @NonNull
     @Override
     public List<Double> getWheelVelocities() {
-        // TODO: If your encoder velocity can exceed 32767 counts / second (such as the REV Through Bore and other
-        //  competing magnetic encoders), change Encoder.getRawVelocity() to Encoder.getCorrectedVelocity() to enable a
-        //  compensation method
-
         return Arrays.asList(
                 encoderTicksToInches(parallelEncoder.getCorrectedVelocity()) * X_MULTIPLIER,
                 encoderTicksToInches(perpendicularEncoder.getCorrectedVelocity()) * Y_MULTIPLIER

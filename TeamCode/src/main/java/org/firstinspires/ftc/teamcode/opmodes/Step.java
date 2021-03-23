@@ -11,7 +11,6 @@ public abstract class Step {
     public double x;
     public double y;
     public double z;
-    public double power;
 
     // variables when shooting
     public Detection powershot;
@@ -20,18 +19,11 @@ public abstract class Step {
     public int ringsFired;
     public boolean firing;
     public boolean powershotsKnockedDown;
-    public boolean aimedAtTarget;
+    public double targetPos;
     public boolean zig;
     public boolean zag;
     public double zigTime;
     public double zagTime;
-
-    // variables for intake jamming
-    public double currentIntakePosition;
-    public double lastIntakePosition;
-    public double intakeJammedTime;
-    public double checkForJam;
-    public boolean unJamming;
 
     // Constructors
     public Step(String telemetry) {
@@ -54,10 +46,12 @@ public abstract class Step {
         return timeout;
     }
 
+    // Set the  telemetry for the step
     public void setTelemetry(String telemetry) {
         this.telemetry = telemetry;
     }
-    // Return the Telemetry for the step
+
+    // Get the telemetry for the step
     public String getTelemetry() {
         return telemetry;
     }

@@ -7,13 +7,13 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-import static org.firstinspires.ftc.teamcode.CVHelpers.drawConvexHull;
-import static org.firstinspires.ftc.teamcode.CVHelpers.drawPoint;
-import static org.firstinspires.ftc.teamcode.CVHelpers.getBottomLeftOfContour;
-import static org.firstinspires.ftc.teamcode.CVHelpers.getCenterOfContour;
 import static org.firstinspires.ftc.teamcode.Constants.GREEN;
 import static org.firstinspires.ftc.teamcode.Constants.INVALID_AREA;
 import static org.firstinspires.ftc.teamcode.Constants.INVALID_POINT;
+import static org.firstinspires.ftc.teamcode.opencv.CVHelpers.drawConvexHull;
+import static org.firstinspires.ftc.teamcode.opencv.CVHelpers.drawPoint;
+import static org.firstinspires.ftc.teamcode.opencv.CVHelpers.getBottomLeftOfContour;
+import static org.firstinspires.ftc.teamcode.opencv.CVHelpers.getCenterOfContour;
 
 // Class for a Detection
 public class Detection {
