@@ -78,6 +78,15 @@ public class Octoliner extends I2cDeviceSynchDevice<I2cDeviceSynch> implements H
         return String.format("[%d, %d, %d, %d, %d, %d, %d, %d]", all[0], all[1], all[2], all[3], all[4], all[5], all[6], all[7]);
     }
 
+    /** Gets the result of {@link #digitalRead()} as a bitmap.
+     * @return A byte whose LSB is sensor 7 and MSB is sensor 0. If you were to take the result of
+     * {@link #digitalReadString()} and interpret it as a byte, you would get this number. 
+     */
+    public byte digitalReadByte() {
+        int[] all = digitalRead();
+        return (byte)((all[0] << 7) | (all[1] << 6) | (all[2] << 5) | (all[3] << 4) | (all[4] << 3) | (all[5] << 2) | (all[6] << 1) | (all[7]));
+    }
+
     /** Returns the sum of all digital sensor values.
      * @return A total sum between the value 0 and 8.
      */
