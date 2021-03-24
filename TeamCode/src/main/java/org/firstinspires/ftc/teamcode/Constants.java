@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.teamcode.opencv.Detection;
 import org.firstinspires.ftc.teamcode.opencv.PowershotDetection;
 import org.opencv.core.Mat;
@@ -11,6 +13,7 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 // Class used to keep track of each constant value
+@Config
 public class Constants {
     // CV Color Constants
     public static final Scalar RED = new Scalar(255, 0, 0);
@@ -68,11 +71,13 @@ public class Constants {
     public static final double CLAW_OPEN = 0.7;
     public static final double INTAKE_SPEED = 0.75;
     public static final double INTAKE_SECONDARY_RELATIVE_SPEED = 0.25;
+    public static final double INTAKE_SHIELD_UP = 0.41;
+    public static final double INTAKE_SHIELD_DOWN = 0.94;
     public static final double SHOOTER_GOAL_POWER = 0.62;
     public static final double SHOOTER_POWERSHOT_POWER = 0.57;
     public static final double SHOOTER_AUTO_AIM_OFFSET_X = 7;
-    public static final double PUSHER_CLOSED = 0.45; // pusher_max -> 0.55
-    public static final double PUSHER_OPEN = 0.65; // pusher_min -> 0.35
+    public static final double PUSHER_CLOSED = 0.35;
+    public static final double PUSHER_OPEN = 0.55;
     public static final double PUSHER_DELAY = 0.15;
 
     // Hardware Name Constants
@@ -84,6 +89,7 @@ public class Constants {
     public static final String CLAW = "claw";
     public static final String INTAKE = "intake";
     public static final String INTAKE_SECONDARY = "secondary";
+    public static final String INTAKE_SHIELD = "shield";
     public static final String SHOOTER = "wheel";
     public static final String PUSHER = "pusher";
     public static final String STACK_WEBCAM = "Stack Webcam";

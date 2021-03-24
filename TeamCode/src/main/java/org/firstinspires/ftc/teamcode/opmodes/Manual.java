@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_DEFAULT_POS;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.Constants.ARM_UP_POS;
+import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SHIELD_UP;
 import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.PUSHER_DELAY;
 import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_AUTO_AIM_OFFSET_X;
@@ -54,6 +55,10 @@ public class Manual extends OpMode {
 
     private boolean intakeReversePressed;
     private double intakePower;
+    private boolean shieldPressedPrev;
+    private boolean shieldPressed;
+    public double shieldPosition;
+    public double shieldManual;
 
     private boolean powershotPowerPressedPrev;
     private boolean powershotPowerPressed;
@@ -77,6 +82,8 @@ public class Manual extends OpMode {
         robot.arm.setClaw(Constants.ServoPosition.CLOSED);
         armPosition = ARM_DEFAULT_POS;
         robot.shooter.setPusher(Constants.ServoPosition.OPEN);
+        robot.intake.setShield(Constants.ServoPosition.CLOSED);
+        shieldPosition = INTAKE_SHIELD_UP;
     }
 
     // Wait for the first frame after the init button was pressed
@@ -113,6 +120,8 @@ public class Manual extends OpMode {
 
         intakeReversePressed = gamepad2.left_bumper;
         intakePower = gamepad2.left_trigger;
+        shieldPressed = gamepad2.left_stick_button;
+        shieldManual = gamepad2.left_stick_y;
 
         powershotPowerPressed = gamepad2.right_bumper;
         shooterPower = gamepad2.right_trigger;
@@ -198,6 +207,10 @@ public class Manual extends OpMode {
         } else {
             robot.intake.setIntake(intakePower * INTAKE_SPEED);
         }
+        if (Math.abs(shieldManual) > 0.2) {
+            shieldPosition -= shieldManual * 0.01;
+        }
+        robot.intake.setShield(shieldPosition);
 
         // shooter
         if (powershotPowerPressed && !powershotPowerPressedPrev) {
@@ -236,6 +249,7 @@ public class Manual extends OpMode {
         clawPressedPrev = clawPressed;
         powershotPowerPressedPrev = powershotPowerPressed;
         pusherPressedPrev = pusherPressed;
+        shieldPressedPrev = shieldPressed;
 
         // show telemetry
         telemetry.addLine(robot.getTelemetry());

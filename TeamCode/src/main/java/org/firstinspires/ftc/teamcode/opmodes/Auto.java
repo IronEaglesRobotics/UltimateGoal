@@ -135,6 +135,7 @@ public class Auto extends LinearOpMode {
 
         // no rings
         noneDropOffFirstWobbleGoal = robot.drive.trajectoryBuilder(startPose)
+                .addTemporalMarker(0, () -> robot.intake.setShield(Constants.ServoPosition.OPEN))
                 .addTemporalMarker(0, () -> robot.shooter.setPusher(Constants.ServoPosition.OPEN))
                 .lineToLinearHeading(new Pose2d(0, -55.75, Math.toRadians(135)))
                 .build();
@@ -170,6 +171,7 @@ public class Auto extends LinearOpMode {
 
         // one ring
         singleDropOffFirstWobbleGoal = robot.drive.trajectoryBuilder(startPose)
+                .addTemporalMarker(0, () -> robot.intake.setShield(Constants.ServoPosition.OPEN))
                 .addTemporalMarker(0, () -> robot.shooter.setPusher(Constants.ServoPosition.OPEN))
                 .back(26)
                 .splineToConstantHeading(new Vector2d(19, -42), Math.toRadians(0))
@@ -207,22 +209,24 @@ public class Auto extends LinearOpMode {
 
         // four rings
         quadDropOffFirstWobbleGoal = robot.drive.trajectoryBuilder(startPose)
+                .addTemporalMarker(0, () -> robot.intake.setShield(Constants.ServoPosition.OPEN))
                 .addTemporalMarker(0, () -> robot.shooter.setPusher(Constants.ServoPosition.OPEN))
                 .lineToLinearHeading(new Pose2d(44, -55.75, Math.toRadians(135)))
                 .build();
         quadDriveToGoal = robot.drive.trajectoryBuilder(quadDropOffFirstWobbleGoal.end())
                 .addTemporalMarker(0, () -> robot.shooter.setShooter(SHOOTER_GOAL_POWER))
                 .addTemporalMarker(0, () -> robot.arm.setArm(ARM_DOWN_POS))
+                .addTemporalMarker(1, () -> robot.intake.setShield(Constants.ServoPosition.CLOSED))
                 .lineToLinearHeading(new Pose2d(-6, -45, Math.toRadians(0)))
                 .build();
         quadDriveToRings = robot.drive.trajectoryBuilder(quadDriveToGoal.end())
                 .addTemporalMarker(0, () -> robot.arm.setClaw(Constants.ServoPosition.OPEN))
-                .lineToLinearHeading(new Pose2d(-18, -38, Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(-8, -38, Math.toRadians(0)))//x:-18
                 .build();
         quadPickUpSomeRings = robot.drive.trajectoryBuilder(quadDriveToRings.end())
                 .addTemporalMarker(0, () -> robot.shooter.setShooter(SHOOTER_GOAL_POWER))
                 .addTemporalMarker(0, () -> robot.intake.setIntake(INTAKE_SPEED))
-                .back(10, new MinVelocityConstraint(
+                .back(15, new MinVelocityConstraint(
                         Arrays.asList(
                                 new AngularVelocityConstraint(DriveConstants.MAX_ANG_VEL),
                                 new MecanumVelocityConstraint(15, DriveConstants.TRACK_WIDTH)
@@ -248,6 +252,7 @@ public class Auto extends LinearOpMode {
         quadDropOffSecondWobbleGoal = robot.drive.trajectoryBuilder(quadDriveToGoalOnceMore.end())
                 .addTemporalMarker(0, () -> robot.shooter.setShooter(0))
                 .addTemporalMarker(0, () -> robot.intake.setIntake(0))
+                .addTemporalMarker(0, () -> robot.intake.setShield(Constants.ServoPosition.OPEN))
                 .addTemporalMarker(3, () -> robot.arm.setClaw(Constants.ServoPosition.OPEN))
                 .lineToLinearHeading(new Pose2d(32, -53, Math.toRadians(180)))
                 .build();
