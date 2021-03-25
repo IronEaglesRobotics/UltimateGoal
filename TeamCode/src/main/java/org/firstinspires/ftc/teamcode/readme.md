@@ -2,16 +2,17 @@
 
 ## How the code is structured:  
 - All of the code that we work on is underneath the teamcode folder, everything else can be thought of as magical extra files that make the app work (although reading through what is available to get an understanding of how it works is great too)
-- The [drive](drive) and [util](util) folders both contain roadrunner helper files and opmodes
-- In the [opmodes](opmodes) folder there are different opmodes for autonomous and driver control periods
-- The [robot](robot) folder houses all the different sub classes for the robot such as the arm and intake
-- The [opencv](opencv) folders contains classes for detections and pipelines that run every time a frame is received from the cameras
+- The [drive](drive) folder contains roadrunner classes and opmodes
+- The [opmodes](opmodes) folder contains different opmodes for autonomous and driver control periods
+- The [robot](robot) folder contains different sub classes for the robot such as the arm and intake
+- The [opencv](opencv) folder contains classes for detections and pipelines that run every time a frame is received from the cameras
+- The [util](util) folder contains various utility classes, mostly for roadrunner
 - The [Constants](Constants.java) class contains a list of all the major constants that don't change
 
 ## Viewing the Dashboard:
 1. First connect to the FTC-prN network (password is password)
 2. Go to `192.168.43.1:8080/dash` in a web browser
-3. You should then be able to view the opmodes as well as view of where the robot thinks it is on the field
+3. You should then be able to view the opmodes as well as where the robot thinks it is on the field
 
 ## Uploading code to the robot over USB-C:  
 1. First connect to the robot control hub via usb-c
