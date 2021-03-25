@@ -208,7 +208,7 @@ public class Manual extends OpMode {
             robot.intake.setIntake(intakePower * INTAKE_SPEED);
         }
         if (Math.abs(shieldManual) > 0.2) {
-            shieldPosition -= shieldManual * 0.01;
+            shieldPosition -= shieldManual * 0.02;
         }
         robot.intake.setShield(shieldPosition);
 
