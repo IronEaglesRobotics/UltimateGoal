@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -23,8 +24,14 @@ import static org.firstinspires.ftc.teamcode.Constants.WHEEL_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.WHEEL_TURBO_SPEED;
 
 // Main Driver Program
+@Config
 @TeleOp(name = "TeleOp", group = "Competition")
 public class Manual extends OpMode {
+    // config values
+    public static double AUTO_AIM_P = 0.8;
+    public static double AUTO_AIM_MIN = 0.15;
+    public static double SHIELD_SPEED = 0.02;
+
     private Robot robot;
 
     // detection values
@@ -153,7 +160,7 @@ public class Manual extends OpMode {
             if (Math.abs(targetPos) < 0.5) {
                 z = 0;
             } else {
-                z = Math.copySign(Math.max(Math.abs((targetPos / 50) * 0.8), 0.15), -targetPos);
+                z = Math.copySign(Math.max(Math.abs((targetPos / 50) * AUTO_AIM_P), AUTO_AIM_MIN), -targetPos);
             }
         }
         if (autoaimGoal) {
@@ -161,7 +168,7 @@ public class Manual extends OpMode {
             if (Math.abs(targetPos) < 0.5) {
                 z = 0;
             } else {
-                z = Math.copySign(Math.max(Math.abs((targetPos / 50) * 0.8), 0.15), -targetPos);
+                z = Math.copySign(Math.max(Math.abs((targetPos / 50) * AUTO_AIM_P), AUTO_AIM_MIN), -targetPos);
             }
         }
         robot.drive.setWeightedDrivePower(new Pose2d(x, y, z));
@@ -190,8 +197,8 @@ public class Manual extends OpMode {
         } else {
             robot.intake.setIntake(intakePower * INTAKE_SPEED);
         }
-        if (Math.abs(shieldManual) > 0.2) {
-            shieldPosition -= shieldManual * 0.02;
+        if (Math.abs(shieldManual) > 0.1) {
+            shieldPosition -= shieldManual * SHIELD_SPEED;
         }
         robot.intake.setShield(shieldPosition);
 
