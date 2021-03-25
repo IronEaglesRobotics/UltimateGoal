@@ -29,8 +29,8 @@ import static org.firstinspires.ftc.teamcode.Constants.RED_UPPER_1;
 import static org.firstinspires.ftc.teamcode.Constants.RED_UPPER_2;
 import static org.firstinspires.ftc.teamcode.Constants.STRUCTURING_ELEMENT;
 import static org.firstinspires.ftc.teamcode.Constants.WHITE;
-import static org.firstinspires.ftc.teamcode.opencv.CVHelpers.getLargestContour;
-import static org.firstinspires.ftc.teamcode.opencv.CVHelpers.getLargestContours;
+import static org.firstinspires.ftc.teamcode.util.CVUtil.getLargestContour;
+import static org.firstinspires.ftc.teamcode.util.CVUtil.getLargestContours;
 
 // Class for the pipeline that is used to detect the goals and powershots
 public class TargetingPipeline extends OpenCvPipeline {

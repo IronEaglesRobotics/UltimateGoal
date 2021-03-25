@@ -10,10 +10,10 @@ import org.opencv.imgproc.Imgproc;
 import static org.firstinspires.ftc.teamcode.Constants.GREEN;
 import static org.firstinspires.ftc.teamcode.Constants.INVALID_AREA;
 import static org.firstinspires.ftc.teamcode.Constants.INVALID_POINT;
-import static org.firstinspires.ftc.teamcode.opencv.CVHelpers.drawConvexHull;
-import static org.firstinspires.ftc.teamcode.opencv.CVHelpers.drawPoint;
-import static org.firstinspires.ftc.teamcode.opencv.CVHelpers.getBottomLeftOfContour;
-import static org.firstinspires.ftc.teamcode.opencv.CVHelpers.getCenterOfContour;
+import static org.firstinspires.ftc.teamcode.util.CVUtil.drawConvexHull;
+import static org.firstinspires.ftc.teamcode.util.CVUtil.drawPoint;
+import static org.firstinspires.ftc.teamcode.util.CVUtil.getBottomLeftOfContour;
+import static org.firstinspires.ftc.teamcode.util.CVUtil.getCenterOfContour;
 
 // Class for a Detection
 public class Detection {

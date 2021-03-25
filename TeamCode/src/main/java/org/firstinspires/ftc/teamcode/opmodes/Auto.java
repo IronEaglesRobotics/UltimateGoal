@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.drive.PoseStorage;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
 import java.util.ArrayList;
@@ -121,6 +122,9 @@ public class Auto extends LinearOpMode {
                 stepTimeout = step.getTimeout() != -1 ? currentRuntime + step.getTimeout() : Double.MAX_VALUE;
                 step.start();
             }
+
+            // save current robot position
+            PoseStorage.currentPose = robot.drive.getPoseEstimate();
 
             // while the step is running display telemetry
             step.whileRunning();

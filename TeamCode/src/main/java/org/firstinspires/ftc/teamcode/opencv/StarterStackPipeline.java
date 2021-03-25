@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opencv;
 
+import org.firstinspires.ftc.teamcode.util.CVUtil;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -60,7 +61,7 @@ public class StarterStackPipeline extends OpenCvPipeline  {
         // set the largest detection that was found to be the StarterStack
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(starterStackMask, contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
-        starterStack.setContour(CVHelpers.getLargestContour(contours));
+        starterStack.setContour(CVUtil.getLargestContour(contours));
 
         // draw the StarterStack detection as well as where was looked for it on the screen
         Imgproc.rectangle(input, STARTERSTACK_LOCATION, WHITE, 2);

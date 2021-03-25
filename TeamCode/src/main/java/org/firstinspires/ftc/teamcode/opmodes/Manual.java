@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.drive.PoseStorage;
 import org.firstinspires.ftc.teamcode.opencv.Detection;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
@@ -30,8 +31,6 @@ public class Manual extends OpMode {
     private Detection red;
     private Detection blue;
     private Detection powershot;
-    private boolean aimedAtPowershots;
-    private boolean aimedAtGoal;
 
     // button presses for driver 1
     private double x;
@@ -84,6 +83,9 @@ public class Manual extends OpMode {
         robot.shooter.setPusher(Constants.ServoPosition.OPEN);
         robot.intake.setShield(Constants.ServoPosition.CLOSED);
         shieldPosition = INTAKE_SHIELD_UP;
+
+        // set current position of the robot
+        robot.drive.setPoseEstimate(PoseStorage.currentPose);
     }
 
     // Wait for the first frame after the init button was pressed
@@ -145,41 +147,22 @@ public class Manual extends OpMode {
 
         // ------------------------- driver 2 ------------------------- //
 
-        // auto aim at powershots
-        if ((autoaimPowershots) && powershot.isValid()) {
-            double px = powershot.getCenter().x+ SHOOTER_AUTO_AIM_OFFSET_X;
-            if (Math.abs(px) < 50) {
-                double zMaxSpeed = 0.7;
-                double zErr = Math.abs(px);
-                double zSpeed = (zErr / 50) * zMaxSpeed;
-                if (zErr <= 1) {
-                    z = 0;
-                    aimedAtPowershots = true;
-                } else if (zErr > 1) {
-                    z = Math.copySign(Math.max(zSpeed, 0.1), -px);
-                    aimedAtPowershots = false;
-                }
+        // auto aim
+        if (autoaimPowershots) {
+            double targetPos = powershot.getCenter().x+ SHOOTER_AUTO_AIM_OFFSET_X;
+            if (Math.abs(targetPos) < 0.5) {
+                z = 0;
+            } else {
+                z = Math.copySign(Math.max(Math.abs((targetPos / 50) * 0.8), 0.15), -targetPos);
             }
-        } else {
-            aimedAtPowershots = false;
         }
-        // auto aim at goal
-        if ((autoaimGoal) && red.isValid()) {
-            double gx = red.getCenter().x+ SHOOTER_AUTO_AIM_OFFSET_X;
-            if (Math.abs(gx) < 50) {
-                double zMaxSpeed = 0.7;
-                double zErr = Math.abs(gx);
-                double zSpeed = (zErr / 50) * zMaxSpeed;
-                if (zErr <= 1) {
-                    z = 0;
-                    aimedAtGoal = true;
-                } else if (zErr > 1) {
-                    z = Math.copySign(Math.max(zSpeed, 0.1), -gx);
-                    aimedAtGoal = false;
-                }
+        if (autoaimGoal) {
+            double targetPos = red.getCenter().x+ SHOOTER_AUTO_AIM_OFFSET_X;
+            if (Math.abs(targetPos) < 0.5) {
+                z = 0;
+            } else {
+                z = Math.copySign(Math.max(Math.abs((targetPos / 50) * 0.8), 0.15), -targetPos);
             }
-        } else {
-            aimedAtGoal = false;
         }
         robot.drive.setWeightedDrivePower(new Pose2d(x, y, z));
         robot.drive.update();

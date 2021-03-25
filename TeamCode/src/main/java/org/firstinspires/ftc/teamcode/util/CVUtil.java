@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opencv;
+package org.firstinspires.ftc.teamcode.util;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 // CV Helper Functions
-public class CVHelpers {
+public class CVUtil {
 
     // Draw a point
     public static void drawPoint(Mat img, Point point, Scalar color) {

@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.config.Config;
-
 import org.firstinspires.ftc.teamcode.opencv.Detection;
 import org.firstinspires.ftc.teamcode.opencv.PowershotDetection;
 import org.opencv.core.Mat;
@@ -13,7 +11,6 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 // Class used to keep track of each constant value
-@Config
 public class Constants {
     // CV Color Constants
     public static final Scalar RED = new Scalar(255, 0, 0);
