@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -19,18 +20,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
-import static org.firstinspires.ftc.teamcode.Constants.ARM_ALMOST_DOWN_POS;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_DEFAULT_POS;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_DOWN_POS;
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SPEED;
-import static org.firstinspires.ftc.teamcode.Constants.PUSHER_DELAY;
-import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_AUTO_AIM_OFFSET_X;
-import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_GOAL_POWER;
-import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_POWERSHOT_POWER;
-
 // Main Autonomous Program
+@Config
 @Autonomous(name = "Autonomous", group = "Competition", preselectTeleOp = "TeleOp")
 public class Auto extends LinearOpMode {
+    // config variables
+    public static int ARM_DEFAULT_POS = 0;
+    public static int ARM_ALMOST_DOWN_POS = 650;
+    public static int ARM_DOWN_POS = 750;
+    public static double INTAKE_SPEED = 0.75;
+    public static double SHOOTER_GOAL_POWER = 0.62;
+    public static double SHOOTER_POWERSHOT_POWER = 0.57;
+    public static double SHOOTER_AUTO_AIM_OFFSET_X = 7;
+    public static double PUSHER_DELAY = 0.15;
+    public static double AUTO_AIM_P = 0.8;
+    public static double AUTO_AIM_MIN = 0.1;
+
     private Robot robot;
     private Constants.StarterStack stack;
     private ArrayList<Step> steps;
@@ -205,7 +210,9 @@ public class Auto extends LinearOpMode {
                 .addTemporalMarker(0, () -> robot.shooter.setShooter(0))
                 .addTemporalMarker(0, () -> robot.intake.setIntake(0))
                 .addTemporalMarker(3.5, () -> robot.arm.setClaw(Constants.ServoPosition.OPEN))
-                .lineToLinearHeading(new Pose2d(10, -26, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(11.5, -26, Math.toRadians(180)))
+                // note: currently the x is 10 on the last upload to the robot, I think adding an inch
+                // and a half will give a little more breathing room
                 .build();
         singlePark = robot.drive.trajectoryBuilder(singleDropOffSecondWobbleGoal.end())
                 .addTemporalMarker(0, () -> robot.arm.setArm(ARM_DEFAULT_POS))
@@ -416,7 +423,7 @@ public class Auto extends LinearOpMode {
                         zag = false;
                         zigTime = getRuntime();
                     } else {
-                        z = Math.copySign(Math.max(Math.abs((targetPos / 50) * 0.8), 0.15), -targetPos);
+                        z = Math.copySign(Math.max(Math.abs((targetPos / 50) * AUTO_AIM_P), AUTO_AIM_MIN), -targetPos);
                     }
                 } else {
                     // wait while servo is moving

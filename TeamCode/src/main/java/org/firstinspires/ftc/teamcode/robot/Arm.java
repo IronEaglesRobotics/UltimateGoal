@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -9,13 +10,16 @@ import org.firstinspires.ftc.teamcode.Constants;
 import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.Constants.ARM;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.CLAW;
-import static org.firstinspires.ftc.teamcode.Constants.CLAW_CLOSED;
-import static org.firstinspires.ftc.teamcode.Constants.CLAW_OPEN;
 
 // Class for the wobble goal arm and claw
+@Config
 public class Arm {
+    // config variables
+    public static double ARM_SPEED = 0.2;
+    public static double CLAW_CLOSED = 0.13;
+    public static double CLAW_OPEN = 0.7;
+
     private final DcMotor wobbler;
     private final Servo claw;
 
@@ -46,6 +50,10 @@ public class Arm {
     public void setArm(int position) {
         wobbler.setTargetPosition(position);
         wobbler.setPower(ARM_SPEED);
+    }
+
+    public int getPosition() {
+        return wobbler.getCurrentPosition();
     }
 
     // Reset arm encoder because the movement is based on the number of ticks from the starting position

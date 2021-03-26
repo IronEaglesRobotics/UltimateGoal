@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -10,13 +11,16 @@ import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.Constants.INTAKE;
 import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SECONDARY;
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SECONDARY_RELATIVE_SPEED;
 import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SHIELD;
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SHIELD_UP;
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SHIELD_DOWN;
 
 // Class for the intake
+@Config
 public class Intake {
+    // config variables
+    public static double INTAKE_SECONDARY_RELATIVE_SPEED = 0.25;
+    public static double INTAKE_SHIELD_UP = 0.41;
+    public static double INTAKE_SHIELD_DOWN = 0.94;
+
     private final DcMotor intake;
     private final DcMotor secondary;
     private final Servo shield;

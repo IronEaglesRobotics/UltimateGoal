@@ -10,28 +10,28 @@ import org.firstinspires.ftc.teamcode.drive.PoseStorage;
 import org.firstinspires.ftc.teamcode.opencv.Detection;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
-import static org.firstinspires.ftc.teamcode.Constants.ARM_DEFAULT_POS;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_DOWN_POS;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_UP_POS;
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SHIELD_UP;
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SPEED;
-import static org.firstinspires.ftc.teamcode.Constants.PUSHER_DELAY;
-import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_AUTO_AIM_OFFSET_X;
-import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_GOAL_POWER;
-import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_POWERSHOT_POWER;
-import static org.firstinspires.ftc.teamcode.Constants.WHEEL_SLOW_SPEED;
-import static org.firstinspires.ftc.teamcode.Constants.WHEEL_SPEED;
-import static org.firstinspires.ftc.teamcode.Constants.WHEEL_TURBO_SPEED;
-
 // Main Driver Program
 @Config
 @TeleOp(name = "TeleOp", group = "Competition")
 public class Manual extends OpMode {
-    // config values
+    // config variables
+    public static double WHEEL_SLOW_SPEED = 0.3;
+    public static double WHEEL_SPEED = 0.7;
+    public static double WHEEL_TURBO_SPEED = 1.0;
+    public static int ARM_DEFAULT_POS = 0;
+    public static int ARM_UP_POS = 221;
+    public static int ARM_DOWN_POS = 750;
+    public static double INTAKE_SPEED = 0.75;
+    public static double INTAKE_SHIELD_UP = 0.94;///wrong one
+    public static double SHIELD_SPEED = 0.04;
+    public static double SHOOTER_GOAL_POWER = 0.62;
+    public static double SHOOTER_POWERSHOT_POWER = 0.57;
+    public static double SHOOTER_AUTO_AIM_OFFSET_X = 7;
+    public static double PUSHER_DELAY = 0.15;
     public static double AUTO_AIM_P = 0.8;
-    public static double AUTO_AIM_MIN = 0.15;
-    public static double SHIELD_SPEED = 0.02;
+    public static double AUTO_AIM_MIN = 0.1;
 
+    // main robot
     private Robot robot;
 
     // detection values
@@ -88,8 +88,8 @@ public class Manual extends OpMode {
         robot.arm.setClaw(Constants.ServoPosition.CLOSED);
         armPosition = ARM_DEFAULT_POS;
         robot.shooter.setPusher(Constants.ServoPosition.OPEN);
-        robot.intake.setShield(Constants.ServoPosition.CLOSED);
         shieldPosition = INTAKE_SHIELD_UP;
+        robot.intake.setShield(shieldPosition);
 
         // set current position of the robot
         robot.drive.setPoseEstimate(PoseStorage.currentPose);
@@ -174,6 +174,9 @@ public class Manual extends OpMode {
         robot.drive.setWeightedDrivePower(new Pose2d(x, y, z));
         robot.drive.update();
 
+        // save current robot position
+        PoseStorage.currentPose = robot.drive.getPoseEstimate();
+
         // move arm up and down
         if (armUpPressed && !armUpPressedPrev) {
             armPosition = ARM_UP_POS;
@@ -181,6 +184,8 @@ public class Manual extends OpMode {
             armPosition = ARM_DOWN_POS;
         } else if (Math.abs(armManual) > 0.1) {
             armPosition -= armManual*20;
+        } else {
+            armPosition = robot.arm.getPosition();
         }
         robot.arm.setArm(armPosition);
 

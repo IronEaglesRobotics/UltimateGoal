@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -9,12 +10,15 @@ import org.firstinspires.ftc.teamcode.Constants;
 import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.Constants.PUSHER;
-import static org.firstinspires.ftc.teamcode.Constants.PUSHER_CLOSED;
-import static org.firstinspires.ftc.teamcode.Constants.PUSHER_OPEN;
 import static org.firstinspires.ftc.teamcode.Constants.SHOOTER;
 
 // Class for the shooter and pusher
+@Config
 public class Shooter {
+    // config variables
+    public static double PUSHER_CLOSED = 0.35;
+    public static double PUSHER_OPEN = 0.55;
+
     private final DcMotor wheel;
     private final Servo pusher;
 
