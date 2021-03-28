@@ -7,9 +7,9 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-import static org.firstinspires.ftc.teamcode.Constants.GREEN;
-import static org.firstinspires.ftc.teamcode.Constants.INVALID_AREA;
-import static org.firstinspires.ftc.teamcode.Constants.INVALID_POINT;
+import static org.firstinspires.ftc.teamcode.util.Constants.GREEN;
+import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_AREA;
+import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_POINT;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.drawConvexHull;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.drawPoint;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getBottomLeftOfContour;

@@ -11,9 +11,9 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.Constants.WHEEL_BACK_RIGHT;
-import static org.firstinspires.ftc.teamcode.Constants.WHEEL_FRONT_LEFT;
-import static org.firstinspires.ftc.teamcode.Constants.WHEEL_FRONT_RIGHT;
+import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_BACK_RIGHT;
+import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_FRONT_LEFT;
+import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_FRONT_RIGHT;
 
 /*
  * Sample tracking wheel localizer implementation assuming the standard configuration:

@@ -8,15 +8,15 @@ import org.firstinspires.ftc.teamcode.util.enums.Position;
 
 import java.util.Locale;
 
-import static org.firstinspires.ftc.teamcode.Constants.ARM;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_ALMOST_DOWN_POS;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_DEFAULT_POS;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_DOWN_POS;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_SPEED;
-import static org.firstinspires.ftc.teamcode.Constants.ARM_UP_POS;
-import static org.firstinspires.ftc.teamcode.Constants.CLAW;
-import static org.firstinspires.ftc.teamcode.Constants.CLAW_CLOSED;
-import static org.firstinspires.ftc.teamcode.Constants.CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.util.Constants.ARM;
+import static org.firstinspires.ftc.teamcode.util.Constants.ARM_ALMOST_DOWN_POS;
+import static org.firstinspires.ftc.teamcode.util.Constants.ARM_DEFAULT_POS;
+import static org.firstinspires.ftc.teamcode.util.Constants.ARM_DOWN_POS;
+import static org.firstinspires.ftc.teamcode.util.Constants.ARM_SPEED;
+import static org.firstinspires.ftc.teamcode.util.Constants.ARM_UP_POS;
+import static org.firstinspires.ftc.teamcode.util.Constants.CLAW;
+import static org.firstinspires.ftc.teamcode.util.Constants.CLAW_CLOSED;
+import static org.firstinspires.ftc.teamcode.util.Constants.CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.CLOSED;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;
 

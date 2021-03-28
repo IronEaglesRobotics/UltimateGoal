@@ -43,11 +43,11 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.Constants.IMU_SENSOR;
-import static org.firstinspires.ftc.teamcode.Constants.WHEEL_BACK_LEFT;
-import static org.firstinspires.ftc.teamcode.Constants.WHEEL_BACK_RIGHT;
-import static org.firstinspires.ftc.teamcode.Constants.WHEEL_FRONT_LEFT;
-import static org.firstinspires.ftc.teamcode.Constants.WHEEL_FRONT_RIGHT;
+import static org.firstinspires.ftc.teamcode.util.Constants.IMU_SENSOR;
+import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_BACK_LEFT;
+import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_BACK_RIGHT;
+import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_FRONT_LEFT;
+import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_FRONT_RIGHT;
 import static org.firstinspires.ftc.teamcode.hardware.drive.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.hardware.drive.DriveConstants.MAX_ANG_ACCEL;
 import static org.firstinspires.ftc.teamcode.hardware.drive.DriveConstants.MAX_ANG_VEL;

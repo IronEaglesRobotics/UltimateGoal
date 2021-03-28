@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.hardware.drive;
 
 import androidx.annotation.NonNull;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -13,8 +12,8 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.Constants.WHEEL_BACK_RIGHT;
-import static org.firstinspires.ftc.teamcode.Constants.WHEEL_FRONT_RIGHT;
+import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_BACK_RIGHT;
+import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_FRONT_RIGHT;
 
 /*
  * Sample tracking wheel localizer implementation assuming the standard configuration:

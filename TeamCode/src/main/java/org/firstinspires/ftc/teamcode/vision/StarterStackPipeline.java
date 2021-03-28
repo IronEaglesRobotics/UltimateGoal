@@ -10,15 +10,15 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 
-import static org.firstinspires.ftc.teamcode.Constants.ANCHOR;
-import static org.firstinspires.ftc.teamcode.Constants.BLUR_SIZE;
-import static org.firstinspires.ftc.teamcode.Constants.ERODE_DILATE_ITERATIONS;
-import static org.firstinspires.ftc.teamcode.Constants.MIN_STARTERSTACK_AREA;
-import static org.firstinspires.ftc.teamcode.Constants.ORANGE_LOWER;
-import static org.firstinspires.ftc.teamcode.Constants.ORANGE_UPPER;
-import static org.firstinspires.ftc.teamcode.Constants.STARTERSTACK_LOCATION;
-import static org.firstinspires.ftc.teamcode.Constants.STRUCTURING_ELEMENT;
-import static org.firstinspires.ftc.teamcode.Constants.WHITE;
+import static org.firstinspires.ftc.teamcode.util.Constants.ANCHOR;
+import static org.firstinspires.ftc.teamcode.util.Constants.BLUR_SIZE;
+import static org.firstinspires.ftc.teamcode.util.Constants.ERODE_DILATE_ITERATIONS;
+import static org.firstinspires.ftc.teamcode.util.Constants.MIN_STARTERSTACK_AREA;
+import static org.firstinspires.ftc.teamcode.util.Constants.ORANGE_LOWER;
+import static org.firstinspires.ftc.teamcode.util.Constants.ORANGE_UPPER;
+import static org.firstinspires.ftc.teamcode.util.Constants.STARTERSTACK_LOCATION;
+import static org.firstinspires.ftc.teamcode.util.Constants.STRUCTURING_ELEMENT;
+import static org.firstinspires.ftc.teamcode.util.Constants.WHITE;
 
 // Class for the pipeline that is used to detect the StarterStack
 public class StarterStackPipeline extends OpenCvPipeline  {

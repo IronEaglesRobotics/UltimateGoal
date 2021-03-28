@@ -8,12 +8,12 @@ import org.firstinspires.ftc.teamcode.util.enums.Position;
 
 import java.util.Locale;
 
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE;
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SECONDARY;
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SECONDARY_RELATIVE_SPEED;
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SHIELD;
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SHIELD_DOWN;
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SHIELD_UP;
+import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE;
+import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SECONDARY;
+import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SECONDARY_RELATIVE_SPEED;
+import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SHIELD;
+import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SHIELD_DOWN;
+import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SHIELD_UP;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.DOWN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;
 

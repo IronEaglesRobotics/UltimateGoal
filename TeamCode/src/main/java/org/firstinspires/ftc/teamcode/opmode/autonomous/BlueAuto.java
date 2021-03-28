@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.opmode.util.Auto;
 import org.firstinspires.ftc.teamcode.util.enums.StarterStack;
 
-import static org.firstinspires.ftc.teamcode.Constants.INTAKE_SPEED;
-import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_GOAL_POWER;
-import static org.firstinspires.ftc.teamcode.Constants.SHOOTER_POWERSHOT_POWER;
+import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SPEED;
+import static org.firstinspires.ftc.teamcode.util.Constants.SHOOTER_GOAL_POWER;
+import static org.firstinspires.ftc.teamcode.util.Constants.SHOOTER_POWERSHOT_POWER;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.ALMOST_DOWN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.BACK;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.CLOSED;

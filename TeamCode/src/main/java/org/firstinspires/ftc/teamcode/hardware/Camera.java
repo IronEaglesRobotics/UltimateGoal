@@ -13,15 +13,15 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 
 import java.util.Locale;
 
-import static org.firstinspires.ftc.teamcode.Constants.INVALID_DETECTION;
-import static org.firstinspires.ftc.teamcode.Constants.INVALID_POWERSHOT_DETECTION;
-import static org.firstinspires.ftc.teamcode.Constants.MIN_STARTERSTACK_QUAD_AREA;
-import static org.firstinspires.ftc.teamcode.Constants.MIN_STARTERSTACK_SINGLE_AREA;
-import static org.firstinspires.ftc.teamcode.Constants.STACK_WEBCAM;
-import static org.firstinspires.ftc.teamcode.Constants.TARGETING_WEBCAM;
-import static org.firstinspires.ftc.teamcode.Constants.WEBCAM_HEIGHT;
-import static org.firstinspires.ftc.teamcode.Constants.WEBCAM_ROTATION;
-import static org.firstinspires.ftc.teamcode.Constants.WEBCAM_WIDTH;
+import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_DETECTION;
+import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_POWERSHOT_DETECTION;
+import static org.firstinspires.ftc.teamcode.util.Constants.MIN_STARTERSTACK_QUAD_AREA;
+import static org.firstinspires.ftc.teamcode.util.Constants.MIN_STARTERSTACK_SINGLE_AREA;
+import static org.firstinspires.ftc.teamcode.util.Constants.STACK_WEBCAM;
+import static org.firstinspires.ftc.teamcode.util.Constants.TARGETING_WEBCAM;
+import static org.firstinspires.ftc.teamcode.util.Constants.WEBCAM_HEIGHT;
+import static org.firstinspires.ftc.teamcode.util.Constants.WEBCAM_ROTATION;
+import static org.firstinspires.ftc.teamcode.util.Constants.WEBCAM_WIDTH;
 import static org.firstinspires.ftc.teamcode.util.enums.StarterStack.NONE;
 import static org.firstinspires.ftc.teamcode.util.enums.StarterStack.QUAD;
 import static org.firstinspires.ftc.teamcode.util.enums.StarterStack.SINGLE;
