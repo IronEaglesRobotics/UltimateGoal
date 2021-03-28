@@ -4,7 +4,6 @@
 - The [opmode](opmode) folder contains different opmodes for autonomous and driver control periods
 - The [util](util) folder contains various utility classes, mostly for roadrunner
 - The [vision](vision) folder contains classes for detections and pipelines that run every time a frame is received from the cameras
-- The [Constants](Constants.java) class contains a list of major constants
 
 ## Viewing the Dashboard:
 1. First connect to the FTC-prN network (password is password)
