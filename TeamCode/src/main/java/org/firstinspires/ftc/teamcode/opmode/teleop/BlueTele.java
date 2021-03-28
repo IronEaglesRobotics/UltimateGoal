@@ -11,6 +11,6 @@ import org.firstinspires.ftc.teamcode.opmode.util.Tele;
 public class BlueTele extends Tele {
     @Override
     public void setAlliance() {
-        this.alliance = Alliance.RED;
+        this.alliance = Alliance.BLUE;
     }
 }

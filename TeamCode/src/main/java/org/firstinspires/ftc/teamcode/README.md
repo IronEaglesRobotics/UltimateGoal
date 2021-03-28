@@ -24,10 +24,11 @@
 5. Press `Shift + F10` or click the green triangle to upload your code
 
 ## Creating your own code:  
-1. download android studio and clone (copy) this current git repository to somewhere local on your computer  
-2. ask Senor Scott or Mr. Thurlow to give you your own branch if you don't already have one so we don't all try to change the same branch of code  
-3. add your own code (try to add comments, make it readable, and make it something that you think will work / be an improvement over what was there before)  
-4. press `Alt + S` and then `Ctrl + K` or click `VCS` and `Commit...` at the top
-5. add your commit message (what you changed), then press `Ctrl + Alt + K` or the `Commit and Push` button to push your code
-6. remember to **just commit to your own branch** unless you have permission otherwise, feel free to merge other branches into your own or suggest code that you think other people should include in their branches  
-7. overall have fun and enjoy coding!
+1. Download android studio and clone (copy) this current git repository to somewhere local on your computer  
+2. Ask Senor Scott or Mr. Thurlow to give you your own branch if you don't already have one so we don't all try to change the same branch of code  
+3. Add your own code (try to add comments, make it readable, and make it something that you think will work / be an improvement over what was there before)  
+4. Press `Alt + S` and then `Ctrl + K` or click `VCS` and `Commit...` at the top
+5. Add your commit message (what you changed), then press `Ctrl + Alt + K` or the `Commit and Push` button to push your code
+6. Press `Alt + P` or `Push` to finalize
+7. Remember to **just commit to your own branch** unless you have permission otherwise, feel free to merge other branches into your own or suggest code that you think other people should include in their branches  
+8. Overall have fun and enjoy coding!

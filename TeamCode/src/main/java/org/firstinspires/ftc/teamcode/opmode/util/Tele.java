@@ -92,15 +92,15 @@ public abstract class Tele extends OpMode {
         double z = driver1.getRightStick().getX();
         if (Math.abs(x) >= 0.1) {
             x += Math.copySign(driver1.getLeftTrigger().getValue() * (WHEEL_TURBO_SPEED - WHEEL_SPEED), x);
-            x += Math.copySign(Math.min(driver1.getRightTrigger().getValue() * (WHEEL_SPEED - WHEEL_SLOW_SPEED), Math.abs(x)), x);
+            x -= Math.copySign(Math.min(driver1.getRightTrigger().getValue() * (WHEEL_SPEED - WHEEL_SLOW_SPEED), Math.abs(x)), x);
         }
         if (Math.abs(y) >= 0.1) {
             y += Math.copySign(driver1.getLeftTrigger().getValue() * (WHEEL_TURBO_SPEED - WHEEL_SPEED), y);
-            y += Math.copySign(Math.min(driver1.getRightTrigger().getValue() * (WHEEL_SPEED - WHEEL_SLOW_SPEED), Math.abs(x)), y);
+            y -= Math.copySign(Math.min(driver1.getRightTrigger().getValue() * (WHEEL_SPEED - WHEEL_SLOW_SPEED), Math.abs(x)), y);
         }
         if (Math.abs(z) >= 0.1) {
             z += Math.copySign(driver1.getLeftTrigger().getValue() * (WHEEL_TURBO_SPEED - WHEEL_SPEED), z);
-            z += Math.copySign(Math.min(driver1.getRightTrigger().getValue() * (WHEEL_SPEED - WHEEL_SLOW_SPEED), Math.abs(x)), z);
+            z -= Math.copySign(Math.min(driver1.getRightTrigger().getValue() * (WHEEL_SPEED - WHEEL_SLOW_SPEED), Math.abs(x)), z);
         }
 
         // auto aim

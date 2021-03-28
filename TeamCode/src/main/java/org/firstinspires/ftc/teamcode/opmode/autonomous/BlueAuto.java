@@ -20,7 +20,7 @@ import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;
 
 @Config
-@Autonomous(name = "Blue Auto", group = "Competition", preselectTeleOp = "Blue TeleOp")
+@Autonomous(name = "Blue Autonomous", group = "Competition", preselectTeleOp = "Blue TeleOp")
 public class BlueAuto extends Auto {
     // these are just the red way points and need to be updated at some point
     public static Pose2d START_POSE = new Pose2d(-63.5, -55.75, Math.toRadians(180));
