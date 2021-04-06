@@ -23,6 +23,7 @@ import static org.firstinspires.ftc.teamcode.util.Constants.SHOOTER_AUTO_AIM_OFF
 import static org.firstinspires.ftc.teamcode.util.Constants.SHOOTER_GOAL_POWER;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.CLOSED;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;
+import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;
 
 // Abstract Auto Program
 public abstract class Auto extends LinearOpMode {
@@ -38,7 +39,7 @@ public abstract class Auto extends LinearOpMode {
         telemetry.update();
         robot = new Robot(hardwareMap);
         robot.shooter.setPusher(OPEN);
-        robot.intake.setShield(OPEN);
+        robot.intake.setShield(UP);
         robot.camera.initStackCamera();
         while (robot.camera.getFrameCount() < 1) {
             idle();

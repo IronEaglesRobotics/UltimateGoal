@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import com.acmerobotics.dashboard.config.Config;
-
 import org.firstinspires.ftc.teamcode.vision.Detection;
 import org.firstinspires.ftc.teamcode.vision.PowershotDetection;
 import org.opencv.core.Mat;
@@ -12,7 +10,6 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Config
 public class Constants {
     // CV Color Constants
     public static Scalar RED = new Scalar(255, 0, 0);
@@ -71,16 +68,16 @@ public class Constants {
     public static double INTAKE_SPEED = 0.75;
     public static double INTAKE_SECONDARY_RELATIVE_SPEED = 0.25;
     public static double INTAKE_SHIELD_UP = 0.41;
-    public static double INTAKE_SHIELD_DOWN = 0.94;
+    public static double INTAKE_SHIELD_DOWN = 0.93;
     public static double SHIELD_SPEED = 0.04;
     public static double SHOOTER_GOAL_POWER = 0.62;
     public static double SHOOTER_POWERSHOT_POWER = 0.57;
-    public static double SHOOTER_AUTO_AIM_OFFSET_X = 7;
+    public static double SHOOTER_AUTO_AIM_OFFSET_X = 8;
     public static double PUSHER_CLOSED = 0.35;
     public static double PUSHER_OPEN = 0.55;
     public static double PUSHER_DELAY = 0.15;
     public static double AUTO_AIM_P = 0.8;
-    public static double AUTO_AIM_MIN = 0.15;
+    public static double AUTO_AIM_MIN = 0.12;
 
     // Hardware Name Constants
     public static final String WHEEL_FRONT_LEFT = "frontLeft";

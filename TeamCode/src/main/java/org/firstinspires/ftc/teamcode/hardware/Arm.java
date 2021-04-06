@@ -68,7 +68,7 @@ public class Arm {
     }
 
     public Position getClaw() {
-        return Math.abs(claw.getPosition() - CLAW_OPEN) > Math.abs(claw.getPosition() - CLAW_CLOSED) ? OPEN : CLOSED;
+        return Math.abs(claw.getPosition() - CLAW_OPEN) < Math.abs(claw.getPosition() - CLAW_CLOSED) ? OPEN : CLOSED;
     }
 
     public void setClaw(Position position) {

@@ -10,7 +10,6 @@ import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE;
 import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SECONDARY;
-import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SECONDARY_RELATIVE_SPEED;
 import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SHIELD;
 import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SHIELD_DOWN;
 import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SHIELD_UP;
@@ -30,17 +29,17 @@ public class Intake {
         intake.setDirection(DcMotor.Direction.REVERSE);
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        secondary.setDirection(DcMotor.Direction.FORWARD);
+        secondary.setDirection(DcMotor.Direction.REVERSE);
         secondary.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void setIntake(double power) {
         intake.setPower(power);
-        secondary.setPower(power * INTAKE_SECONDARY_RELATIVE_SPEED);
+        secondary.setPower(power);
     }
 
     public Position getShield() {
-        return Math.abs(shield.getPosition() - INTAKE_SHIELD_UP) > Math.abs(shield.getPosition() - INTAKE_SHIELD_DOWN) ? UP : DOWN;
+        return Math.abs(shield.getPosition() - INTAKE_SHIELD_UP) < Math.abs(shield.getPosition() - INTAKE_SHIELD_DOWN) ? UP : DOWN;
     }
 
     public void setShield(Position position) {

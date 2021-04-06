@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.opmode.util.Auto;
 import org.firstinspires.ftc.teamcode.util.enums.StarterStack;
@@ -20,6 +21,7 @@ import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;
 
 @Config
+@Disabled
 @Autonomous(name = "Blue Autonomous", group = "Competition", preselectTeleOp = "Blue TeleOp")
 public class BlueAuto extends Auto {
     // these are just the red way points and need to be updated at some point
