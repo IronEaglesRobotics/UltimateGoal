@@ -8,9 +8,9 @@ import org.firstinspires.ftc.teamcode.util.enums.Position;
 
 import java.util.Locale;
 
+import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_CLOSED;
+import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_OPEN;
 import static org.firstinspires.ftc.teamcode.util.Constants.PUSHER;
-import static org.firstinspires.ftc.teamcode.util.Constants.PUSHER_CLOSED;
-import static org.firstinspires.ftc.teamcode.util.Constants.PUSHER_OPEN;
 import static org.firstinspires.ftc.teamcode.util.Constants.SHOOTER;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.CLOSED;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;

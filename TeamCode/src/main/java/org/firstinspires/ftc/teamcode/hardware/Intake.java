@@ -8,11 +8,11 @@ import org.firstinspires.ftc.teamcode.util.enums.Position;
 
 import java.util.Locale;
 
+import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_DOWN;
+import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_UP;
 import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE;
 import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SECONDARY;
 import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SHIELD;
-import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SHIELD_DOWN;
-import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SHIELD_UP;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.DOWN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;
 
@@ -26,10 +26,10 @@ public class Intake {
         secondary = hardwareMap.get(DcMotor.class, INTAKE_SECONDARY);
         shield = hardwareMap.get(Servo.class, INTAKE_SHIELD);
 
-        intake.setDirection(DcMotor.Direction.REVERSE);
+        intake.setDirection(DcMotor.Direction.FORWARD);
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        secondary.setDirection(DcMotor.Direction.REVERSE);
+        secondary.setDirection(DcMotor.Direction.FORWARD);
         secondary.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 

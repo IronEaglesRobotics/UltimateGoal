@@ -8,15 +8,15 @@ import org.firstinspires.ftc.teamcode.util.enums.Position;
 
 import java.util.Locale;
 
+import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_ALMOST_DOWN_POS;
+import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_DEFAULT_POS;
+import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_DOWN_POS;
+import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_POWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_UP_POS;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CLAW_CLOSED;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.util.Constants.ARM;
-import static org.firstinspires.ftc.teamcode.util.Constants.ARM_ALMOST_DOWN_POS;
-import static org.firstinspires.ftc.teamcode.util.Constants.ARM_DEFAULT_POS;
-import static org.firstinspires.ftc.teamcode.util.Constants.ARM_DOWN_POS;
-import static org.firstinspires.ftc.teamcode.util.Constants.ARM_SPEED;
-import static org.firstinspires.ftc.teamcode.util.Constants.ARM_UP_POS;
 import static org.firstinspires.ftc.teamcode.util.Constants.CLAW;
-import static org.firstinspires.ftc.teamcode.util.Constants.CLAW_CLOSED;
-import static org.firstinspires.ftc.teamcode.util.Constants.CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.CLOSED;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;
 
@@ -42,7 +42,7 @@ public class Arm {
 
     public void setArm(int position) {
         wobbler.setTargetPosition(position);
-        wobbler.setPower(ARM_SPEED);
+        wobbler.setPower(ARM_POWER);
     }
 
     public void setArm(Position position) {
@@ -59,7 +59,7 @@ public class Arm {
             case DOWN:
                 wobbler.setTargetPosition(ARM_DOWN_POS);
         }
-        wobbler.setPower(ARM_SPEED);
+        wobbler.setPower(ARM_POWER);
     }
 
     public void resetEncoder() {

@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
-import static org.firstinspires.ftc.teamcode.util.Constants.AUTO_AIM_MIN;
-import static org.firstinspires.ftc.teamcode.util.Constants.AUTO_AIM_P;
-import static org.firstinspires.ftc.teamcode.util.Constants.PUSHER_DELAY;
-import static org.firstinspires.ftc.teamcode.util.Constants.SHOOTER_AUTO_AIM_OFFSET_X;
-import static org.firstinspires.ftc.teamcode.util.Constants.SHOOTER_GOAL_POWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MIN;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_P;
+import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_DELAY;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_AUTO_AIM_OFFSET_X;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_GOAL_POWER;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.CLOSED;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;

@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.opmode.util.Auto;
 import org.firstinspires.ftc.teamcode.util.enums.StarterStack;
 
-import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SPEED;
-import static org.firstinspires.ftc.teamcode.util.Constants.SHOOTER_GOAL_POWER;
-import static org.firstinspires.ftc.teamcode.util.Constants.SHOOTER_POWERSHOT_POWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SPEED;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_GOAL_POWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_POWERSHOT_POWER;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.ALMOST_DOWN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.BACK;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.CLOSED;
@@ -22,7 +22,7 @@ import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;
 @Config
 @Autonomous(name = "Red Autonomous", group = "Competition", preselectTeleOp = "Red TeleOp")
 public class RedAuto extends Auto {
-    public static Pose2d START_POSE = new Pose2d(-63.5, -55.75, Math.toRadians(180));
+    public static Pose2d START_POSE = new Pose2d(-63.5, -55.75, Math.toRadians(180)); 
 
     public static Pose2d NONE_DROP_FIRST_WOBBLE     = new Pose2d(0, -55.75, Math.toRadians(135));
     public static Pose2d NONE_POWERSHOTS            = new Pose2d(-8, -10, Math.toRadians(0));
@@ -53,7 +53,7 @@ public class RedAuto extends Auto {
         robot.drive.setPoseEstimate(START_POSE);
 
         Trajectory noneDropFirstWobble = robot.drive.trajectoryBuilder(START_POSE)
-                .addTemporalMarker(1, () -> robot.shooter.setShooter(SHOOTER_POWERSHOT_POWER))
+                .addTemporalMarker(0.5, () -> robot.shooter.setShooter(SHOOTER_POWERSHOT_POWER))
                 .lineToLinearHeading(NONE_DROP_FIRST_WOBBLE)
                 .build();
         Trajectory nonePowershots = robot.drive.trajectoryBuilder(noneDropFirstWobble.end())
@@ -77,7 +77,7 @@ public class RedAuto extends Auto {
                 .build();
 
         Trajectory singleDropFirstWobble = robot.drive.trajectoryBuilder(START_POSE)
-                .addTemporalMarker(1.5, () -> robot.shooter.setShooter(SHOOTER_POWERSHOT_POWER))
+                .addTemporalMarker(1, () -> robot.shooter.setShooter(SHOOTER_POWERSHOT_POWER))
                 .back(26)
                 .splineToConstantHeading(new Vector2d(SINGLE_DROP_FIRST_WOBBLE.getX(), SINGLE_DROP_FIRST_WOBBLE.getY()), SINGLE_DROP_FIRST_WOBBLE.getHeading())
                 .build();
@@ -112,13 +112,13 @@ public class RedAuto extends Auto {
                 .build();
 
         Trajectory quadDropFirstWobble = robot.drive.trajectoryBuilder(START_POSE)
-                .addTemporalMarker(2, () -> robot.shooter.setShooter(SHOOTER_GOAL_POWER))
+                .addTemporalMarker(1.5, () -> robot.shooter.setShooter(SHOOTER_GOAL_POWER))
                 .lineToLinearHeading(QUAD_DROP_FIRST_WOBBLE)
                 .build();
         Trajectory quadGoal = robot.drive.trajectoryBuilder(quadDropFirstWobble.end())
-                .addTemporalMarker(0, () -> robot.intake.setShield(DOWN))
-                .addTemporalMarker(0, () -> robot.arm.setArm(DOWN))
-                .addTemporalMarker(1, () -> robot.arm.setClaw(OPEN))
+                .addTemporalMarker(0.5, () -> robot.intake.setShield(DOWN))
+                .addTemporalMarker(0.5, () -> robot.arm.setArm(DOWN))
+                .addTemporalMarker(1.5, () -> robot.arm.setClaw(OPEN))
                 .lineToLinearHeading(QUAD_GOAL)
                 .build();
         Trajectory quadRing = robot.drive.trajectoryBuilder(quadGoal.end())
