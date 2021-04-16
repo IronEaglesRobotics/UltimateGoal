@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MIN;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_P;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_WAIT;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_DELAY;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_GOAL_POWER;
@@ -182,7 +184,14 @@ public abstract class Auto extends LinearOpMode {
                         }
                     }
                     // either start firing or move towards target
-                    if (Math.abs(targetPos) <= 0.5) {
+                    if (Math.abs(targetPos) <= AUTO_AIM_ERROR) {
+                        if (shootingDelay == -1) {
+                            shootingDelay = currentRuntime;
+                        }
+                    } else {
+                        shootingDelay = -1;
+                    }
+                    if (shootingDelay != -1 && currentRuntime >= shootingDelay + AUTO_AIM_WAIT) {
                         z = 0;
                         firing = true;
                         robot.shooter.setPusher(CLOSED);

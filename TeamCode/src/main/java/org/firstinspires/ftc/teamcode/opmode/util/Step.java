@@ -24,6 +24,7 @@ public abstract class Step {
     public boolean zag;
     public double zigTime;
     public double zagTime;
+    public double shootingDelay = -1;
 
     // Constructors
     public Step(String telemetry) {

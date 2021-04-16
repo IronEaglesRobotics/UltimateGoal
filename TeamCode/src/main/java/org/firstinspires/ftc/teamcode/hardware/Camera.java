@@ -135,7 +135,7 @@ public class Camera {
             return String.format(Locale.US, "Stack: %s\nSize: %.4f", checkStack(), getStarterStack().getArea());
         } else if (targetingCameraInitialized) {
             return String.format(Locale.US, "Red Goal:  Area: %.2f Center: (%.2f,%.2f)\n" +
-                                                    "Blue Goal: Area: %.2f Center: (%.2f,%.2f)" +
+                                                    "Blue Goal: Area: %.2f Center: (%.2f,%.2f)\n" +
                                                     "Red PowerShots: (%.1f,%.1f) (%.1f,%.1f) (%.1f,%.1f)\n" +
                                                     "BluePowerShots: (%.1f,%.1f) (%.1f,%.1f) (%.1f,%.1f)\n",
                     targetingPipeline.getRed().getArea(), targetingPipeline.getRed().getCenter().x, targetingPipeline.getRed().getCenter().x,
