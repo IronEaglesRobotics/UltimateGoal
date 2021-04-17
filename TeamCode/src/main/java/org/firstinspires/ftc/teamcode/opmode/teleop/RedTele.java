@@ -14,6 +14,7 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_DEFAULT_POS;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_SPEED;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_UP_POS;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MAX_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MIN;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_P;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_PMAX;
@@ -110,7 +111,7 @@ public class RedTele extends OpMode {
             }
             if (Math.abs(targetPos) < 0.5) {
                 z = 0;
-            } else {
+            } else if (Math.abs(targetPos) < AUTO_AIM_MAX_ERROR){
                 z = Math.copySign(Math.max(Math.abs((targetPos / AUTO_AIM_PMAX) * AUTO_AIM_P), AUTO_AIM_MIN), -targetPos);
             }
         }
