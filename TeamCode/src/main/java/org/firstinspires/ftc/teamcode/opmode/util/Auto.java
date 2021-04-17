@@ -19,6 +19,7 @@ import java.util.Locale;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MIN;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_P;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_PMAX;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_WAIT;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_DELAY;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_AUTO_AIM_OFFSET_X;
@@ -199,7 +200,7 @@ public abstract class Auto extends LinearOpMode {
                         zag = false;
                         zigTime = getRuntime();
                     } else {
-                        z = Math.copySign(Math.max(Math.abs((targetPos / 50) * AUTO_AIM_P), AUTO_AIM_MIN), -targetPos);
+                        z = Math.copySign(Math.max(Math.abs((targetPos / AUTO_AIM_PMAX) * AUTO_AIM_P), AUTO_AIM_MIN), -targetPos);
                     }
                 } else {
                     // wait while servo is moving
