@@ -19,13 +19,13 @@ public class Configurables {
     public static double SHIELD_SPEED = 0.04;
     public static double SHOOTER_GOAL_POWER = 0.62;
     public static double SHOOTER_POWERSHOT_POWER = 0.57;
-    public static double SHOOTER_AUTO_AIM_OFFSET_X = 9;
+    public static double SHOOTER_AUTO_AIM_OFFSET_X = 5;
     public static double PUSHER_CLOSED = 0.35;
     public static double PUSHER_OPEN = 0.55;
     public static double PUSHER_DELAY = 0.15;
-    public static double AUTO_AIM_P = 0.8;
-    public static double AUTO_AIM_MIN = 0.13;
-    public static double AUTO_AIM_ERROR = 0.5;
     public static double AUTO_AIM_WAIT = 0.5;
-    public static double AUTO_AIM_PMAX = 30;
+    public static double AUTO_AIM_MAX_ERROR = 50;
+    public static double AUTO_AIM_A = 0.08;
+    public static double AUTO_AIM_H = 0.5;
+    public static double AUTO_AIM_EXP = 2.0;
 }

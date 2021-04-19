@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
-import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_ERROR;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MIN;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_P;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_PMAX;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_A;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_EXP;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_H;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MAX_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_WAIT;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_DELAY;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_AUTO_AIM_OFFSET_X;
@@ -185,7 +185,7 @@ public abstract class Auto extends LinearOpMode {
                         }
                     }
                     // either start firing or move towards target
-                    if (Math.abs(targetPos) <= AUTO_AIM_ERROR) {
+                    if (Math.abs(targetPos) <= AUTO_AIM_H) {
                         if (shootingDelay == -1) {
                             shootingDelay = currentRuntime;
                         }
@@ -200,7 +200,13 @@ public abstract class Auto extends LinearOpMode {
                         zag = false;
                         zigTime = getRuntime();
                     } else {
-                        z = Math.copySign(Math.max(Math.abs((targetPos / AUTO_AIM_PMAX) * AUTO_AIM_P), AUTO_AIM_MIN), -targetPos);
+                        double x2 = Math.abs(targetPos);
+                        double power = AUTO_AIM_A * Math.pow((x2 - AUTO_AIM_H), 1/AUTO_AIM_EXP);
+                        if (x2 < AUTO_AIM_H || x2 > AUTO_AIM_MAX_ERROR) {
+                            z = 0;
+                        } else {
+                            z = Math.copySign(power, -targetPos);
+                        }
                     }
                 } else {
                     // wait while servo is moving
