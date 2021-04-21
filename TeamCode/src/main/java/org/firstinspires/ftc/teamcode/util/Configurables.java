@@ -16,8 +16,9 @@ public class Configurables {
     public static double INTAKE_SPEED = 0.9;
     public static double INTAKE_SHIELD_UP = 0.05;//0.41
     public static double INTAKE_SHIELD_DOWN = 0.95;//0.93
-    public static double SHIELD_SPEED = 0.04;
+    public static double INTAKE_SHIELD_SPEED = 0.04;
     public static double SHOOTER_GOAL_POWER = 0.62;
+    public static double SHOOTER_MID_GOAL_POWER = 0.54;
     public static double SHOOTER_POWERSHOT_POWER = 0.57;
     public static double SHOOTER_AUTO_AIM_OFFSET_X = 5;
     public static double PUSHER_CLOSED = 0.35;
@@ -28,4 +29,16 @@ public class Configurables {
     public static double AUTO_AIM_A = 0.08;
     public static double AUTO_AIM_H = 0.5;
     public static double AUTO_AIM_EXP = 2.0;
+
+    // CV Color Threshold Constants
+    public static Color CAMERA_RED_GOAL_LOWER = new Color(165, 85, 80);
+    public static Color CAMERA_RED_GOAL_UPPER = new Color(15, 255, 255);
+    public static Color CAMERA_RED_POWERSHOT_LOWER = new Color(165, 85, 80);
+    public static Color CAMERA_RED_POWERSHOT_UPPER = new Color(15, 255, 255);
+    public static Color CAMERA_BLUE_GOAL_LOWER = new Color(75, 85, 100);
+    public static Color CAMERA_BLUE_GOAL_UPPER = new Color(120, 255, 255);
+    public static Color CAMERA_BLUE_POWERSHOT_LOWER = new Color(75, 50, 50);
+    public static Color CAMERA_BLUE_POWERSHOT_UPPER = new Color(120, 255, 255);
+    public static Color CAMERA_ORANGE_LOWER = new Color(10, 70, 100);
+    public static Color CAMERA_ORANGE_UPPER = new Color(50, 255, 255);
 }

@@ -5,17 +5,18 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 
+import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_ORANGE_LOWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_ORANGE_UPPER;
 import static org.firstinspires.ftc.teamcode.util.Constants.ANCHOR;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLUR_SIZE;
 import static org.firstinspires.ftc.teamcode.util.Constants.ERODE_DILATE_ITERATIONS;
 import static org.firstinspires.ftc.teamcode.util.Constants.MIN_STARTERSTACK_AREA;
-import static org.firstinspires.ftc.teamcode.util.Constants.ORANGE_LOWER;
-import static org.firstinspires.ftc.teamcode.util.Constants.ORANGE_UPPER;
 import static org.firstinspires.ftc.teamcode.util.Constants.STARTERSTACK_LOCATION;
 import static org.firstinspires.ftc.teamcode.util.Constants.STRUCTURING_ELEMENT;
 import static org.firstinspires.ftc.teamcode.util.Constants.WHITE;
@@ -49,7 +50,7 @@ public class StarterStackPipeline extends OpenCvPipeline  {
     // Update the StarterStack Detection
     private void updateStarterStack(Mat input) {
         // take pixels that are in the color range and put them into a mask, eroding and dilating them to remove white noise
-        Core.inRange(hsv, ORANGE_LOWER, ORANGE_UPPER, orangeMask);
+        Core.inRange(hsv, new Scalar(CAMERA_ORANGE_LOWER.get()), new Scalar(CAMERA_ORANGE_UPPER.get()), orangeMask);
         Imgproc.erode(orangeMask, orangeMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
         Imgproc.dilate(orangeMask, orangeMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
 

@@ -17,16 +17,6 @@ public class Constants {
     public static Scalar BLUE = new Scalar(0, 0, 255);
     public static Scalar WHITE = new Scalar(255, 255, 255);
 
-    // CV Color Threshold Constants
-    public static Scalar RED_LOWER_1 = new Scalar(0, 85, 80);
-    public static Scalar RED_UPPER_1 = new Scalar(15, 255, 255);
-    public static Scalar RED_LOWER_2 = new Scalar(165, 85, 80);
-    public static Scalar RED_UPPER_2 = new Scalar(180, 255, 255);
-    public static Scalar BLUE_LOWER = new Scalar(75, 85, 100);
-    public static Scalar BLUE_UPPER = new Scalar(120, 255, 255);
-    public static Scalar ORANGE_LOWER = new Scalar(10, 70, 100);
-    public static Scalar ORANGE_UPPER = new Scalar(50, 255, 255);
-
     // CV Structuring Constants
     public static final Mat STRUCTURING_ELEMENT = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5));
     public static final Point ANCHOR = new Point((STRUCTURING_ELEMENT.cols() / 2f), STRUCTURING_ELEMENT.rows() / 2f);
@@ -53,32 +43,6 @@ public class Constants {
     public static final double INVALID_AREA = -1;
     public static final Detection INVALID_DETECTION = new Detection(new Size(0, 0), 0);
     public static final PowershotDetection INVALID_POWERSHOT_DETECTION = new PowershotDetection(new Size(0, 0), 0);
-
-//    // Robot Constants
-//    public static double WHEEL_SLOW_SPEED = 0.3;
-//    public static double WHEEL_SPEED = 0.7;
-//    public static double WHEEL_TURBO_SPEED = 1.0;
-//    public static double ARM_POWER = 0.2;
-//    public static double ARM_SPEED = 20;
-//    public static int ARM_DEFAULT_POS = 0;
-//    public static int ARM_UP_POS = 221;
-//    public static int ARM_ALMOST_DOWN_POS = 650;
-//    public static int ARM_DOWN_POS = 750;
-//    public static double CLAW_CLOSED = 0.13;
-//    public static double CLAW_OPEN = 0.7;
-//    public static double INTAKE_SPEED = 0.45;
-//    public static double INTAKE_SECONDARY_RELATIVE_SPEED = 0.25;
-//    public static double INTAKE_SHIELD_UP = 0.41;
-//    public static double INTAKE_SHIELD_DOWN = 0.93;
-//    public static double SHIELD_SPEED = 0.04;
-//    public static double SHOOTER_GOAL_POWER = 0.62;
-//    public static double SHOOTER_POWERSHOT_POWER = 0.57;
-//    public static double SHOOTER_AUTO_AIM_OFFSET_X = 8;
-//    public static double PUSHER_CLOSED = 0.35;
-//    public static double PUSHER_OPEN = 0.55;
-//    public static double PUSHER_DELAY = 0.15;
-//    public static double AUTO_AIM_P = 0.75;
-//    public static double AUTO_AIM_MIN = 0.12;
 
     // Hardware Name Constants
     public static final String WHEEL_FRONT_LEFT = "frontLeft";

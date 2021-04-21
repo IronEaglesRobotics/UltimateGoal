@@ -31,8 +31,8 @@ import static org.firstinspires.ftc.teamcode.util.enums.Position.CLOSED;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;
 
 // Driver Program
-@TeleOp(name = "Red TeleOp", group = "Competition")
-public class RedTele extends OpMode {
+@TeleOp(name = "Blue TeleOp", group = "Competition")
+public class BlueTele extends OpMode {
     public Alliance alliance;
     private Robot robot;
 
@@ -48,7 +48,7 @@ public class RedTele extends OpMode {
     private boolean zig;
 
     public void setAlliance() {
-        this.alliance = Alliance.RED;
+        this.alliance = Alliance.BLUE;
     }
 
     // Init
@@ -198,7 +198,7 @@ public class RedTele extends OpMode {
             shieldPosition += driver2.getLeftStick().getY() * INTAKE_SHIELD_SPEED;
         }
         if (shieldPosition < INTAKE_SHIELD_UP && shieldPosition < INTAKE_SHIELD_DOWN) {
-                shieldPosition = Math.min(INTAKE_SHIELD_UP, INTAKE_SHIELD_DOWN);
+            shieldPosition = Math.min(INTAKE_SHIELD_UP, INTAKE_SHIELD_DOWN);
         } else if (shieldPosition > INTAKE_SHIELD_UP && shieldPosition > INTAKE_SHIELD_DOWN) {
             shieldPosition = Math.max(INTAKE_SHIELD_UP, INTAKE_SHIELD_DOWN);
         }

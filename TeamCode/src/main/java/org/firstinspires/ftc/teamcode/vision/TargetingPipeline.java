@@ -1,20 +1,28 @@
 package org.firstinspires.ftc.teamcode.vision;
 
+import org.firstinspires.ftc.teamcode.util.OpenCVUtil;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 
+import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_BLUE_GOAL_LOWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_BLUE_GOAL_UPPER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_BLUE_POWERSHOT_LOWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_BLUE_POWERSHOT_UPPER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_GOAL_LOWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_GOAL_UPPER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_POWERSHOT_LOWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_POWERSHOT_UPPER;
 import static org.firstinspires.ftc.teamcode.util.Constants.ANCHOR;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLUE;
-import static org.firstinspires.ftc.teamcode.util.Constants.BLUE_LOWER;
-import static org.firstinspires.ftc.teamcode.util.Constants.BLUE_UPPER;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLUR_SIZE;
 import static org.firstinspires.ftc.teamcode.util.Constants.ERODE_DILATE_ITERATIONS;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_POINT;
@@ -23,10 +31,6 @@ import static org.firstinspires.ftc.teamcode.util.Constants.MIN_POWERSHOT_AREA;
 import static org.firstinspires.ftc.teamcode.util.Constants.POWERSHOT_DIMENSIONS;
 import static org.firstinspires.ftc.teamcode.util.Constants.POWERSHOT_OFFSET;
 import static org.firstinspires.ftc.teamcode.util.Constants.RED;
-import static org.firstinspires.ftc.teamcode.util.Constants.RED_LOWER_1;
-import static org.firstinspires.ftc.teamcode.util.Constants.RED_LOWER_2;
-import static org.firstinspires.ftc.teamcode.util.Constants.RED_UPPER_1;
-import static org.firstinspires.ftc.teamcode.util.Constants.RED_UPPER_2;
 import static org.firstinspires.ftc.teamcode.util.Constants.STRUCTURING_ELEMENT;
 import static org.firstinspires.ftc.teamcode.util.Constants.WHITE;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getLargestContour;
@@ -40,11 +44,22 @@ public class TargetingPipeline extends OpenCvPipeline {
     Mat redMask2 = new Mat();
     Mat redMask = new Mat();
     Mat blueMask = new Mat();
+    Scalar redGoalLower1;
+    Scalar redGoalUpper1;
+    Scalar redGoalLower2;
+    Scalar redGoalUpper2;
+    Scalar redPowershotLower1;
+    Scalar redPowershotUpper1;
+    Scalar redPowershotLower2;
+    Scalar redPowershotUpper2;
 
     private Detection red;
     private Detection blue;
     private PowershotDetection redPowershots;
     private PowershotDetection bluePowershots;
+
+    private double redGoalx;
+    private double blueGoalx;
 
     // Init
     @Override
@@ -73,8 +88,12 @@ public class TargetingPipeline extends OpenCvPipeline {
     // Update the Red Goal Detection
     private void updateRed(Mat input) {
         // take pixels that are in the color range and put them into a mask, eroding and dilating them to remove white noise
-        Core.inRange(hsv, RED_LOWER_1, RED_UPPER_1, redMask1);
-        Core.inRange(hsv, RED_LOWER_2, RED_UPPER_2, redMask2);
+        redGoalLower1 = new Scalar(CAMERA_RED_GOAL_LOWER.getH(), CAMERA_RED_GOAL_LOWER.getS(), CAMERA_RED_GOAL_LOWER.getV());
+        redGoalUpper1 = new Scalar(180, CAMERA_RED_GOAL_UPPER.getS(), CAMERA_RED_GOAL_UPPER.getV());
+        redGoalLower2 = new Scalar(0, CAMERA_RED_GOAL_LOWER.getS(), CAMERA_RED_GOAL_LOWER.getV());
+        redGoalUpper2 = new Scalar(CAMERA_RED_GOAL_UPPER.getH(), CAMERA_RED_GOAL_UPPER.getS(), CAMERA_RED_GOAL_UPPER.getV());
+        Core.inRange(hsv, redGoalLower1, redGoalUpper1, redMask1);
+        Core.inRange(hsv, redGoalLower2, redGoalUpper2, redMask2);
         Core.add(redMask1, redMask2, redMask);
         Imgproc.erode(redMask, redMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
         Imgproc.dilate(redMask, redMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
@@ -83,6 +102,7 @@ public class TargetingPipeline extends OpenCvPipeline {
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(redMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
         red.setContour(getLargestContour(contours));
+        redGoalx = red.getBottomLeftCornerPx().x;
 
         // draw the Red Goal detection
         red.draw(input, RED);
@@ -91,7 +111,7 @@ public class TargetingPipeline extends OpenCvPipeline {
     // Update the Blue Goal Detection
     private void updateBlue(Mat input) {
         // take pixels that are in the color range and put them into a mask, eroding and dilating them to remove white noise
-        Core.inRange(hsv, BLUE_LOWER, BLUE_UPPER, blueMask);
+        Core.inRange(hsv, new Scalar(CAMERA_BLUE_GOAL_LOWER.get()), new Scalar(CAMERA_BLUE_GOAL_UPPER.get()), blueMask);
         Imgproc.erode(blueMask, blueMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
         Imgproc.dilate(blueMask, blueMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
 
@@ -99,6 +119,7 @@ public class TargetingPipeline extends OpenCvPipeline {
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(blueMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
         blue.setContour(getLargestContour(contours));
+        blueGoalx = blue.getBottomRightCornerPx().x;
 
         // draw the Blue Goal detection
         blue.draw(input, BLUE);
@@ -120,8 +141,13 @@ public class TargetingPipeline extends OpenCvPipeline {
         );
 
         // take pixels that are in the color range and put them into a mask
-        Core.inRange(hsv, RED_LOWER_1, RED_UPPER_1, redMask1);
-        Core.inRange(hsv, RED_LOWER_2, RED_UPPER_2, redMask2);
+        redPowershotLower1 = new Scalar(CAMERA_RED_POWERSHOT_LOWER.getH(), CAMERA_RED_POWERSHOT_LOWER.getS(), CAMERA_RED_POWERSHOT_LOWER.getV());
+        redPowershotUpper1 = new Scalar(180, CAMERA_RED_POWERSHOT_UPPER.getS(), CAMERA_RED_POWERSHOT_UPPER.getV());
+        redPowershotLower2 = new Scalar(0, CAMERA_RED_POWERSHOT_LOWER.getS(), CAMERA_RED_POWERSHOT_LOWER.getV());
+        redPowershotUpper2 = new Scalar(CAMERA_RED_POWERSHOT_UPPER.getH(), CAMERA_RED_POWERSHOT_UPPER.getS(), CAMERA_RED_POWERSHOT_UPPER.getV());
+
+        Core.inRange(hsv, redPowershotLower1, redPowershotUpper1, redMask1);
+        Core.inRange(hsv, redPowershotLower2, redPowershotUpper2, redMask2);
         Core.add(redMask1, redMask2, redMask);
 
         // make a new mask that will be used to find the contours of the Powershots
@@ -132,6 +158,12 @@ public class TargetingPipeline extends OpenCvPipeline {
         // set the largest detection that was found to be the Powershots
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(powershotMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+        for (int i = 0; i < contours.size(); i++) {
+            if ((int) OpenCVUtil.getCenterOfContour(contours.get(i)).x > redGoalx) {
+                contours.remove(i);
+                i--;
+            }
+        }
         redPowershots.setContours(getLargestContours(contours, 3));
 
         // draw the Powershot detection as well as where was looked for it on the screen
@@ -148,14 +180,14 @@ public class TargetingPipeline extends OpenCvPipeline {
 
         // create a rectangle based off of the goal of where to look for the powershots
         Rect powershotRect = new Rect(
-                (int) (blue.getBottomRightCornerPx().x + POWERSHOT_OFFSET.x),
+                (int) (blue.getBottomRightCornerPx().x - POWERSHOT_OFFSET.x),
                 (int) (blue.getBottomRightCornerPx().y + POWERSHOT_OFFSET.y),
                 (int) POWERSHOT_DIMENSIONS.width,
                 (int) POWERSHOT_DIMENSIONS.height
         );
 
         // take pixels that are in the color range and put them into a mask
-        Core.inRange(hsv, BLUE_LOWER, BLUE_UPPER, blueMask);
+        Core.inRange(hsv, new Scalar(CAMERA_BLUE_POWERSHOT_LOWER.get()), new Scalar(CAMERA_BLUE_POWERSHOT_UPPER.get()), blueMask);
 
         // make a new mask that will be used to find the contours of the Powershots
         Mat powershotMask = new Mat(hsv.size(), CvType.CV_8U);
@@ -165,6 +197,12 @@ public class TargetingPipeline extends OpenCvPipeline {
         // set the largest detection that was found to be the Powershots
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(powershotMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+        for (int i = 0; i < contours.size(); i++) {
+            if ((int) OpenCVUtil.getCenterOfContour(contours.get(i)).x < blueGoalx) {
+                contours.remove(i);
+                i--;
+            }
+        }
         bluePowershots.setContours(getLargestContours(contours, 3));
 
         // draw the Powershot detection as well as where was looked for it on the screen
