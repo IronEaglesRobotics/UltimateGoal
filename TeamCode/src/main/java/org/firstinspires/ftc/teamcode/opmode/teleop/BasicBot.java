@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.opmode.util.controller.Controller;
 
 // Driver Program
-@TeleOp(name = "Basic Bot", group = "Competition")
+@TeleOp(name = "Basic Bot", group = "Development")
 public class BasicBot extends OpMode {
     private DcMotor frontLeft = null;
     private DcMotor frontRight = null;

@@ -19,7 +19,6 @@ import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_A;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_EXP;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_H;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MAX_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_WAIT;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_DELAY;
@@ -207,7 +206,7 @@ public abstract class Auto extends LinearOpMode {
                         }
                     }
                     // either start firing or move towards target
-                    if (Math.abs(targetPos) <= AUTO_AIM_H) {
+                    if (Math.abs(targetPos) <= 0.5) {
                         if (shootingDelay == -1) {
                             shootingDelay = currentRuntime;
                         }
@@ -220,11 +219,11 @@ public abstract class Auto extends LinearOpMode {
                         robot.shooter.setPusher(CLOSED);
                         zig = true;
                         zag = false;
-                        zigTime = getRuntime();
+                        zigTime = currentRuntime;
                     } else {
                         double x2 = Math.abs(targetPos);
-                        double power = AUTO_AIM_A * Math.pow((x2 - AUTO_AIM_H), 1/AUTO_AIM_EXP);
-                        if (x2 < AUTO_AIM_H || x2 > AUTO_AIM_MAX_ERROR) {
+                        double power = AUTO_AIM_A * Math.pow((x2), 1.0/AUTO_AIM_EXP);
+                        if (x2 < 0.5 || x2 > AUTO_AIM_MAX_ERROR) {
                             z = 0;
                         } else {
                             z = Math.copySign(power, -targetPos);
@@ -232,18 +231,19 @@ public abstract class Auto extends LinearOpMode {
                     }
                 } else {
                     // wait while servo is moving
-                    if (zig && getRuntime() > zigTime + PUSHER_DELAY) {
+                    if (zig && currentRuntime > zigTime + PUSHER_DELAY) {
                         robot.shooter.setPusher(OPEN);
                         zig = false;
                         zag = true;
-                        zagTime = getRuntime();
-                    } else if (zag && getRuntime() > zagTime + (powershotsKnockedDown ? PUSHER_DELAY : 1)) {
+                        zagTime = currentRuntime;
+                    } else if (zag && currentRuntime > zagTime + (powershotsKnockedDown ? PUSHER_DELAY : 1)) {
                         firing = false;
                         ringsFired++;
                     }
                 }
                 robot.drive.setWeightedDrivePower(new Pose2d(0, 0, z));
                 robot.drive.update();
+                setTelemetry("\nz: "+z+"\nerror: "+targetPos);
             }
             @Override
             public void end() {}

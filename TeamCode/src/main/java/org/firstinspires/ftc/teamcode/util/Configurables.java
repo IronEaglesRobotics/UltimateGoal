@@ -26,9 +26,9 @@ public class Configurables {
     public static double PUSHER_DELAY = 0.15;
     public static double AUTO_AIM_WAIT = 0.02;
     public static double AUTO_AIM_MAX_ERROR = 50;
-    public static double AUTO_AIM_A = 0.08;
-    public static double AUTO_AIM_H = 0.5;
-    public static double AUTO_AIM_EXP = 2.0;
+    public static double AUTO_AIM_A = 0.12;
+    public static double AUTO_AIM_H = 0;
+    public static double AUTO_AIM_EXP = 3.0;
 
     // CV Color Threshold Constants
     public static Color CAMERA_RED_GOAL_LOWER = new Color(165, 85, 80);
