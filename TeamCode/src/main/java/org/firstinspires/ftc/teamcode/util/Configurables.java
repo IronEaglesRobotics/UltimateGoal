@@ -24,7 +24,7 @@ public class Configurables {
     public static double PUSHER_CLOSED = 0.35;
     public static double PUSHER_OPEN = 0.55;
     public static double PUSHER_DELAY = 0.15;
-    public static double AUTO_AIM_WAIT = 0.5;
+    public static double AUTO_AIM_WAIT = 0.02;
     public static double AUTO_AIM_MAX_ERROR = 50;
     public static double AUTO_AIM_A = 0.08;
     public static double AUTO_AIM_H = 0.5;

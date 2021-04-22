@@ -33,7 +33,7 @@ import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;
 // Driver Program
 @TeleOp(name = "Blue TeleOp", group = "Competition")
 public class BlueTele extends OpMode {
-    public Alliance alliance;
+    public final Alliance alliance = Alliance.BLUE;
     private Robot robot;
 
     private Controller driver1;
@@ -46,10 +46,6 @@ public class BlueTele extends OpMode {
     private double finishTime;
     private boolean checkPusher;
     private boolean zig;
-
-    public void setAlliance() {
-        this.alliance = Alliance.BLUE;
-    }
 
     // Init
     @Override
@@ -72,8 +68,6 @@ public class BlueTele extends OpMode {
         // set gamepads
         driver1 = new Controller(gamepad1);
         driver2 = new Controller(gamepad2);
-
-        setAlliance();
     }
 
     // Wait for the first frame after the init button was pressed

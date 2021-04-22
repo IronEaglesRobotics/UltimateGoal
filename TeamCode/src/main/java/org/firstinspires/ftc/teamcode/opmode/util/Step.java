@@ -14,7 +14,7 @@ public abstract class Step {
 
     // variables when shooting
     public Detection powershot;
-    public Detection red;
+    public Detection goal;
     public int ringsToFire;
     public int ringsFired;
     public boolean firing;

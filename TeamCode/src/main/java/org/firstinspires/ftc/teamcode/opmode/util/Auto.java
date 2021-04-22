@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.util.enums.Alliance;
 import org.firstinspires.ftc.teamcode.util.enums.StarterStack;
 
 import java.util.ArrayList;
@@ -24,22 +25,29 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_WAIT;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_DELAY;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_GOAL_POWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_POWERSHOT_POWER;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.CLOSED;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;
 
 // Abstract Auto Program
 public abstract class Auto extends LinearOpMode {
+    public Alliance alliance;
     public Robot robot;
     private StarterStack stack;
     private ArrayList<Step> steps;
     private double currentRuntime;
+
+    public void setAlliance() {
+        this.alliance = Alliance.RED;
+    }
 
     @Override
     public void runOpMode() {
         // init
         telemetry.addLine("Initializing Robot...");
         telemetry.update();
+        setAlliance();
         robot = new Robot(hardwareMap);
         robot.shooter.setPusher(OPEN);
         robot.intake.setShield(UP);
@@ -165,13 +173,23 @@ public abstract class Auto extends LinearOpMode {
             public void start() {
                 ringsToFire = rings;
                 powershotsKnockedDown = !shootPowershots;
+                if (shootPowershots) {
+                    robot.shooter.setShooter(SHOOTER_POWERSHOT_POWER);
+                } else {
+                    robot.shooter.setShooter(SHOOTER_GOAL_POWER);
+                }
+                shootingDelay = -1;
             }
             @Override
             public void whileRunning() {
                 if (!firing) {
                     // determine offset of target
                     if (!powershotsKnockedDown) {
-                        powershot = robot.camera.getRedPowershots().getLeftMost();
+                        if (alliance == Alliance.RED) {
+                            powershot = robot.camera.getRedPowershots().getLeftMost();
+                        } else {
+                            powershot = robot.camera.getBluePowershots().getLeftMost();
+                        }
                         if (powershot.isValid()) {
                             targetPos = powershot.getCenter().x + SHOOTER_AUTO_AIM_OFFSET_X;
                         } else {
@@ -179,9 +197,13 @@ public abstract class Auto extends LinearOpMode {
                             robot.shooter.setShooter(SHOOTER_GOAL_POWER);
                         }
                     } else {
-                        red = robot.camera.getRed();
-                        if (red.isValid()) {
-                            targetPos = red.getCenter().x + SHOOTER_AUTO_AIM_OFFSET_X;
+                        if (alliance == Alliance.RED) {
+                            goal = robot.camera.getRed();
+                        } else {
+                            goal = robot.camera.getBlue();
+                        }
+                        if (goal.isValid()) {
+                            targetPos = goal.getCenter().x + SHOOTER_AUTO_AIM_OFFSET_X;
                         }
                     }
                     // either start firing or move towards target
@@ -215,7 +237,7 @@ public abstract class Auto extends LinearOpMode {
                         zig = false;
                         zag = true;
                         zagTime = getRuntime();
-                    } else if (zag && getRuntime() > zagTime + (powershotsKnockedDown ? 0.2 : 1)) {
+                    } else if (zag && getRuntime() > zagTime + (powershotsKnockedDown ? PUSHER_DELAY : 1)) {
                         firing = false;
                         ringsFired++;
                     }

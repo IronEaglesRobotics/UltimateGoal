@@ -20,8 +20,8 @@ import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;
 
 @Config
-@Autonomous(name = "Red Autonomous", group = "Competition", preselectTeleOp = "Red TeleOp")
-public class RedAuto extends Auto {
+@Autonomous(name = "Blue Autonomous", group = "Competition", preselectTeleOp = "Blue TeleOp")
+public class BlueAuto extends Auto {
     public static Pose2d START_POSE = new Pose2d(-63.5, -55.75, Math.toRadians(180));
 
     public static Pose2d NONE_DROP_FIRST_WOBBLE     = new Pose2d(0, -55.75, Math.toRadians(135));
@@ -50,7 +50,7 @@ public class RedAuto extends Auto {
 
     @Override
     public void setAlliance() {
-        this.alliance = Alliance.RED;
+        this.alliance = Alliance.BLUE;
     }
 
     @Override
@@ -163,7 +163,7 @@ public class RedAuto extends Auto {
                 setIntake(0.5, 0.5);
                 setIntake(0, 0);
                 followTrajectory(nonePowershots);
-                shootRings(10, false, 3);
+                shootRings(6, false, 3);
                 followTrajectory(nonePickUpSecondWobble);
                 followTrajectory(noneDropSecondWobble);
                 followTrajectory(nonePark);
