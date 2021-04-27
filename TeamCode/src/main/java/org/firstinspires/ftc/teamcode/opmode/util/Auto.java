@@ -206,7 +206,7 @@ public abstract class Auto extends LinearOpMode {
                         }
                     }
                     // either start firing or move towards target
-                    if (Math.abs(targetPos) <= 0.5) {
+                    if (Math.abs(targetPos) <= 2) {
                         if (shootingDelay == -1) {
                             shootingDelay = currentRuntime;
                         }

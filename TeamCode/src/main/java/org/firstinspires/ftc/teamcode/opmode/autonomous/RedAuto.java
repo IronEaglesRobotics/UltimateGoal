@@ -31,20 +31,20 @@ public class RedAuto extends Auto {
     public static Pose2d NONE_PARK                  = new Pose2d(6, -24, Math.toRadians(180));
 
     public static Pose2d SINGLE_DROP_FIRST_WOBBLE     = new Pose2d(19, -41, Math.toRadians(0));
-    public static Pose2d SINGLE_POWERSHOTS            = new Pose2d(-8, -44, Math.toRadians(0));
+    public static Pose2d SINGLE_POWERSHOTS            = new Pose2d(-9, -44, Math.toRadians(0));
     public static Pose2d SINGLE_RING                  = new Pose2d(-8, -39, Math.toRadians(0));
-    public static Pose2d SINGLE_PICK_UP_SECOND_WOBBLE = new Pose2d(-40, -34.5, Math.toRadians(0));
+    public static Pose2d SINGLE_PICK_UP_SECOND_WOBBLE = new Pose2d(-37, -33, Math.toRadians(0));
     public static Pose2d SINGLE_GOAL                  = new Pose2d(-8, -44, Math.toRadians(0));
-    public static Pose2d SINGLE_DROP_SECOND_WOBBLE    = new Pose2d(11.5, -26, Math.toRadians(180));
+    public static Pose2d SINGLE_DROP_SECOND_WOBBLE    = new Pose2d(11, -27, Math.toRadians(180));
     public static Pose2d SINGLE_PARK                  = new Pose2d(6, -24, Math.toRadians(180));
 
     public static Pose2d QUAD_DROP_FIRST_WOBBLE       = new Pose2d(44, -55.75, Math.toRadians(135));
-    public static Pose2d QUAD_GOAL                    = new Pose2d(-8, -44, Math.toRadians(0));
+    public static Pose2d QUAD_GOAL                    = new Pose2d(-9, -44, Math.toRadians(0));
     public static Pose2d QUAD_RING                    = new Pose2d(-8, -38, Math.toRadians(0));
     public static Pose2d QUAD_PICK_UP_RING            = new Pose2d(-25, -38, Math.toRadians(0));
-    public static Pose2d QUAD_GOAL_2                  = new Pose2d(-8, -44, Math.toRadians(0));
-    public static Pose2d QUAD_PICK_UP_SECOND_WOBBLE   = new Pose2d(-42, -35, Math.toRadians(0));
-    public static Pose2d QUAD_GOAL_3                  = new Pose2d(-8, -44, Math.toRadians(0));
+    public static Pose2d QUAD_GOAL_2                  = new Pose2d(-9, -44, Math.toRadians(0));
+    public static Pose2d QUAD_PICK_UP_SECOND_WOBBLE   = new Pose2d(-40, -35, Math.toRadians(0));
+    public static Pose2d QUAD_GOAL_3                  = new Pose2d(-9, -44, Math.toRadians(0));
     public static Pose2d QUAD_DROP_SECOND_WOBBLE      = new Pose2d(32, -53, Math.toRadians(180));
     public static Pose2d QUAD_PARK                    = new Pose2d(6, -24, Math.toRadians(180));
 
@@ -97,7 +97,7 @@ public class RedAuto extends Auto {
         Trajectory singlePickUpSecondWobble = robot.drive.trajectoryBuilder(singleRing.end())
                 .addTemporalMarker(0, () -> robot.intake.setIntake(INTAKE_SPEED))
                 .addTemporalMarker(0, () -> robot.shooter.setShooter(SHOOTER_GOAL_POWER))
-                .addTemporalMarker(1, () -> robot.arm.setClaw(CLOSED))
+                .addTemporalMarker(1.3, () -> robot.arm.setClaw(CLOSED))
                 .lineToLinearHeading(SINGLE_PICK_UP_SECOND_WOBBLE)
                 .build();
         Trajectory singleGoal = robot.drive.trajectoryBuilder(singlePickUpSecondWobble.end())
@@ -137,7 +137,7 @@ public class RedAuto extends Auto {
                 .lineToLinearHeading(QUAD_GOAL_2)
                 .build();
         Trajectory quadPickUpSecondWobble = robot.drive.trajectoryBuilder(quadGoal2.end())
-                .addTemporalMarker(2.75, () -> robot.arm.setClaw(CLOSED))
+                .addTemporalMarker(2.5, () -> robot.arm.setClaw(CLOSED))
                 .lineToLinearHeading(QUAD_PICK_UP_SECOND_WOBBLE, getVelocityConstraint(15), getAccelerationConstraint())
                 .build();
         Trajectory quadGoal3 = robot.drive.trajectoryBuilder(quadPickUpSecondWobble.end())
@@ -194,6 +194,7 @@ public class RedAuto extends Auto {
                 followTrajectory(quadGoal2);
                 shootRings(3, false, 2);
                 followTrajectory(quadPickUpSecondWobble);
+                delay(0.25);
                 followTrajectory(quadGoal3);
                 shootRings(6, false, 4);
                 followTrajectory(quadDropSecondWobble);
