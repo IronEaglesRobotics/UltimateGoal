@@ -33,8 +33,9 @@ import static org.firstinspires.ftc.teamcode.util.Constants.POWERSHOT_OFFSET;
 import static org.firstinspires.ftc.teamcode.util.Constants.RED;
 import static org.firstinspires.ftc.teamcode.util.Constants.STRUCTURING_ELEMENT;
 import static org.firstinspires.ftc.teamcode.util.Constants.WHITE;
-import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getLargestContour;
+import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getHighGoalContour;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getLargestContours;
+
 
 // Class for the pipeline that is used to detect the goals and powershots
 public class TargetingPipeline extends OpenCvPipeline {
@@ -101,7 +102,8 @@ public class TargetingPipeline extends OpenCvPipeline {
         // set the largest detection that was found to be the Red Goal detection
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(redMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
-        red.setContour(getLargestContour(contours));
+        red.setContour(getHighGoalContour(contours));
+//        red.setContour(getLargestContour(contours));
         redGoalx = red.getBottomLeftCornerPx().x;
 
         // draw the Red Goal detection
@@ -118,7 +120,8 @@ public class TargetingPipeline extends OpenCvPipeline {
         // set the largest detection that was found to be the Red Goal detection
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(blueMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
-        blue.setContour(getLargestContour(contours));
+        blue.setContour(getHighGoalContour(contours));
+//        blue.setContour(getLargestContour(contours));
         blueGoalx = blue.getBottomRightCornerPx().x;
 
         // draw the Blue Goal detection

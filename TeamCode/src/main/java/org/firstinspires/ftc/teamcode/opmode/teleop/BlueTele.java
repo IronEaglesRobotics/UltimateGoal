@@ -42,7 +42,7 @@ public class BlueTele extends OpMode {
     private int armPosition;
     public double shieldPosition;
 
-    private double shooterPower;
+    private double shooterPower = SHOOTER_GOAL_POWER;
     private double finishTime;
     private boolean checkPusher;
     private boolean zig;
