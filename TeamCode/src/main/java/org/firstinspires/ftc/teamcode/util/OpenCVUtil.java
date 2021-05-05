@@ -81,20 +81,27 @@ public class OpenCVUtil {
 
     public static MatOfPoint getHighGoalContour(List<MatOfPoint> contours) {
         Collections.sort(contours, (a, b) -> (int) Imgproc.contourArea(b) - (int) Imgproc.contourArea(a));
-        for (int i = 0; i < contours.size()-1; i++) {
-            double y1 = OpenCVUtil.getCenterOfContour(contours.get(i)).y;
-            double y2 = OpenCVUtil.getCenterOfContour(contours.get(i+1)).y;
-            // remove based on the difference between y values
-            if (Math.abs(y1)-Math.abs(y2) > 20) {
-                contours.remove(i);
-            } else { // add something later to remove based on size
-                break;
+        if (contours.size() > 1) {
+            for (int i = 0; i < contours.size()-1; i++) {
+                double y1 = OpenCVUtil.getCenterOfContour(contours.get(i)).y;
+                double y2 = OpenCVUtil.getCenterOfContour(contours.get(i+1)).y;
+                if (Math.abs(y1)-Math.abs(y2) > 20) { // remove based on the difference between y values
+                    contours.remove(i);
+                } else { // add something later to remove based on size
+                    break;
+                }
+            }
+            if (contours.size() > 1) {
+                MatOfPoint highGoal = new MatOfPoint();
+                highGoal.push_back(contours.get(0));
+                highGoal.push_back(contours.get(1));
+                return highGoal;
+            } else if (contours.size() > 0) {
+                MatOfPoint highGoal = new MatOfPoint();
+                highGoal.push_back(contours.get(0));
+                return highGoal;
             }
         }
-        MatOfPoint highGoal = new MatOfPoint();
-        highGoal.push_back(contours.get(0));
-        highGoal.push_back(contours.get(1));
-
-        return highGoal;
+        return null;
     }
 }

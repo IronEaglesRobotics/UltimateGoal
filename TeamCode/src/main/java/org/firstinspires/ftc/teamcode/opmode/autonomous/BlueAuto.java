@@ -22,31 +22,31 @@ import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;
 @Config
 @Autonomous(name = "Blue Autonomous", group = "Competition", preselectTeleOp = "Blue TeleOp")
 public class BlueAuto extends Auto {
-    public static Pose2d START_POSE = new Pose2d(-63.5, 56.5, Math.toRadians(180));//15.5
+    public static Pose2d START_POSE = new Pose2d(-63.5, 56.5, Math.toRadians(180));
 
     public static Pose2d NONE_DROP_FIRST_WOBBLE     = new Pose2d(0, 56.5, Math.toRadians(-135));
     public static Pose2d NONE_POWERSHOTS            = new Pose2d(-8, 44, Math.toRadians(0));
-    public static Pose2d NONE_PICK_UP_SECOND_WOBBLE = new Pose2d(-38, 10, Math.toRadians(0));
+    public static Pose2d NONE_PICK_UP_SECOND_WOBBLE = new Pose2d(-38, 17, Math.toRadians(0));
     public static Pose2d NONE_DROP_SECOND_WOBBLE    = new Pose2d(-5, 55, Math.toRadians(-135));
     public static Pose2d NONE_PARK                  = new Pose2d(6, 24, Math.toRadians(180));
 
-    public static Pose2d SINGLE_DROP_FIRST_WOBBLE     = new Pose2d(19, -41, Math.toRadians(0));
-    public static Pose2d SINGLE_POWERSHOTS            = new Pose2d(-8, -44, Math.toRadians(0));
-    public static Pose2d SINGLE_RING                  = new Pose2d(-8, -39, Math.toRadians(0));
-    public static Pose2d SINGLE_PICK_UP_SECOND_WOBBLE = new Pose2d(-40, -34.5, Math.toRadians(0));
-    public static Pose2d SINGLE_GOAL                  = new Pose2d(-8, -44, Math.toRadians(0));
-    public static Pose2d SINGLE_DROP_SECOND_WOBBLE    = new Pose2d(11.5, -26, Math.toRadians(180));
-    public static Pose2d SINGLE_PARK                  = new Pose2d(6, -24, Math.toRadians(180));
+    public static Pose2d SINGLE_DROP_FIRST_WOBBLE     = new Pose2d(19, 41, Math.toRadians(0));
+    public static Pose2d SINGLE_POWERSHOTS            = new Pose2d(-8, 44, Math.toRadians(0));
+    public static Pose2d SINGLE_RING                  = new Pose2d(-8, 39, Math.toRadians(0));
+    public static Pose2d SINGLE_PICK_UP_SECOND_WOBBLE = new Pose2d(-40, 16, Math.toRadians(0));
+    public static Pose2d SINGLE_GOAL                  = new Pose2d(-8, 44, Math.toRadians(0));
+    public static Pose2d SINGLE_DROP_SECOND_WOBBLE    = new Pose2d(11.5, 42, Math.toRadians(180));
+    public static Pose2d SINGLE_PARK                  = new Pose2d(6, 24, Math.toRadians(180));
 
-    public static Pose2d QUAD_DROP_FIRST_WOBBLE       = new Pose2d(44, -55.75, Math.toRadians(135));
-    public static Pose2d QUAD_GOAL                    = new Pose2d(-8, -44, Math.toRadians(0));
-    public static Pose2d QUAD_RING                    = new Pose2d(-8, -38, Math.toRadians(0));
-    public static Pose2d QUAD_PICK_UP_RING            = new Pose2d(-25, -38, Math.toRadians(0));
-    public static Pose2d QUAD_GOAL_2                  = new Pose2d(-8, -44, Math.toRadians(0));
-    public static Pose2d QUAD_PICK_UP_SECOND_WOBBLE   = new Pose2d(-42, -35, Math.toRadians(0));
-    public static Pose2d QUAD_GOAL_3                  = new Pose2d(-8, -44, Math.toRadians(0));
-    public static Pose2d QUAD_DROP_SECOND_WOBBLE      = new Pose2d(32, -53, Math.toRadians(180));
-    public static Pose2d QUAD_PARK                    = new Pose2d(6, -24, Math.toRadians(180));
+    public static Pose2d QUAD_DROP_FIRST_WOBBLE       = new Pose2d(44, 56.5, Math.toRadians(-135));
+    public static Pose2d QUAD_GOAL                    = new Pose2d(-8, 44, Math.toRadians(0));
+    public static Pose2d QUAD_RING                    = new Pose2d(-8, 34, Math.toRadians(0));
+    public static Pose2d QUAD_PICK_UP_RING            = new Pose2d(-25, 34, Math.toRadians(0));
+    public static Pose2d QUAD_GOAL_2                  = new Pose2d(-8, 44, Math.toRadians(0));
+    public static Pose2d QUAD_PICK_UP_SECOND_WOBBLE   = new Pose2d(-42, 20, Math.toRadians(0));
+    public static Pose2d QUAD_GOAL_3                  = new Pose2d(-8, 44, Math.toRadians(0));
+    public static Pose2d QUAD_DROP_SECOND_WOBBLE      = new Pose2d(32, 58.0, Math.toRadians(180));
+    public static Pose2d QUAD_PARK                    = new Pose2d(6, 24, Math.toRadians(180));
 
     @Override
     public void setAlliance() {
@@ -194,6 +194,7 @@ public class BlueAuto extends Auto {
                 followTrajectory(quadGoal2);
                 shootRings(3, false, 2);
                 followTrajectory(quadPickUpSecondWobble);
+                delay(0.25);
                 followTrajectory(quadGoal3);
                 shootRings(6, false, 4);
                 followTrajectory(quadDropSecondWobble);
