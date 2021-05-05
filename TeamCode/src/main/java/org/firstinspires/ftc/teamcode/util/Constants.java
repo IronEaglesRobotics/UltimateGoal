@@ -34,7 +34,7 @@ public class Constants {
     public static double MIN_STARTERSTACK_QUAD_AREA = 1.10;
     public static double MIN_GOAL_AREA = 0.01;
     public static double MIN_POWERSHOT_AREA = 0.0005;
-    public static Rect STARTERSTACK_LOCATION = new Rect(75, 50, 140, 90);
+    public static Rect STARTERSTACK_LOCATION = new Rect(75, 50, 190, 90);
     public static Point POWERSHOT_OFFSET = new Point(-3, -20); // offset from the bottom left of the goal to the top right of the powershot box
     public static Size POWERSHOT_DIMENSIONS = new Size(100, 50);
 
