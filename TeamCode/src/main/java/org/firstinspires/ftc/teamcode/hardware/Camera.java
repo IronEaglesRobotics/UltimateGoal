@@ -3,20 +3,20 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.util.enums.StarterStack;
 import org.firstinspires.ftc.teamcode.vision.Detection;
 import org.firstinspires.ftc.teamcode.vision.PowershotDetection;
 import org.firstinspires.ftc.teamcode.vision.StarterStackPipeline;
 import org.firstinspires.ftc.teamcode.vision.TargetingPipeline;
-import org.firstinspires.ftc.teamcode.util.enums.StarterStack;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 
 import java.util.Locale;
 
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MIN_STARTERSTACK_QUAD_AREA;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MIN_STARTERSTACK_SINGLE_AREA;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_DETECTION;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_POWERSHOT_DETECTION;
-import static org.firstinspires.ftc.teamcode.util.Constants.MIN_STARTERSTACK_QUAD_AREA;
-import static org.firstinspires.ftc.teamcode.util.Constants.MIN_STARTERSTACK_SINGLE_AREA;
 import static org.firstinspires.ftc.teamcode.util.Constants.STACK_WEBCAM;
 import static org.firstinspires.ftc.teamcode.util.Constants.TARGETING_WEBCAM;
 import static org.firstinspires.ftc.teamcode.util.Constants.WEBCAM_HEIGHT;
@@ -84,9 +84,9 @@ public class Camera {
     public StarterStack checkStack() {
         if (stackCameraInitialized) {
             double area = stackPipeline.getStarterStack().getArea();
-            if (area > MIN_STARTERSTACK_QUAD_AREA) {
+            if (area > CV_MIN_STARTERSTACK_QUAD_AREA) {
                 return QUAD;
-            } else if (area > MIN_STARTERSTACK_SINGLE_AREA){
+            } else if (area > CV_MIN_STARTERSTACK_SINGLE_AREA){
                 return SINGLE;
             }
         }

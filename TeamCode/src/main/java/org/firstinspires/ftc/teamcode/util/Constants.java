@@ -4,7 +4,6 @@ import org.firstinspires.ftc.teamcode.vision.Detection;
 import org.firstinspires.ftc.teamcode.vision.PowershotDetection;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -28,15 +27,15 @@ public class Constants {
     public static final int WEBCAM_HEIGHT = 240;
     public static final OpenCvCameraRotation WEBCAM_ROTATION = OpenCvCameraRotation.UPRIGHT;
 
-    // CV Detection Constants
-    public static double MIN_STARTERSTACK_AREA = 0;
-    public static double MIN_STARTERSTACK_SINGLE_AREA = 0.08;
-    public static double MIN_STARTERSTACK_QUAD_AREA = 1.10;
-    public static double MIN_GOAL_AREA = 0.01;
-    public static double MIN_POWERSHOT_AREA = 0.0005;
-    public static Rect STARTERSTACK_LOCATION = new Rect(75, 50, 190, 90);
-    public static Point POWERSHOT_OFFSET = new Point(-3, -20); // offset from the bottom left of the goal to the top right of the powershot box
-    public static Size POWERSHOT_DIMENSIONS = new Size(100, 50);
+//    // CV Detection Constants
+//    public static double MIN_STARTERSTACK_AREA = 0;
+//    public static double MIN_STARTERSTACK_SINGLE_AREA = 0.08;
+//    public static double MIN_STARTERSTACK_QUAD_AREA = 1.10;
+//    public static double MIN_GOAL_AREA = 0.01;
+//    public static double MIN_POWERSHOT_AREA = 0.0005;
+//    public static Rect STARTERSTACK_LOCATION = new Rect(75, 50, 190, 90);
+//    public static Point POWERSHOT_OFFSET = new Point(-3, -20); // offset from the bottom left of the goal to the top right of the powershot box
+//    public static Size POWERSHOT_DIMENSIONS = new Size(100, 50);
 
     // CV Invalid Detection Constants
     public static final Point INVALID_POINT = new Point(Double.MIN_VALUE, Double.MIN_VALUE);

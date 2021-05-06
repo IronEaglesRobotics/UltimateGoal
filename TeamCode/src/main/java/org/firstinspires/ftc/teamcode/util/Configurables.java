@@ -2,6 +2,10 @@ package org.firstinspires.ftc.teamcode.util;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Size;
+
 @Config
 public class Configurables {
     // Robot Constants
@@ -31,14 +35,24 @@ public class Configurables {
     public static double AUTO_AIM_EXP = 2.0;
 
     // CV Color Threshold Constants
-    public static Color CAMERA_RED_GOAL_LOWER = new Color(165, 85, 80);
-    public static Color CAMERA_RED_GOAL_UPPER = new Color(15, 255, 255);
-    public static Color CAMERA_RED_POWERSHOT_LOWER = new Color(165, 85, 80);
-    public static Color CAMERA_RED_POWERSHOT_UPPER = new Color(15, 255, 255);
-    public static Color CAMERA_BLUE_GOAL_LOWER = new Color(75, 85, 100);
-    public static Color CAMERA_BLUE_GOAL_UPPER = new Color(120, 255, 255);
+    public static Color CAMERA_RED_GOAL_LOWER       = new Color(165, 85, 80);
+    public static Color CAMERA_RED_GOAL_UPPER       = new Color(15, 255, 255);
+    public static Color CAMERA_RED_POWERSHOT_LOWER  = new Color(165, 85, 80);
+    public static Color CAMERA_RED_POWERSHOT_UPPER  = new Color(15, 255, 255);
+    public static Color CAMERA_BLUE_GOAL_LOWER      = new Color(75, 85, 100);
+    public static Color CAMERA_BLUE_GOAL_UPPER      = new Color(120, 255, 255);
     public static Color CAMERA_BLUE_POWERSHOT_LOWER = new Color(75, 50, 50);
     public static Color CAMERA_BLUE_POWERSHOT_UPPER = new Color(120, 255, 255);
-    public static Color CAMERA_ORANGE_LOWER = new Color(10, 70, 100);
-    public static Color CAMERA_ORANGE_UPPER = new Color(50, 255, 255);
+    public static Color CAMERA_ORANGE_LOWER         = new Color(10, 70, 100);
+    public static Color CAMERA_ORANGE_UPPER         = new Color(50, 255, 255);
+
+    // CV Detection Constants
+    public static double CV_MIN_STARTERSTACK_AREA = 0;
+    public static double CV_MIN_STARTERSTACK_SINGLE_AREA = 0.08;
+    public static double CV_MIN_STARTERSTACK_QUAD_AREA = 1.10;
+    public static double CV_MIN_GOAL_AREA = 0.01;
+    public static double CV_MIN_POWERSHOT_AREA = 0.0005;
+    public static Rect CV_STARTERSTACK_LOCATION = new Rect(75, 50, 190, 90);
+    public static Point CV_POWERSHOT_OFFSET = new Point(-3, -20); // offset from the bottom left of the goal to the top right of the powershot box
+    public static Size CV_POWERSHOT_DIMENSIONS = new Size(100, 50);
 }

@@ -32,47 +32,65 @@ import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;
 // Abstract Auto Program
 public abstract class Auto extends LinearOpMode {
     public Alliance alliance;
+    public boolean checkForStarterStack;
     public Robot robot;
-    private StarterStack stack;
     private ArrayList<Step> steps;
     private double currentRuntime;
-
-    public void setAlliance() {
-        this.alliance = Alliance.RED;
-    }
+    private StarterStack stack = StarterStack.NONE;
 
     @Override
     public void runOpMode() {
         // init
         telemetry.addLine("Initializing Robot...");
         telemetry.update();
-        setAlliance();
+
         robot = new Robot(hardwareMap);
         robot.shooter.setPusher(OPEN);
         robot.intake.setShield(UP);
-        robot.camera.initStackCamera();
-        while (robot.camera.getFrameCount() < 1) {
-            idle();
-        }
 
-        // wait for start
-        while (!(isStarted() || isStopRequested())) {
-            stack = robot.camera.checkStack();
-            telemetry.addLine("Initialized");
-            telemetry.addLine(robot.camera.getTelemetry());
-            telemetry.update();
-        }
-        if (isStopRequested()) return;
-        resetStartTime();
+        setAlliance();
+        setCamera();
 
-        // switch cameras
-        robot.camera.stopStackCamera();
-        while(robot.camera.getFrameCount() > 0) {
-            idle();
-        }
-        robot.camera.initTargetingCamera();
-        while(robot.camera.getFrameCount() < 1) {
-            idle();
+        if (checkForStarterStack) {
+            // start stack camera
+            robot.camera.initStackCamera();
+            while (robot.camera.getFrameCount() < 1) {
+                idle();
+            }
+
+            // wait for start
+            while (!(isStarted() || isStopRequested())) {
+                stack = robot.camera.checkStack();
+                telemetry.addLine("Initialized");
+                telemetry.addLine(robot.camera.getTelemetry());
+                telemetry.update();
+            }
+            if (isStopRequested()) return;
+            resetStartTime();
+
+            // switch cameras
+            robot.camera.stopStackCamera();
+            while(robot.camera.getFrameCount() > 0) {
+                idle();
+            }
+            robot.camera.initTargetingCamera();
+            while(robot.camera.getFrameCount() < 1) {
+                idle();
+            }
+        } else {
+            // start targeting camera
+            robot.camera.initTargetingCamera();
+            while(robot.camera.getFrameCount() < 1) {
+                idle();
+            }
+
+            // wait for start
+            while (!(isStarted() || isStopRequested())) {
+                telemetry.addLine("Initialized");
+                telemetry.update();
+            }
+            if (isStopRequested()) return;
+            resetStartTime();
         }
 
         // run steps
@@ -110,9 +128,18 @@ public abstract class Auto extends LinearOpMode {
         }
     }
 
+    public void setAlliance() {
+        alliance = Alliance.RED;
+    }
+
+    public void setCamera() {
+        checkForStarterStack = true;
+    }
+
     public void buildSteps(StarterStack stack) {
         steps = new ArrayList<>();
         delay(5);
+        stopTargetingCamera();
     }
 
     public void delay(double timeout) {

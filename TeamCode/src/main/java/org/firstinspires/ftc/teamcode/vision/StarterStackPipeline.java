@@ -13,11 +13,11 @@ import java.util.ArrayList;
 
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_ORANGE_LOWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_ORANGE_UPPER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MIN_STARTERSTACK_AREA;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_STARTERSTACK_LOCATION;
 import static org.firstinspires.ftc.teamcode.util.Constants.ANCHOR;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLUR_SIZE;
 import static org.firstinspires.ftc.teamcode.util.Constants.ERODE_DILATE_ITERATIONS;
-import static org.firstinspires.ftc.teamcode.util.Constants.MIN_STARTERSTACK_AREA;
-import static org.firstinspires.ftc.teamcode.util.Constants.STARTERSTACK_LOCATION;
 import static org.firstinspires.ftc.teamcode.util.Constants.STRUCTURING_ELEMENT;
 import static org.firstinspires.ftc.teamcode.util.Constants.WHITE;
 
@@ -32,7 +32,7 @@ public class StarterStackPipeline extends OpenCvPipeline  {
     // Init
     @Override
     public void init(Mat input) {
-        starterStack = new Detection(input.size(), MIN_STARTERSTACK_AREA);
+        starterStack = new Detection(input.size(), CV_MIN_STARTERSTACK_AREA);
     }
 
     // Process each frame that is received from the webcam
@@ -56,7 +56,7 @@ public class StarterStackPipeline extends OpenCvPipeline  {
 
         // make a new mask that will be used to find the contours of the StarterStack
         Mat starterStackMask = new Mat(hsv.size(), CvType.CV_8U);
-        Imgproc.rectangle(starterStackMask, STARTERSTACK_LOCATION, WHITE, -1);
+        Imgproc.rectangle(starterStackMask, CV_STARTERSTACK_LOCATION, WHITE, -1);
         Core.bitwise_and(orangeMask, starterStackMask, starterStackMask);
 
         // set the largest detection that was found to be the StarterStack
@@ -65,7 +65,7 @@ public class StarterStackPipeline extends OpenCvPipeline  {
         starterStack.setContour(OpenCVUtil.getLargestContour(contours));
 
         // draw the StarterStack detection as well as where was looked for it on the screen
-        Imgproc.rectangle(input, STARTERSTACK_LOCATION, WHITE, 2);
+        Imgproc.rectangle(input, CV_STARTERSTACK_LOCATION, WHITE, 2);
         starterStack.draw(input, WHITE);
     }
 
