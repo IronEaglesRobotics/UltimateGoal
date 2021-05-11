@@ -24,10 +24,10 @@ public class Configurables {
     public static double SHOOTER_GOAL_POWER = 0.62;
     public static double SHOOTER_MID_GOAL_POWER = 0.54;
     public static double SHOOTER_POWERSHOT_POWER = 0.57;
-    public static double SHOOTER_AUTO_AIM_OFFSET_X = 5;
     public static double PUSHER_CLOSED = 0.35;
     public static double PUSHER_OPEN = 0.55;
     public static double PUSHER_DELAY = 0.15;
+    public static double AUTO_AIM_OFFSET_X = 5;
     public static double AUTO_AIM_WAIT = 0.02;
     public static double AUTO_AIM_MAX_ERROR = 50;
     public static double AUTO_AIM_A = 0.08;
@@ -53,6 +53,8 @@ public class Configurables {
     public static double CV_MIN_GOAL_AREA = 0.01;
     public static double CV_MIN_POWERSHOT_AREA = 0.0005;
     public static Rect CV_STARTERSTACK_LOCATION = new Rect(75, 50, 190, 90);
-    public static Point CV_POWERSHOT_OFFSET = new Point(-3, -20); // offset from the bottom left of the goal to the top right of the powershot box
+    public static Point CV_POWERSHOT_OFFSET = new Point(-3, -20); // offset from the bottom left of the goal to the top right of the powershot box (for red)
     public static Size CV_POWERSHOT_DIMENSIONS = new Size(100, 50);
+    public static double CV_GOAL_ALLOWABLE_Y_ERROR = 20;
+    public static double CV_GOAL_ALLOWABLE_SIZE_ERROR = 1;
 }

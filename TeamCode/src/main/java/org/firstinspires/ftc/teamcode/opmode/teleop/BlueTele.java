@@ -23,7 +23,7 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_UP
 import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SPEED;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_DELAY;
 import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_SPEED;
-import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_AUTO_AIM_OFFSET_X;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_GOAL_POWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_MID_GOAL_POWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_POWERSHOT_POWER;
@@ -100,9 +100,9 @@ public class BlueTele extends OpMode {
             shooterPower = SHOOTER_POWERSHOT_POWER;
             double targetPos = 0;
             if (alliance == Alliance.RED) {
-                targetPos = redPowershot.getCenter().x + SHOOTER_AUTO_AIM_OFFSET_X;
+                targetPos = redPowershot.getCenter().x + AUTO_AIM_OFFSET_X;
             } else if (alliance == Alliance.BLUE) {
-                targetPos = bluePowershot.getCenter().x + SHOOTER_AUTO_AIM_OFFSET_X;
+                targetPos = bluePowershot.getCenter().x + AUTO_AIM_OFFSET_X;
             }
             double x2 = Math.abs(targetPos);
             double power = AUTO_AIM_A * Math.pow((x2 - AUTO_AIM_H), 1/AUTO_AIM_EXP);
@@ -119,9 +119,9 @@ public class BlueTele extends OpMode {
             shooterPower = SHOOTER_GOAL_POWER;
             double targetPos = 0;
             if (alliance == Alliance.RED) {
-                targetPos = red.getCenter().x + SHOOTER_AUTO_AIM_OFFSET_X;
+                targetPos = red.getCenter().x + AUTO_AIM_OFFSET_X;
             } else if (alliance == Alliance.BLUE) {
-                targetPos = blue.getCenter().x + SHOOTER_AUTO_AIM_OFFSET_X;
+                targetPos = blue.getCenter().x + AUTO_AIM_OFFSET_X;
             }
             double x2 = Math.abs(targetPos);
             double power = AUTO_AIM_A * Math.pow((x2 - AUTO_AIM_H), 1/AUTO_AIM_EXP);
@@ -138,9 +138,9 @@ public class BlueTele extends OpMode {
             shooterPower = SHOOTER_MID_GOAL_POWER;
             double targetPos = 0;
             if (alliance == Alliance.RED) {
-                targetPos = blue.getCenter().x + SHOOTER_AUTO_AIM_OFFSET_X;
+                targetPos = blue.getCenter().x + AUTO_AIM_OFFSET_X;
             } else if (alliance == Alliance.BLUE) {
-                targetPos = red.getCenter().x + SHOOTER_AUTO_AIM_OFFSET_X;
+                targetPos = red.getCenter().x + AUTO_AIM_OFFSET_X;
             }
             double x2 = Math.abs(targetPos);
             double power = AUTO_AIM_A * Math.pow((x2 - AUTO_AIM_H), 1/AUTO_AIM_EXP);

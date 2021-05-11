@@ -103,7 +103,6 @@ public class TargetingPipeline extends OpenCvPipeline {
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(redMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
         red.setContour(getHighGoalContour(contours));
-//        red.setContour(getLargestContour(contours));
         redGoalx = red.getBottomLeftCornerPx().x;
 
         // draw the Red Goal detection
@@ -121,7 +120,6 @@ public class TargetingPipeline extends OpenCvPipeline {
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(blueMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
         blue.setContour(getHighGoalContour(contours));
-//        blue.setContour(getLargestContour(contours));
         blueGoalx = blue.getBottomRightCornerPx().x;
 
         // draw the Blue Goal detection

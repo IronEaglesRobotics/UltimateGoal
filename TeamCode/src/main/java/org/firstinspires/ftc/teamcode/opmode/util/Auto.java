@@ -22,7 +22,7 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_EXP;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MAX_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_WAIT;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_DELAY;
-import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_AUTO_AIM_OFFSET_X;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_GOAL_POWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_POWERSHOT_POWER;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.CLOSED;
@@ -217,7 +217,7 @@ public abstract class Auto extends LinearOpMode {
                             powershot = robot.camera.getBluePowershots().getLeftMost();
                         }
                         if (powershot.isValid()) {
-                            targetPos = powershot.getCenter().x + SHOOTER_AUTO_AIM_OFFSET_X;
+                            targetPos = powershot.getCenter().x + AUTO_AIM_OFFSET_X;
                         } else {
                             powershotsKnockedDown = true;
                             robot.shooter.setShooter(SHOOTER_GOAL_POWER);
@@ -229,7 +229,7 @@ public abstract class Auto extends LinearOpMode {
                             goal = robot.camera.getBlue();
                         }
                         if (goal.isValid()) {
-                            targetPos = goal.getCenter().x + SHOOTER_AUTO_AIM_OFFSET_X;
+                            targetPos = goal.getCenter().x + AUTO_AIM_OFFSET_X;
                         }
                     }
                     // either start firing or move towards target
