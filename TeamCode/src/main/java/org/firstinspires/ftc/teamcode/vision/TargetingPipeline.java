@@ -102,11 +102,16 @@ public class TargetingPipeline extends OpenCvPipeline {
         // set the largest detection that was found to be the Red Goal detection
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(redMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+        for (int i = 0; i < contours.size(); i++) {
+            Detection newDetection = new Detection(input.size(),0);
+            newDetection.setContour(contours.get(i));
+            newDetection.draw(input, RED);
+        }
         red.setContour(getHighGoalContour(contours));
         redGoalx = red.getBottomLeftCornerPx().x;
 
         // draw the Red Goal detection
-        red.draw(input, RED);
+        red.draw(input, WHITE);
     }
 
     // Update the Blue Goal Detection
@@ -119,11 +124,16 @@ public class TargetingPipeline extends OpenCvPipeline {
         // set the largest detection that was found to be the Red Goal detection
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(blueMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+        for (int i = 0; i < contours.size(); i++) {
+            Detection newDetection = new Detection(input.size(),0);
+            newDetection.setContour(contours.get(i));
+            newDetection.draw(input, BLUE);
+        }
         blue.setContour(getHighGoalContour(contours));
         blueGoalx = blue.getBottomRightCornerPx().x;
 
         // draw the Blue Goal detection
-        blue.draw(input, BLUE);
+        blue.draw(input, WHITE);
     }
 
     // Update the Red Powershot Detection

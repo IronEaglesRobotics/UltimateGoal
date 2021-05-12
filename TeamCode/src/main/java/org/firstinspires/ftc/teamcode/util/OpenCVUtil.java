@@ -92,8 +92,8 @@ public class OpenCVUtil {
             default:
                 int goalCounter = -1;
                 for (int i = 0; i < contours.size()-1; i++) {
-                    MatOfPoint contour1 = contours.get(0);
-                    MatOfPoint contour2 = contours.get(1);
+                    MatOfPoint contour1 = contours.get(i);
+                    MatOfPoint contour2 = contours.get(i+1);
                     double y1 = OpenCVUtil.getCenterOfContour(contour1).y;
                     double y2 = OpenCVUtil.getCenterOfContour(contour2).y;
                     double area1 = Imgproc.contourArea(contour1);

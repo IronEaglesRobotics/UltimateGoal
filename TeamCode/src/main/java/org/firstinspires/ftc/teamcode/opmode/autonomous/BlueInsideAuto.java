@@ -17,7 +17,7 @@ public class BlueInsideAuto extends Auto {
     public static Pose2d START_POSE = new Pose2d(-59.5, 18.0, Math.toRadians(-45));
 
     public static Pose2d SHOOT = new Pose2d(-8, 12, Math.toRadians(10));
-    public static Pose2d PARK  = new Pose2d(10, 12, Math.toRadians(180));
+    public static Pose2d PARK  = new Pose2d(10, 6, Math.toRadians(180));//12
 
     @Override
     public void setAlliance() {
@@ -42,7 +42,7 @@ public class BlueInsideAuto extends Auto {
                 .lineToLinearHeading(PARK)
                 .build();
 
-        delay(25);
+        delay(24);
         followTrajectory(shoot);
         shootRings(3.5, false, 3);
         followTrajectory(park);

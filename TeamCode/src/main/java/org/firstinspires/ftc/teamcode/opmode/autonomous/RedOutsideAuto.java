@@ -28,7 +28,7 @@ public class RedOutsideAuto extends Auto {
     public static Pose2d NONE_POWERSHOTS            = new Pose2d(-8, -44, Math.toRadians(0));
     public static Pose2d NONE_PICK_UP_SECOND_WOBBLE = new Pose2d(-38, -34.5, Math.toRadians(0));
     public static Pose2d NONE_DROP_SECOND_WOBBLE    = new Pose2d(-2, -43, Math.toRadians(135));
-    public static Pose2d NONE_PARK                  = new Pose2d(6, -24, Math.toRadians(180));
+    public static Pose2d NONE_PARK                  = new Pose2d(6, -48, Math.toRadians(180));
 
     public static Pose2d SINGLE_DROP_FIRST_WOBBLE     = new Pose2d(19, -41, Math.toRadians(0));
     public static Pose2d SINGLE_POWERSHOTS            = new Pose2d(-9, -44, Math.toRadians(0));
@@ -36,7 +36,7 @@ public class RedOutsideAuto extends Auto {
     public static Pose2d SINGLE_PICK_UP_SECOND_WOBBLE = new Pose2d(-37, -33, Math.toRadians(0));
     public static Pose2d SINGLE_GOAL                  = new Pose2d(-8, -44, Math.toRadians(0));
     public static Pose2d SINGLE_DROP_SECOND_WOBBLE    = new Pose2d(11, -27, Math.toRadians(180));
-    public static Pose2d SINGLE_PARK                  = new Pose2d(6, -24, Math.toRadians(180));
+    public static Pose2d SINGLE_PARK                  = new Pose2d(6, -48, Math.toRadians(180));
 
     public static Pose2d QUAD_DROP_FIRST_WOBBLE       = new Pose2d(44, -55.75, Math.toRadians(135));
     public static Pose2d QUAD_GOAL                    = new Pose2d(-9, -44, Math.toRadians(0));
@@ -46,7 +46,7 @@ public class RedOutsideAuto extends Auto {
     public static Pose2d QUAD_PICK_UP_SECOND_WOBBLE   = new Pose2d(-40, -35, Math.toRadians(0));
     public static Pose2d QUAD_GOAL_3                  = new Pose2d(-9, -44, Math.toRadians(0));
     public static Pose2d QUAD_DROP_SECOND_WOBBLE      = new Pose2d(32, -53, Math.toRadians(180));
-    public static Pose2d QUAD_PARK                    = new Pose2d(6, -24, Math.toRadians(180));
+    public static Pose2d QUAD_PARK                    = new Pose2d(6, -48, Math.toRadians(180));
 
     @Override
     public void setAlliance() {
