@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode.autonomous;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -19,7 +18,6 @@ import static org.firstinspires.ftc.teamcode.util.enums.Position.DOWN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;
 
-@Config
 @Autonomous(name = "Red Outside No Wobble", group = "Competition", preselectTeleOp = "Red TeleOp")
 public class RedOutsideWobble extends Auto {
     public static Pose2d START_POSE = new Pose2d(-63.5, -55.75, Math.toRadians(180));
@@ -46,7 +44,7 @@ public class RedOutsideWobble extends Auto {
     public static Pose2d QUAD_PICK_UP_SECOND_WOBBLE   = new Pose2d(-40, -35, Math.toRadians(0));
     public static Pose2d QUAD_GOAL_3                  = new Pose2d(-9, -44, Math.toRadians(0));
     public static Pose2d QUAD_DROP_SECOND_WOBBLE      = new Pose2d(32, -53, Math.toRadians(180));
-    public static Pose2d QUAD_PARK                    = new Pose2d(6, -20, Math.toRadians(0));
+    public static Pose2d QUAD_PARK                    = new Pose2d(6, -48, Math.toRadians(180));
 
     @Override
     public void setAlliance() {

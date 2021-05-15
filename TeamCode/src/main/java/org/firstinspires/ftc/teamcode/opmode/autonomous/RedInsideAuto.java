@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode.autonomous;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -11,7 +10,6 @@ import org.firstinspires.ftc.teamcode.util.enums.StarterStack;
 
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_GOAL_POWER;
 
-@Config
 @Autonomous(name = "Red Inside Auto", group = "Competition", preselectTeleOp = "Red TeleOp")
 public class RedInsideAuto extends Auto {
     public static Pose2d START_POSE = new Pose2d(-59.5, -18.0, Math.toRadians(45));

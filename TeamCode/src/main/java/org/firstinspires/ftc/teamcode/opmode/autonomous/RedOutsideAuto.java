@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode.autonomous;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -19,7 +18,6 @@ import static org.firstinspires.ftc.teamcode.util.enums.Position.DOWN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;
 
-@Config
 @Autonomous(name = "Red Outside Auto", group = "Competition", preselectTeleOp = "Red TeleOp")
 public class RedOutsideAuto extends Auto {
     public static Pose2d START_POSE = new Pose2d(-63.5, -55.75, Math.toRadians(180));

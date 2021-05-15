@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.Octoliner;
 
+@Disabled
 @TeleOp(name = "Octoliner Test", group = "Development")
 public class TestOctoliner extends OpMode {
 
