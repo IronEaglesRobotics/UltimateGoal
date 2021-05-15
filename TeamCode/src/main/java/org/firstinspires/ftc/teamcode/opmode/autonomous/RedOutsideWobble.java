@@ -20,8 +20,8 @@ import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;
 
 @Config
-@Autonomous(name = "Red Outside Auto", group = "Competition", preselectTeleOp = "Red TeleOp")
-public class RedOutsideAuto extends Auto {
+@Autonomous(name = "Red Outside No Wobble", group = "Competition", preselectTeleOp = "Red TeleOp")
+public class RedOutsideWobble extends Auto {
     public static Pose2d START_POSE = new Pose2d(-63.5, -55.75, Math.toRadians(180));
 
     public static Pose2d NONE_DROP_FIRST_WOBBLE     = new Pose2d(0, -55.75, Math.toRadians(135));
@@ -45,8 +45,8 @@ public class RedOutsideAuto extends Auto {
     public static Pose2d QUAD_GOAL_2                  = new Pose2d(-9, -44, Math.toRadians(0));
     public static Pose2d QUAD_PICK_UP_SECOND_WOBBLE   = new Pose2d(-40, -35, Math.toRadians(0));
     public static Pose2d QUAD_GOAL_3                  = new Pose2d(-9, -44, Math.toRadians(0));
-    public static Pose2d QUAD_DROP_SECOND_WOBBLE      = new Pose2d(34, -53, Math.toRadians(180));
-    public static Pose2d QUAD_PARK                    = new Pose2d(6, -48, Math.toRadians(180));
+    public static Pose2d QUAD_DROP_SECOND_WOBBLE      = new Pose2d(32, -53, Math.toRadians(180));
+    public static Pose2d QUAD_PARK                    = new Pose2d(6, -20, Math.toRadians(0));
 
     @Override
     public void setAlliance() {
@@ -71,16 +71,17 @@ public class RedOutsideAuto extends Auto {
                 .addTemporalMarker(1, () -> robot.arm.setClaw(OPEN))
                 .lineToLinearHeading(NONE_POWERSHOTS)
                 .build();
-        Trajectory nonePickUpSecondWobble = robot.drive.trajectoryBuilder(nonePowershots.end())
+//        Trajectory nonePickUpSecondWobble = robot.drive.trajectoryBuilder(nonePowershots.end())
+//                .addTemporalMarker(0, () -> robot.shooter.setShooter(0))
+//                .addTemporalMarker(1.1, () -> robot.arm.setClaw(CLOSED))
+//                .lineToLinearHeading(NONE_PICK_UP_SECOND_WOBBLE)
+//                .build();
+//        Trajectory noneDropSecondWobble = robot.drive.trajectoryBuilder(nonePickUpSecondWobble.end())
+//                .addTemporalMarker(2.5, () -> robot.arm.setClaw(OPEN))
+//                .lineToLinearHeading(NONE_DROP_SECOND_WOBBLE)
+//                .build();
+        Trajectory nonePark = robot.drive.trajectoryBuilder(nonePowershots.end())
                 .addTemporalMarker(0, () -> robot.shooter.setShooter(0))
-                .addTemporalMarker(1.1, () -> robot.arm.setClaw(CLOSED))
-                .lineToLinearHeading(NONE_PICK_UP_SECOND_WOBBLE)
-                .build();
-        Trajectory noneDropSecondWobble = robot.drive.trajectoryBuilder(nonePickUpSecondWobble.end())
-                .addTemporalMarker(2.5, () -> robot.arm.setClaw(OPEN))
-                .lineToLinearHeading(NONE_DROP_SECOND_WOBBLE)
-                .build();
-        Trajectory nonePark = robot.drive.trajectoryBuilder(noneDropSecondWobble.end())
                 .addTemporalMarker(0, () -> robot.arm.setArm(BACK))
                 .addTemporalMarker(0.5, () -> robot.arm.setClaw(CLOSED))
                 .lineToLinearHeading(NONE_PARK)
@@ -109,13 +110,15 @@ public class RedOutsideAuto extends Auto {
                 .addTemporalMarker(0, () -> robot.arm.setArm(ALMOST_DOWN))
                 .lineToLinearHeading(SINGLE_GOAL)
                 .build();
-        Trajectory singleDropSecondWobble = robot.drive.trajectoryBuilder(singleGoal.end())
+//        Trajectory singleDropSecondWobble = robot.drive.trajectoryBuilder(singleGoal.end())
+//                .addTemporalMarker(0, () -> robot.intake.setIntake(0))
+//                .addTemporalMarker(0, () -> robot.shooter.setShooter(0))
+//                .addTemporalMarker(3.5, () -> robot.arm.setClaw(OPEN))
+//                .lineToLinearHeading(SINGLE_DROP_SECOND_WOBBLE)
+//                .build();
+        Trajectory singlePark = robot.drive.trajectoryBuilder(singleGoal.end())
                 .addTemporalMarker(0, () -> robot.intake.setIntake(0))
                 .addTemporalMarker(0, () -> robot.shooter.setShooter(0))
-                .addTemporalMarker(3.5, () -> robot.arm.setClaw(OPEN))
-                .lineToLinearHeading(SINGLE_DROP_SECOND_WOBBLE)
-                .build();
-        Trajectory singlePark = robot.drive.trajectoryBuilder(singleDropSecondWobble.end())
                 .addTemporalMarker(0, () -> robot.arm.setArm(BACK))
                 .addTemporalMarker(0.5, () -> robot.arm.setClaw(CLOSED))
                 .lineToLinearHeading(SINGLE_PARK)
@@ -146,19 +149,22 @@ public class RedOutsideAuto extends Auto {
                 .lineToLinearHeading(QUAD_PICK_UP_SECOND_WOBBLE, getVelocityConstraint(15), getAccelerationConstraint())
                 .build();
         Trajectory quadGoal3 = robot.drive.trajectoryBuilder(quadPickUpSecondWobble.end())
-                .addTemporalMarker(0, () -> robot.arm.setArm(ALMOST_DOWN))
+                .addTemporalMarker(0, () -> robot.arm.setArm(BACK))
                 .lineToLinearHeading(QUAD_GOAL_3)
                 .build();
-        Trajectory quadDropSecondWobble = robot.drive.trajectoryBuilder(quadGoal3.end())
+//        Trajectory quadDropSecondWobble = robot.drive.trajectoryBuilder(quadGoal3.end())
+//                .addTemporalMarker(0, () -> robot.intake.setIntake(0))
+//                .addTemporalMarker(0, () -> robot.intake.setShield(UP))
+//                .addTemporalMarker(0, () -> robot.shooter.setShooter(0))
+////                .addTemporalMarker(3, () -> robot.arm.setClaw(OPEN))
+//                .lineToLinearHeading(QUAD_DROP_SECOND_WOBBLE)
+//                .build();
+        Trajectory quadPark = robot.drive.trajectoryBuilder(quadGoal3.end())
                 .addTemporalMarker(0, () -> robot.intake.setIntake(0))
                 .addTemporalMarker(0, () -> robot.intake.setShield(UP))
                 .addTemporalMarker(0, () -> robot.shooter.setShooter(0))
-                .addTemporalMarker(3, () -> robot.arm.setClaw(OPEN))
-                .lineToLinearHeading(QUAD_DROP_SECOND_WOBBLE)
-                .build();
-        Trajectory quadPark = robot.drive.trajectoryBuilder(quadDropSecondWobble.end())
-                .addTemporalMarker(0, () -> robot.arm.setArm(BACK))
-                .addTemporalMarker(0.5, () -> robot.arm.setClaw(CLOSED))
+//                .addTemporalMarker(0, () -> robot.arm.setArm(BACK))
+//                .addTemporalMarker(0.5, () -> robot.arm.setClaw(CLOSED))
                 .lineToLinearHeading(QUAD_PARK)
                 .build();
 
@@ -169,8 +175,8 @@ public class RedOutsideAuto extends Auto {
                 setIntake(0, 0);
                 followTrajectory(nonePowershots);
                 shootRings(10, false, 3);
-                followTrajectory(nonePickUpSecondWobble);
-                followTrajectory(noneDropSecondWobble);
+//                followTrajectory(nonePickUpSecondWobble);
+//                followTrajectory(noneDropSecondWobble);
                 followTrajectory(nonePark);
                 delay(2);
                 break;
@@ -184,7 +190,7 @@ public class RedOutsideAuto extends Auto {
                 followTrajectory(singlePickUpSecondWobble);
                 followTrajectory(singleGoal);
                 shootRings(3, false, 1);
-                followTrajectory(singleDropSecondWobble);
+//                followTrajectory(singleDropSecondWobble);
                 followTrajectory(singlePark);
                 delay(2);
                 break;
@@ -202,7 +208,7 @@ public class RedOutsideAuto extends Auto {
                 delay(0.25);
                 followTrajectory(quadGoal3);
                 shootRings(6, false, 4);
-                followTrajectory(quadDropSecondWobble);
+//                followTrajectory(quadDropSecondWobble);
                 followTrajectory(quadPark);
                 delay(2);
         }
