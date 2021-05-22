@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.hardware.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.util.enums.Alliance;
+import org.firstinspires.ftc.teamcode.util.enums.Position;
 import org.firstinspires.ftc.teamcode.util.enums.StarterStack;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public abstract class Auto extends LinearOpMode {
     public boolean checkForStarterStack;
     public Robot robot;
     private ArrayList<Step> steps;
+    private double stepTimeout;
     private double currentRuntime;
     private StarterStack stack = StarterStack.NONE;
 
@@ -98,7 +100,7 @@ public abstract class Auto extends LinearOpMode {
         buildSteps(stack);
         int stepNumber = 0;
         Step step = steps.get(stepNumber);
-        double stepTimeout = step.getTimeout() != -1 ? currentRuntime + step.getTimeout() : Double.MAX_VALUE;
+        stepTimeout = step.getTimeout() != -1 ? currentRuntime + step.getTimeout() : Double.MAX_VALUE;
         step.start();
         while(opModeIsActive() && !isStopRequested()) {
             currentRuntime = getRuntime();
@@ -174,6 +176,59 @@ public abstract class Auto extends LinearOpMode {
         });
     }
 
+    public void setClaw(double timeout, Position position) {
+        steps.add(new Step("Setting arm to " + position, timeout) {
+            @Override
+            public void start() {
+                robot.arm.setClaw(position);
+            }
+            @Override
+            public void whileRunning() {}
+            @Override
+            public void end() {}
+            @Override
+            public boolean isFinished() {
+                return false;
+            }
+        });
+    }
+
+    public void setArm(double timeout, Position position) {
+        steps.add(new Step("Setting arm to " + position, timeout) {
+            @Override
+            public void start() {
+                robot.arm.setArm(position);
+            }
+            @Override
+            public void whileRunning() {}
+            @Override
+            public void end() {}
+            @Override
+            public boolean isFinished() {
+                return false;
+            }
+        });
+    }
+
+    public void turn(double degrees) {
+        steps.add(new Step("Following a trajectory") {
+            @Override
+            public void start() {
+                robot.drive.turn(degrees);
+            }
+            @Override
+            public void whileRunning() {
+                robot.drive.update();
+            }
+            @Override
+            public void end() {}
+            @Override
+            public boolean isFinished() {
+                return !robot.drive.isBusy();
+            }
+        });
+    }
+
     public void followTrajectory(Trajectory trajectory) {
         steps.add(new Step("Following a trajectory") {
             @Override
@@ -233,7 +288,7 @@ public abstract class Auto extends LinearOpMode {
                         }
                     }
                     // either start firing or move towards target
-                    if (Math.abs(targetPos) <= 2) {
+                    if (Math.abs(targetPos) <= 2 || currentRuntime >= stepTimeout - 2) {
                         if (shootingDelay == -1) {
                             shootingDelay = currentRuntime;
                         }

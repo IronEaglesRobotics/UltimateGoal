@@ -13,6 +13,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_BLUE_GOAL_LOWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_BLUE_GOAL_UPPER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_BLUE_POWERSHOT_LOWER;
@@ -21,6 +22,7 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_GOAL_
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_GOAL_UPPER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_POWERSHOT_LOWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_POWERSHOT_UPPER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_Y_LINE;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MIN_GOAL_AREA;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MIN_POWERSHOT_AREA;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_POWERSHOT_DIMENSIONS;
@@ -29,9 +31,12 @@ import static org.firstinspires.ftc.teamcode.util.Constants.ANCHOR;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLUE;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLUR_SIZE;
 import static org.firstinspires.ftc.teamcode.util.Constants.ERODE_DILATE_ITERATIONS;
+import static org.firstinspires.ftc.teamcode.util.Constants.GREEN;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_POINT;
 import static org.firstinspires.ftc.teamcode.util.Constants.RED;
 import static org.firstinspires.ftc.teamcode.util.Constants.STRUCTURING_ELEMENT;
+import static org.firstinspires.ftc.teamcode.util.Constants.WEBCAM_HEIGHT;
+import static org.firstinspires.ftc.teamcode.util.Constants.WEBCAM_WIDTH;
 import static org.firstinspires.ftc.teamcode.util.Constants.WHITE;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getHighGoalContour;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getLargestContours;
@@ -59,9 +64,6 @@ public class TargetingPipeline extends OpenCvPipeline {
     private PowershotDetection redPowershots;
     private PowershotDetection bluePowershots;
 
-    private double redGoalx;
-    private double blueGoalx;
-
     // Init
     @Override
     public void init(Mat input) {
@@ -82,6 +84,9 @@ public class TargetingPipeline extends OpenCvPipeline {
         updateBlue(input);
         updateRedPowershots(input);
         updateBluePowershots(input);
+
+        Imgproc.line(input, new Point(0, (CV_GOAL_ALLOWABLE_Y_LINE/WEBCAM_HEIGHT)*100), new Point(WEBCAM_WIDTH, (CV_GOAL_ALLOWABLE_Y_LINE/WEBCAM_HEIGHT)*100), GREEN, 2);
+        Imgproc.line(input, new Point(-AUTO_AIM_OFFSET_X, 0), new Point(-AUTO_AIM_OFFSET_X, WEBCAM_HEIGHT), GREEN, 2);
 
         return input;
     }
@@ -108,7 +113,6 @@ public class TargetingPipeline extends OpenCvPipeline {
             newDetection.draw(input, RED);
         }
         red.setContour(getHighGoalContour(contours));
-        redGoalx = red.getBottomLeftCornerPx().x;
 
         // draw the Red Goal detection
         red.draw(input, WHITE);
@@ -130,7 +134,6 @@ public class TargetingPipeline extends OpenCvPipeline {
             newDetection.draw(input, BLUE);
         }
         blue.setContour(getHighGoalContour(contours));
-        blueGoalx = blue.getBottomRightCornerPx().x;
 
         // draw the Blue Goal detection
         blue.draw(input, WHITE);
@@ -170,7 +173,8 @@ public class TargetingPipeline extends OpenCvPipeline {
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(powershotMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
         for (int i = 0; i < contours.size(); i++) {
-            if ((int) OpenCVUtil.getCenterOfContour(contours.get(i)).x > redGoalx) {
+            if (OpenCVUtil.getCenterOfContour(contours.get(i)).x > red.getBottomLeftCornerPx().x ||
+                    OpenCVUtil.getCenterOfContour(contours.get(i)).y < red.getBottomLeftCornerPx().y) {
                 contours.remove(i);
                 i--;
             }
@@ -209,7 +213,8 @@ public class TargetingPipeline extends OpenCvPipeline {
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(powershotMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
         for (int i = 0; i < contours.size(); i++) {
-            if ((int) OpenCVUtil.getCenterOfContour(contours.get(i)).x < blueGoalx) {
+            if (OpenCVUtil.getCenterOfContour(contours.get(i)).x < blue.getBottomRightCornerPx().x ||
+                    OpenCVUtil.getCenterOfContour(contours.get(i)).y < blue.getBottomRightCornerPx().y) {
                 contours.remove(i);
                 i--;
             }

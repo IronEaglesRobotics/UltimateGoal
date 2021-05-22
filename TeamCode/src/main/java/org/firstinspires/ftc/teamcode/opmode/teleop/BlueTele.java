@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -46,6 +47,8 @@ public class BlueTele extends OpMode {
     private double finishTime;
     private boolean checkPusher;
     private boolean zig;
+
+    private PIDCoefficients pidController = new PIDCoefficients();
 
     // Init
     @Override

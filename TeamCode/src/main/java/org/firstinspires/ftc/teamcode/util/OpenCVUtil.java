@@ -14,6 +14,7 @@ import java.util.List;
 
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_SIZE_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_Y_ERROR;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_Y_LINE;
 
 // CV Helper Functions
 public class OpenCVUtil {
@@ -94,16 +95,25 @@ public class OpenCVUtil {
                 for (int i = 0; i < contours.size()-1; i++) {
                     MatOfPoint contour1 = contours.get(i);
                     MatOfPoint contour2 = contours.get(i+1);
-                    double y1 = OpenCVUtil.getCenterOfContour(contour1).y;
-                    double y2 = OpenCVUtil.getCenterOfContour(contour2).y;
+                    double y1 = Imgproc.boundingRect(contour1).y;
+                    double y2 = Imgproc.boundingRect(contour2).y;
                     double area1 = Imgproc.contourArea(contour1);
                     double area2 = Imgproc.contourArea(contour2);
-                    if (Math.abs(y1-y2) < CV_GOAL_ALLOWABLE_Y_ERROR && Math.abs(area1-area2) < CV_GOAL_ALLOWABLE_SIZE_ERROR) {
+                    if (Math.abs(Math.abs(y1)-Math.abs(y2)) < CV_GOAL_ALLOWABLE_Y_ERROR &&
+                            Math.abs(area1-area2) < CV_GOAL_ALLOWABLE_SIZE_ERROR &&
+                            y1 > CV_GOAL_ALLOWABLE_Y_LINE && y2 > CV_GOAL_ALLOWABLE_Y_LINE) {
                         goalCounter = i;
                         break;
                     }
                 }
                 if (goalCounter == -1) {
+                    for (int i = 0; i < contours.size(); i++) {
+                        MatOfPoint contour = contours.get(i);
+                        double y = Imgproc.boundingRect(contour).y;
+                        if (y > CV_GOAL_ALLOWABLE_Y_LINE) {
+                            return contour;
+                        }
+                    }
                     return contours.get(0);
                 } else {
                     MatOfPoint highGoal = new MatOfPoint();
