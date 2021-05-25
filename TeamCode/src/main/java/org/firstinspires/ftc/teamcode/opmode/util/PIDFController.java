@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.util;
 
+import com.acmerobotics.dashboard.config.Config;
+
 /**
  * This is a PID controller (https://en.wikipedia.org/wiki/PID_controller)
  * for your robot. Internally, it performs all the calculations for you.
@@ -12,9 +14,13 @@ package org.firstinspires.ftc.teamcode.opmode.util;
  * measured value. If we consider e(t) the positional error, then
  * int(0,t)[e(t')dt'] is the total error and e'(t) is the velocity error.
  */
+@Config
 public class PIDFController {
 
-    private double kP, kI, kD, kF;
+    private double kP;
+    private double kI;
+    private double kD;
+    private double kF;
     private double setPoint;
     private double measuredValue;
     private double minIntegral, maxIntegral;

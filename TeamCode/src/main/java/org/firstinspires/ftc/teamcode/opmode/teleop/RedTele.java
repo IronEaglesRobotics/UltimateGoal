@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.Robot;
+import org.firstinspires.ftc.teamcode.opmode.util.PIDFController;
 import org.firstinspires.ftc.teamcode.opmode.util.PoseStorage;
 import org.firstinspires.ftc.teamcode.opmode.util.controller.Controller;
 import org.firstinspires.ftc.teamcode.util.enums.Alliance;
@@ -14,16 +15,16 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_DEFAULT_POS;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_SPEED;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_UP_POS;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_A;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_EXP;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_H;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MAX_ERROR;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_ACCEPTABLE_ERROR;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_OFFSET_X;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_XD;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_XI;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_XP;
 import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_DOWN;
+import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_SPEED;
 import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_UP;
 import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SPEED;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_DELAY;
-import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_SPEED;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_GOAL_POWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_MID_GOAL_POWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_POWERSHOT_POWER;
@@ -47,6 +48,18 @@ public class RedTele extends OpMode {
     private boolean checkPusher;
     private boolean zig;
 
+    PIDFController controller;
+
+    private double calculateAutoAim(double currentPosition, double setPoint) {
+        controller.setPIDF(AUTO_AIM_XP, AUTO_AIM_XI, AUTO_AIM_XD, 0);
+        return -controller.calculate(currentPosition, setPoint);
+    }
+
+    private boolean isAimed() {
+        controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
+        return controller.atSetPoint();
+    }
+
     // Init
     @Override
     public void init() {
@@ -61,6 +74,8 @@ public class RedTele extends OpMode {
         robot.shooter.setPusher(OPEN);
         shieldPosition = INTAKE_SHIELD_UP;
         robot.intake.setShield(shieldPosition);
+
+        controller = new PIDFController(0, 0, 0, 0);
 
         // set current position of the robot
         robot.drive.setPoseEstimate(PoseStorage.currentPose);
@@ -85,6 +100,13 @@ public class RedTele extends OpMode {
         driver1.update();
         driver2.update();
 
+        if (driver1.getA().isJustPressed()) {
+            robot.lights.setPattern();
+        } else if (driver1.getLeftBumper().isJustPressed()) {
+            robot.lights.previousPattern();
+        } else if (driver1.getRightBumper().isJustPressed()) {
+            robot.lights.nextPattern();
+        }
         // base control
         double x = -driver1.getLeftStick().getY();
         double y = -driver1.getLeftStick().getX();
@@ -104,18 +126,11 @@ public class RedTele extends OpMode {
             } else if (alliance == Alliance.BLUE) {
                 targetPos = bluePowershot.getCenter().x + AUTO_AIM_OFFSET_X;
             }
-            double x2 = Math.abs(targetPos);
-            double power = AUTO_AIM_A * Math.pow((x2 - AUTO_AIM_H), 1/AUTO_AIM_EXP);
-
-            if (x2 < AUTO_AIM_H || x2 > AUTO_AIM_MAX_ERROR) {
-                z = 0;
-            } else {
-                z = Math.copySign(power, -targetPos);
-
-            }
+            double output = calculateAutoAim(0, targetPos);
+            z = isAimed() ? 0 : output;
         }
         // goal
-        if (driver2.getY().isPressed()) {
+        else if (driver2.getY().isPressed()) {
             shooterPower = SHOOTER_GOAL_POWER;
             double targetPos = 0;
             if (alliance == Alliance.RED) {
@@ -123,18 +138,20 @@ public class RedTele extends OpMode {
             } else if (alliance == Alliance.BLUE) {
                 targetPos = blue.getCenter().x + AUTO_AIM_OFFSET_X;
             }
-            double x2 = Math.abs(targetPos);
-            double power = AUTO_AIM_A * Math.pow((x2 - AUTO_AIM_H), 1/AUTO_AIM_EXP);
+            double output = calculateAutoAim(0, targetPos);
+            z = isAimed() ? 0 : output;
 
-            if (x2 < AUTO_AIM_H || x2 > AUTO_AIM_MAX_ERROR) {
-                z = 0;
-            } else {
-                z = Math.copySign(power, -targetPos);
-
-            }
+//            double x2 = Math.abs(targetPos);
+//            double power = AUTO_AIM_A * Math.pow((x2 - AUTO_AIM_H), 1/AUTO_AIM_EXP);
+//
+//            if (x2 < AUTO_AIM_H || x2 > AUTO_AIM_MAX_ERROR) {
+//                z = 0;
+//            } else {
+//                z = Math.copySign(power, -targetPos);
+//            }
         }
         // mid goal
-        if (driver2.getRightBumper().isPressed()) {
+        else if (driver2.getRightBumper().isPressed()) {
             shooterPower = SHOOTER_MID_GOAL_POWER;
             double targetPos = 0;
             if (alliance == Alliance.RED) {
@@ -142,15 +159,11 @@ public class RedTele extends OpMode {
             } else if (alliance == Alliance.BLUE) {
                 targetPos = red.getCenter().x + AUTO_AIM_OFFSET_X;
             }
-            double x2 = Math.abs(targetPos);
-            double power = AUTO_AIM_A * Math.pow((x2 - AUTO_AIM_H), 1/AUTO_AIM_EXP);
-
-            if (x2 < AUTO_AIM_H || x2 > AUTO_AIM_MAX_ERROR) {
-                z = 0;
-            } else {
-                z = Math.copySign(power, -targetPos);
-
-            }
+            double output = calculateAutoAim(0, targetPos);
+            z = isAimed() ? 0 : output;
+        }
+        else {
+            controller.reset();
         }
         robot.drive.setWeightedDrivePower(new Pose2d(x, y, z));
         robot.drive.update();
@@ -180,7 +193,7 @@ public class RedTele extends OpMode {
             robot.arm.setClaw(robot.arm.getClaw() == OPEN ? CLOSED : OPEN);
         }
 
-        // intake
+        // intake)
         if (driver2.getLeftBumper().isPressed()) {
             robot.intake.setIntake(-driver2.getLeftTrigger().getValue() * INTAKE_SPEED);
         } else {
@@ -221,6 +234,12 @@ public class RedTele extends OpMode {
         }
 
         // show telemetry
+//        telemetry.addLine("z: "+z);
+//        telemetry.addLine("is aimed:"+isAimed());
+//        telemetry.addLine("position error: "+controller.getPositionError());
+//        telemetry.addLine("coefficients: "+ Arrays.toString(controller.getCoefficients()));
+//        telemetry.addLine("tolerance: " + Arrays.toString(controller.getTolerance()));
+//        telemetry.addLine(""+AUTO_AIM_XP);
         telemetry.addLine(robot.getTelemetry());
         telemetry.update();
     }

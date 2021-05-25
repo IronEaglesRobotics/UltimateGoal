@@ -39,9 +39,9 @@ public class BlueOutsideAuto extends Auto {
 
     public static Pose2d QUAD_DROP_FIRST_WOBBLE       = new Pose2d(44, 58, Math.toRadians(-135));
     public static Pose2d QUAD_GOAL                    = new Pose2d(-10, 42, Math.toRadians(0));
-    public static Pose2d QUAD_PICK_UP_RING            = new Pose2d(-28, 44, Math.toRadians(0));
-    public static Pose2d QUAD_GOAL_2                  = new Pose2d(-13, 44, Math.toRadians(0));
-    public static Pose2d QUAD_RINGS                   = new Pose2d(-46, 44, Math.toRadians(0));
+    public static Pose2d QUAD_PICK_UP_RING            = new Pose2d(-28, 46, Math.toRadians(0));
+    public static Pose2d QUAD_GOAL_2                  = new Pose2d(-13, 46, Math.toRadians(0));
+    public static Pose2d QUAD_RINGS                   = new Pose2d(-46, 46, Math.toRadians(0));
     public static Pose2d QUAD_PICK_UP_SECOND_WOBBLE   = new Pose2d(-40, 34, Math.toRadians(60));
     public static Pose2d QUAD_GOAL_3                  = new Pose2d(-13, 49, Math.toRadians(0));
     public static Pose2d QUAD_DROP_SECOND_WOBBLE      = new Pose2d(28, 55, Math.toRadians(-135));

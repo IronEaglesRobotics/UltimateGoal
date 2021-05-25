@@ -100,8 +100,7 @@ public class OpenCVUtil {
                     double area1 = Imgproc.contourArea(contour1);
                     double area2 = Imgproc.contourArea(contour2);
                     if (Math.abs(Math.abs(y1)-Math.abs(y2)) < CV_GOAL_ALLOWABLE_Y_ERROR &&
-                            Math.abs(area1-area2) < CV_GOAL_ALLOWABLE_SIZE_ERROR &&
-                            y1 > CV_GOAL_ALLOWABLE_Y_LINE && y2 > CV_GOAL_ALLOWABLE_Y_LINE) {
+                            Math.abs(area1-area2) < CV_GOAL_ALLOWABLE_SIZE_ERROR) {
                         goalCounter = i;
                         break;
                     }

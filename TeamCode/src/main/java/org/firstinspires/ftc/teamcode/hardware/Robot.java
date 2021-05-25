@@ -10,6 +10,7 @@ public class Robot {
     public Intake intake;
     public Shooter shooter;
     public Camera camera;
+    public Lights lights;
 
     public Robot(HardwareMap hardwareMap) {
         drive = new SampleMecanumDrive(hardwareMap);
@@ -17,12 +18,14 @@ public class Robot {
         intake = new Intake(hardwareMap);
         shooter = new Shooter(hardwareMap);
         camera = new Camera(hardwareMap);
+        lights = new Lights(hardwareMap);
     }
 
     public String getTelemetry() {
         return arm.getTelemetry() + "\n" +
                 intake.getTelemetry() + "\n" +
                 shooter.getTelemetry() + "\n" +
-                camera.getTelemetry();
+                camera.getTelemetry() + "\n" +
+                lights.getTelemetry();
     }
 }

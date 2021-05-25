@@ -50,6 +50,8 @@ public class TargetingPipeline extends OpenCvPipeline {
     Mat redMask2 = new Mat();
     Mat redMask = new Mat();
     Mat blueMask = new Mat();
+    Mat blackMask = new Mat();
+    Mat whiteMask = new Mat();
     Scalar redGoalLower1;
     Scalar redGoalUpper1;
     Scalar redGoalLower2;
@@ -104,6 +106,9 @@ public class TargetingPipeline extends OpenCvPipeline {
         Imgproc.erode(redMask, redMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
         Imgproc.dilate(redMask, redMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
 
+//        Core.inRange(hsv, new Scalar(CAMERA_BLACK_LOWER.get()), new Scalar(CAMERA_BLACK_UPPER.get()), blackMask);
+//        Core.inRange(hsv, new Scalar(CAMERA_WHITE_LOWER.get()), new Scalar(CAMERA_WHITE_UPPER.get()), whiteMask);
+
         // set the largest detection that was found to be the Red Goal detection
         ArrayList<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(redMask, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
@@ -114,8 +119,24 @@ public class TargetingPipeline extends OpenCvPipeline {
         }
         red.setContour(getHighGoalContour(contours));
 
+//        ArrayList<MatOfPoint> contoursBlack = new ArrayList<>();
+//        Imgproc.findContours(blackMask, contoursBlack, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+//        for (int i = 0; i < contoursBlack.size(); i++) {
+//            Detection newDetection = new Detection(input.size(),0.01);
+//            newDetection.setContour(contoursBlack.get(i));
+//            newDetection.draw(input, BLACK);
+//        }
+//
+//        ArrayList<MatOfPoint> contoursWhite = new ArrayList<>();
+//        Imgproc.findContours(whiteMask, contoursWhite, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+//        for (int i = 0; i < contoursWhite.size(); i++) {
+//            Detection newDetection = new Detection(input.size(),0.01);
+//            newDetection.setContour(contoursWhite.get(i));
+//            newDetection.draw(input, WHITE);
+//        }
+
         // draw the Red Goal detection
-        red.draw(input, WHITE);
+        red.draw(input, RED);
     }
 
     // Update the Blue Goal Detection
