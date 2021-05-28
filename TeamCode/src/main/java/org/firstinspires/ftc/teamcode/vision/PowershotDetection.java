@@ -34,6 +34,18 @@ public class PowershotDetection {
         return count;
     }
 
+    public void setMinArea(double minAreaFactor) {
+        for (Detection powershot : powershots) {
+            powershot.setMinArea(minAreaFactor);
+        }
+    }
+
+    public void setMaxArea(double maxAreaFactor) {
+        for (Detection powershot : powershots) {
+            powershot.setMaxArea(maxAreaFactor);
+        }
+    }
+
     // Gets powerShot of specified number.
     public Detection get(int i) {
         return powershots.get(i);

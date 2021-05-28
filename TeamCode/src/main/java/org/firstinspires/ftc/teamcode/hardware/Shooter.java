@@ -39,6 +39,10 @@ public class Shooter {
         wheel.setPower(power);
     }
 
+    public double getShooter() {
+        return wheel.getPower();
+    }
+
     public String getTelemetry() {
         return String.format(Locale.US, "Shooter: %.2f\nPusher: %s", wheel.getPower(), getPusher());
     }

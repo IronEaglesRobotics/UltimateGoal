@@ -25,7 +25,7 @@ public class Robot {
         return arm.getTelemetry() + "\n" +
                 intake.getTelemetry() + "\n" +
                 shooter.getTelemetry() + "\n" +
-                camera.getTelemetry() + "\n" +
-                lights.getTelemetry();
+                camera.getTelemetry() + "\n";
+//                +lights.getTelemetry();
     }
 }

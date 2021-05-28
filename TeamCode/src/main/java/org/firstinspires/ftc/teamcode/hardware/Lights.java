@@ -9,6 +9,15 @@ import java.util.Locale;
 @Config
 public class Lights {
     public static int NUMBER = 1;
+    public static int RED_NORMAL = 51;
+    public static int RED_AIMING = 49;
+    public static int RED_LOCKED_ON = 84;
+    public static int RED_AIMED_AND_READY = 87;
+    public static int BLUE_NORMAL = 61;
+    public static int BLUE_AIMING = 59;
+    public static int BLUE_LOCKED_ON = 84;
+    public static int BLUE_AIMED_AND_READY = 87;
+
     private RevBlinkinLedDriver blinkinLedDriver;
     private RevBlinkinLedDriver.BlinkinPattern pattern;
 
@@ -22,6 +31,12 @@ public class Lights {
         pattern = RevBlinkinLedDriver.BlinkinPattern.fromNumber(NUMBER);
         blinkinLedDriver.setPattern(pattern);
     }
+
+    public void setPattern(int patternNumber) {
+        pattern = RevBlinkinLedDriver.BlinkinPattern.fromNumber(patternNumber);
+        blinkinLedDriver.setPattern(pattern);
+    }
+
     public void nextPattern() {
         pattern = pattern.next();
         blinkinLedDriver.setPattern(pattern);

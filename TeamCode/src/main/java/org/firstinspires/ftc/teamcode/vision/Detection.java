@@ -12,13 +12,15 @@ import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_AREA;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_POINT;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.drawConvexHull;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.drawPoint;
+import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.fillConvexHull;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getBottomLeftOfContour;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getBottomRightOfContour;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getCenterOfContour;
 
 // Class for a Detection
 public class Detection {
-    private final double minAreaPx;
+    private double minAreaPx;
+    private double maxAreaPx;
     private final Size maxSizePx;
     private double areaPx =  INVALID_AREA;
     private Point centerPx = INVALID_POINT;
@@ -27,9 +29,24 @@ public class Detection {
     private MatOfPoint contour;
 
     // Constructor
-    public Detection(Size maxSize, double minAreaFactor) {
-        this.maxSizePx = maxSize;
-        this.minAreaPx = maxSize.area() * minAreaFactor;
+    public Detection(Size frameSize, double minAreaFactor) {
+        this.maxSizePx = frameSize;
+        this.minAreaPx = frameSize.area() * minAreaFactor;
+        this.maxAreaPx = frameSize.area();
+    }
+
+    public Detection(Size frameSize, double minAreaFactor, double maxSizeFactor) {
+        this.maxSizePx = frameSize;
+        this.minAreaPx = frameSize.area() * minAreaFactor;
+        this.maxAreaPx = frameSize.area() * maxSizeFactor;
+    }
+
+    public void setMinArea(double minAreaFactor) {
+        this.minAreaPx = maxSizePx.area() * minAreaFactor;
+    }
+
+    public void setMaxArea(double maxAreaFactor) {
+        this.minAreaPx = maxSizePx.area() * maxAreaFactor;
     }
 
     // Draw a convex hull around the current detection on the given image
@@ -37,8 +54,18 @@ public class Detection {
         if (isValid()) {
             drawConvexHull(img, contour, color);
             drawPoint(img, centerPx, GREEN);
-            drawPoint(img, bottomLeftPx, GREEN);
-            drawPoint(img, bottomRightPx, GREEN);
+//            drawPoint(img, bottomLeftPx, GREEN);
+//            drawPoint(img, bottomRightPx, GREEN);
+        }
+    }
+
+    // Draw a convex hull around the current detection on the given image
+    public void fill(Mat img, Scalar color) {
+        if (isValid()) {
+            fillConvexHull(img, contour, color);
+            drawPoint(img, centerPx, GREEN);
+//            drawPoint(img, bottomLeftPx, GREEN);
+//            drawPoint(img, bottomRightPx, GREEN);
         }
     }
 
@@ -57,7 +84,7 @@ public class Detection {
         this.contour = contour;
 
         double area;
-        if (contour != null && (area = Imgproc.contourArea(contour)) > minAreaPx) {
+        if (contour != null && (area = Imgproc.contourArea(contour)) > minAreaPx && area < maxAreaPx) {
             this.areaPx = area;
             this.centerPx = getCenterOfContour(contour);
             this.bottomLeftPx = getBottomLeftOfContour(contour);

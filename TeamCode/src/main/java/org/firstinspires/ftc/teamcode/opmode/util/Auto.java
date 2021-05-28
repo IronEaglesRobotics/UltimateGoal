@@ -18,12 +18,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
-import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_A;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_EXP;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MAX_ERROR;
+import static org.firstinspires.ftc.teamcode.hardware.Lights.BLUE_AIMED_AND_READY;
+import static org.firstinspires.ftc.teamcode.hardware.Lights.BLUE_AIMING;
+import static org.firstinspires.ftc.teamcode.hardware.Lights.BLUE_NORMAL;
+import static org.firstinspires.ftc.teamcode.hardware.Lights.RED_AIMED_AND_READY;
+import static org.firstinspires.ftc.teamcode.hardware.Lights.RED_AIMING;
+import static org.firstinspires.ftc.teamcode.hardware.Lights.RED_NORMAL;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_ACCEPTABLE_ERROR;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MIN_POWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_OFFSET_X;
+import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_PID;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_WAIT;
 import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_DELAY;
-import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_GOAL_POWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_POWERSHOT_POWER;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.CLOSED;
@@ -40,6 +46,8 @@ public abstract class Auto extends LinearOpMode {
     private double currentRuntime;
     private StarterStack stack = StarterStack.NONE;
 
+    PIDFController controller;
+
     @Override
     public void runOpMode() {
         // init
@@ -50,8 +58,16 @@ public abstract class Auto extends LinearOpMode {
         robot.shooter.setPusher(OPEN);
         robot.intake.setShield(UP);
 
+        controller = new PIDFController(0, 0, 0, 0);
+
         setAlliance();
         setCamera();
+
+        if (alliance == Alliance.RED) {
+            robot.lights.setPattern(RED_NORMAL);
+        } else if (alliance == Alliance.BLUE) {
+            robot.lights.setPattern(BLUE_NORMAL);
+        }
 
         if (checkForStarterStack) {
             // start stack camera
@@ -288,7 +304,7 @@ public abstract class Auto extends LinearOpMode {
                         }
                     }
                     // either start firing or move towards target
-                    if (Math.abs(targetPos) <= 2 || currentRuntime >= stepTimeout - 2) {
+                    if (Math.abs(targetPos) <= AUTO_AIM_ACCEPTABLE_ERROR || currentRuntime >= stepTimeout - 2) {
                         if (shootingDelay == -1) {
                             shootingDelay = currentRuntime;
                         }
@@ -296,6 +312,11 @@ public abstract class Auto extends LinearOpMode {
                         shootingDelay = -1;
                     }
                     if (shootingDelay != -1 && currentRuntime >= shootingDelay + AUTO_AIM_WAIT) {
+                        if (alliance == Alliance.RED) {
+                            robot.lights.setPattern(RED_AIMED_AND_READY);
+                        } else if (alliance == Alliance.BLUE) {
+                            robot.lights.setPattern(BLUE_AIMED_AND_READY);
+                        }
                         z = 0;
                         firing = true;
                         robot.shooter.setPusher(CLOSED);
@@ -303,13 +324,15 @@ public abstract class Auto extends LinearOpMode {
                         zag = false;
                         zigTime = currentRuntime;
                     } else {
-                        double x2 = Math.abs(targetPos);
-                        double power = AUTO_AIM_A * Math.pow((x2), 1.0/AUTO_AIM_EXP);
-                        if (x2 < 0.5 || x2 > AUTO_AIM_MAX_ERROR) {
-                            z = 0;
-                        } else {
-                            z = Math.copySign(power, -targetPos);
+                        if (alliance == Alliance.RED) {
+                            robot.lights.setPattern(RED_AIMING);
+                        } else if (alliance == Alliance.BLUE) {
+                            robot.lights.setPattern(BLUE_AIMING);
                         }
+                        controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
+                        controller.setTolerance(0.1);
+                        double output = -controller.calculate(0, targetPos);
+                        z = Math.abs(controller.getPositionError()) <= AUTO_AIM_ACCEPTABLE_ERROR ? 0 : Math.copySign(Math.max(AUTO_AIM_MIN_POWER, Math.abs(output)), output);
                     }
                 } else {
                     // wait while servo is moving
