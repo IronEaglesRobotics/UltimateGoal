@@ -82,6 +82,12 @@ public abstract class Tele extends OpMode {
         // set gamepads
         driver1 = new Controller(gamepad1);
         driver2 = new Controller(gamepad2);
+
+        if (alliance == Alliance.RED) {
+            robot.lights.setPattern(RED_NORMAL);
+        } else if (alliance == Alliance.BLUE) {
+            robot.lights.setPattern(BLUE_NORMAL);
+        }
     }
 
     // Wait for the first frame after the init button was pressed
@@ -192,41 +198,6 @@ public abstract class Tele extends OpMode {
             } else if (alliance == Alliance.BLUE) {
                 robot.lights.setPattern(BLUE_NORMAL);
             }
-        }
-
-
-
-        if (isAiming) {
-            if (z == 0) {
-                if (Math.abs(robot.shooter.getShooter() - shooterPower) <= 0.01) {
-                    if (alliance == Alliance.RED) {
-                        robot.lights.setPattern(RED_AIMED_AND_READY);
-                    } else if (alliance == Alliance.BLUE) {
-                        robot.lights.setPattern(BLUE_AIMED_AND_READY);
-                    }
-                } else {
-                    if (alliance == Alliance.RED) {
-                        robot.lights.setPattern(RED_LOCKED_ON);
-                    } else if (alliance == Alliance.BLUE) {
-                        robot.lights.setPattern(BLUE_LOCKED_ON);
-                    }
-                }
-            } else {
-                if (alliance == Alliance.RED) {
-                    robot.lights.setPattern(RED_AIMING);
-                } else if (alliance == Alliance.BLUE) {
-                    robot.lights.setPattern(BLUE_AIMING);
-                }
-            }
-        } else {
-            if (alliance == Alliance.RED) {
-                robot.lights.setPattern(RED_NORMAL);
-            } else if (alliance == Alliance.BLUE) {
-                robot.lights.setPattern(BLUE_NORMAL);
-            }
-        }
-        if (driver1.getA().isJustPressed()) {
-            robot.lights.setPattern();
         }
 
         // save current robot position

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.util;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import org.firstinspires.ftc.teamcode.util.enums.Alliance;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
@@ -145,14 +146,14 @@ public class OpenCVUtil {
         }
     }
 
-    public static MatOfPoint getConfidenceContour(List<MatOfPoint> contours, Mat frame) {
+    public static MatOfPoint getConfidenceContour(List<MatOfPoint> contours, Mat frame, Alliance alliance) {
         if (contours.size() == 0 || frame == null) {
             return null;
         }
 
         int highestConfidence = 0;
         int highestConfidenceCounter = 0;
-        for (int i = 0; i < contours.size() - 1; i++) {
+        for (int i = 0; i < contours.size(); i++) {
             MatOfPoint contour = contours.get(i);
             Rect rect = Imgproc.boundingRect(contour);
 
@@ -160,15 +161,15 @@ public class OpenCVUtil {
 
             // area check
             double area = Imgproc.contourArea(contour);
-            confidence += 1 - Math.max(0, Math.min(1, Math.abs(properArea - area) / properArea));
+            confidence += 1 - Math.abs(properArea - area) / properArea;
             // aspect check
             double properAspectRatio = ((double)properAspect.height)/((double)properAspect.width);
             double wantedAspectRatio = ((double) rect.height) / ((double) rect.width);
-            confidence += 1 - Math.max(0, Math.min(1, Math.abs(properAspectRatio - wantedAspectRatio) / properAspectRatio));
+            confidence += 1 - Math.abs(properAspectRatio - wantedAspectRatio) / properAspectRatio;
             // solidarity check
             double boundingArea = rect.area();
             double contourArea = Imgproc.contourArea(contour);
-            confidence += 1 - Math.max(0, Math.min(1, Math.abs(boundingArea - contourArea)));
+            confidence += 1 - Math.abs(boundingArea - contourArea);
             // side colors check
             double inch = rect.width / 11.0;
             int left = Math.max(0, (int) (rect.x - (3 * inch)));
@@ -187,8 +188,11 @@ public class OpenCVUtil {
                 }
             }
 
+            confidence = 1;
+
             if (confidence >= highestConfidence) {
                 highestConfidenceCounter = i;
+                highestConfidence = (int)confidence;
             }
         }
 

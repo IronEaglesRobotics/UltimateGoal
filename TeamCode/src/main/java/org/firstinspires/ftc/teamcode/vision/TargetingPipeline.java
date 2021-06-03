@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision;
 
 import org.firstinspires.ftc.teamcode.util.OpenCVUtil;
+import org.firstinspires.ftc.teamcode.util.enums.Alliance;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -83,16 +84,17 @@ public class TargetingPipeline extends OpenCvPipeline {
 //        Imgproc.cvtColor(blurred, hsv, Imgproc.COLOR_RGB2HSV);
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
 
-        updateWhite(input);
+        updateRedNew(input);
+//        updateBlueNew(input);
 //        updateRed(input);
 //        updateBlue(input);
-        updateRedPowershots(input);
-        updateBluePowershots(input);
+//        updateRedPowershots(input);
+//        updateBluePowershots(input);
 
         return input;
     }
 
-    private void updateWhite(Mat input) {
+    private void updateRedNew(Mat input) {
         Core.inRange(hsv , new Scalar(CAMERA_WHITE_LOWER.get()), new Scalar(CAMERA_WHITE_UPPER.get()), whiteMask);
         Imgproc.erode(whiteMask, whiteMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
         Imgproc.dilate(whiteMask, whiteMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
@@ -104,15 +106,37 @@ public class TargetingPipeline extends OpenCvPipeline {
             newDetection.setContour(contoursWhite.get(i));
             newDetection.draw(input, WHITE);
         }
-        MatOfPoint contour = getConfidenceContour(contoursWhite, hsv);
+        MatOfPoint contour = getConfidenceContour(contoursWhite, hsv, Alliance.RED);
         if (contour != null) {
             red.setContour(contour);
         }
-//        red.setContour(getConfidenceContour(contoursWhite, hsv));
 
         // draw the Red Goal detection
         red.fill(input, GRAY);
     }
+
+    private void updateBlueNew(Mat input) {
+        Core.inRange(hsv , new Scalar(CAMERA_WHITE_LOWER.get()), new Scalar(CAMERA_WHITE_UPPER.get()), whiteMask);
+        Imgproc.erode(whiteMask, whiteMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
+        Imgproc.dilate(whiteMask, whiteMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
+
+        ArrayList<MatOfPoint> contoursWhite = new ArrayList<>();
+        Imgproc.findContours(whiteMask, contoursWhite, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+        for (int i = 0; i < contoursWhite.size(); i++) {
+            Detection newDetection = new Detection(input.size(),0.01);
+            newDetection.setContour(contoursWhite.get(i));
+            newDetection.draw(input, WHITE);
+        }
+        MatOfPoint contour = getConfidenceContour(contoursWhite, hsv, Alliance.BLUE);
+        if (contour != null) {
+            blue.setContour(contour);
+        }
+
+        // draw the Red Goal detection
+        blue.fill(input, GRAY);
+    }
+
+
     // Update the Red Goal Detection
     private void updateRed(Mat input) {
         // take pixels that are in the color range and put them into a mask, eroding and dilating them to remove white noise
