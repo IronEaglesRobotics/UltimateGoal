@@ -2,23 +2,33 @@ package org.firstinspires.ftc.teamcode.util;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import org.firstinspires.ftc.teamcode.util.enums.Alliance;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
-import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Moments;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
+import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_BLUE_GOAL_LOWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_BLUE_GOAL_UPPER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_GOAL_LOWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_GOAL_UPPER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_AREA_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_ASPECT_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_SIZE_ERROR;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_SOLIDARITY_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_Y_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ASPECT_RATIO;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_PROPER_AREA;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_PROPER_ASPECT;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_PROPER_HEIGHT;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MAX_GOAL_AREA;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MIN_GOAL_AREA;
 
@@ -26,8 +36,7 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MIN_GOAL_AREA
 @Config
 public class OpenCVUtil {
 
-    public static Size properAspect = new Size(11, 8.5);
-    public static double properArea = 0.012;
+    public static String telem = "nothing";
 
     // Draw a point
     public static void drawPoint(Mat img, Point point, Scalar color) {
@@ -145,56 +154,100 @@ public class OpenCVUtil {
         }
     }
 
-//    public static MatOfPoint getConfidenceContour(List<MatOfPoint> contours, Mat frame, Alliance alliance) {
-//        if (contours.size() == 0 || frame == null) {
-//            return null;
-//        }
-//
-//        int highestConfidence = 0;
-//        int highestConfidenceCounter = 0;
-//        for (int i = 0; i < contours.size(); i++) {
-//            MatOfPoint contour = contours.get(i);
-//            Rect rect = Imgproc.boundingRect(contour);
-//
-//            double confidence = 0;
-//
-//            // area check
-//            double area = Imgproc.contourArea(contour);
-//            confidence += 1 - Math.abs(properArea - area) / properArea;
-//            // aspect check
-//            double properAspectRatio = ((double)properAspect.height)/((double)properAspect.width);
-//            double wantedAspectRatio = ((double) rect.height) / ((double) rect.width);
-//            confidence += 1 - Math.abs(properAspectRatio - wantedAspectRatio) / properAspectRatio;
-//            // solidarity check
-//            double boundingArea = rect.area();
-//            double contourArea = Imgproc.contourArea(contour);
-//            confidence += 1 - Math.abs(boundingArea - contourArea);
-//            // side colors check
-//            double inch = rect.width / 11.0;
-//            int left = Math.max(0, (int) (rect.x - (3 * inch)));
-//            left = Math.min(left, frame.width());
-//            int right = Math.max(0, (int) (rect.x + rect.width +  (3 * inch)));
-//            right = Math.min(right, frame.width());
-//            int yValue = Math.max((int)(rect.y + (rect.height / 2.0)), 0);
-//            yValue = Math.min(yValue, frame.height());
-//
-//            double[] leftColor = frame.get(yValue, left);
-//            double[] rightColor = frame.get(yValue, right);
-//
-//            if (leftColor != null && rightColor != null) {
-//                if (Math.abs(leftColor[0]-rightColor[0]) < 10 && Math.abs(leftColor[1]-rightColor[1]) < 10 && Math.abs(leftColor[2]-rightColor[2]) < 10) {
-//                    confidence += 1;
-//                }
-//            }
-//
-//            confidence = 1;
-//
-//            if (confidence >= highestConfidence) {
-//                highestConfidenceCounter = i;
-//                highestConfidence = (int)confidence;
-//            }
-//        }
-//
-//        return contours.get(highestConfidenceCounter);
-//    }
+    public static MatOfPoint getConfidenceContour(List<MatOfPoint> contours, Mat frame, Mat telemFrame, Alliance alliance) {
+        if (contours.size() == 0 || frame == null) {
+            return null;
+        }
+
+        double highestConfidence = 0;
+        int highestConfidenceCounter = 0;
+        for (int i = 0; i < contours.size(); i++) {
+            MatOfPoint contour = contours.get(i);
+
+            double area = (Imgproc.contourArea(contour) / (frame.width()*frame.height()) ) * 100;
+            Rect rect = Imgproc.boundingRect(contour);
+
+            // area check
+            double difference = Math.abs(CV_GOAL_PROPER_AREA - area);
+
+            double areaConfidence;
+            if (difference <= CV_GOAL_ALLOWABLE_AREA_ERROR) {
+                areaConfidence = 1;
+            } else {
+                areaConfidence = Math.min(area, CV_GOAL_PROPER_AREA)/Math.max(area, CV_GOAL_PROPER_AREA);
+            }
+
+            // aspect check
+            double properAspectRatio = ((double)CV_GOAL_PROPER_ASPECT.height)/((double)CV_GOAL_PROPER_ASPECT.width);
+            double wantedAspectRatio = ((double) rect.height) / ((double) rect.width);
+            double aspectConfidence = 1 - Math.abs(properAspectRatio - wantedAspectRatio) / properAspectRatio;
+
+            // solidarity check
+            double error = Math.abs(area - rect.area());
+            double solidarityConfidence;
+            if (error <= CV_GOAL_ALLOWABLE_SOLIDARITY_ERROR) {
+                solidarityConfidence = 1;
+            } else {
+                solidarityConfidence = area / ((rect.area() / (frame.width()*frame.height())) * 100);
+            }
+
+            // side colors check
+            double inch = rect.width / 11.0;
+            int left = Math.max(0, (int) (rect.x - (3 * inch)));
+            left = Math.min(left, frame.width());
+            int right = Math.max(0, (int) (rect.x + rect.width +  (3 * inch)));
+            right = Math.min(right, frame.width());
+            int yValue = Math.max((int)(rect.y + (rect.height / 2.0)), 0);
+            yValue = Math.min(yValue, frame.height());
+
+            double[] leftColor = frame.get(yValue, left);
+            double[] rightColor = frame.get(yValue, right);
+
+            double sideCheckConfidence = 0;
+            if (alliance == Alliance.RED) {
+                if (leftColor != null && rightColor != null) {
+                    if ((leftColor[0] < CAMERA_RED_GOAL_UPPER.h || leftColor[0] > CAMERA_RED_GOAL_LOWER.h) &&
+                            (CAMERA_RED_GOAL_LOWER.s < leftColor[1] && leftColor[1] < CAMERA_RED_GOAL_UPPER.s) &&
+                            (CAMERA_RED_GOAL_LOWER.v < leftColor[2] && leftColor[2] < CAMERA_RED_GOAL_UPPER.v)) {
+                        sideCheckConfidence += 0.5;
+                    }
+                    if ((rightColor[0] < CAMERA_RED_GOAL_UPPER.h || rightColor[0] > CAMERA_RED_GOAL_LOWER.h) &&
+                            (CAMERA_RED_GOAL_LOWER.s < rightColor[1] && rightColor[1] < CAMERA_RED_GOAL_UPPER.s) &&
+                            (CAMERA_RED_GOAL_LOWER.v < rightColor[2] && rightColor[2] < CAMERA_RED_GOAL_UPPER.v)) {
+                        sideCheckConfidence += 0.5;
+                    }
+                }
+            } else if (alliance == Alliance.BLUE) {
+                if (leftColor != null && rightColor != null) {
+                    if ((CAMERA_BLUE_GOAL_LOWER.h < leftColor[0] && leftColor[0] < CAMERA_BLUE_GOAL_UPPER.h) &&
+                            (CAMERA_BLUE_GOAL_LOWER.s < leftColor[1] && leftColor[1] < CAMERA_BLUE_GOAL_UPPER.s) &&
+                            (CAMERA_BLUE_GOAL_LOWER.v < leftColor[2] && leftColor[2] < CAMERA_BLUE_GOAL_UPPER.v)) {
+                        sideCheckConfidence += 1;
+                    }
+                    if ((CAMERA_BLUE_GOAL_LOWER.h < rightColor[0] && rightColor[0] < CAMERA_BLUE_GOAL_UPPER.h) &&
+                            (CAMERA_BLUE_GOAL_LOWER.s < rightColor[1] && rightColor[1] < CAMERA_BLUE_GOAL_UPPER.s) &&
+                            (CAMERA_BLUE_GOAL_LOWER.v < rightColor[2] && rightColor[2] < CAMERA_BLUE_GOAL_UPPER.v)) {
+                        sideCheckConfidence += 1;
+                    }
+                }
+            }
+
+            // height check
+            double heightConfidence = 1 - (Math.abs(CV_GOAL_PROPER_HEIGHT - (rect.y+(rect.height/2.0))) / (frame.height() - CV_GOAL_PROPER_HEIGHT));
+
+            double totalConfidence = areaConfidence + aspectConfidence + solidarityConfidence + sideCheckConfidence + heightConfidence;
+
+            if (totalConfidence > highestConfidence) {
+                highestConfidenceCounter = i;
+                highestConfidence = totalConfidence;
+                if (leftColor != null && rightColor != null) {
+                    telem = String.format(Locale.US, "Area Confidence: %s\nAspect Confidence: %s\nSolidarity Confidence: %s\nSide Check Confidence: %s\nHeight Confidence: %s\nH: %s S: %s V: %s\nH: %s S: %s V: %s", areaConfidence, aspectConfidence, solidarityConfidence, sideCheckConfidence, heightConfidence, leftColor[0], leftColor[1], leftColor[2], rightColor[0], rightColor[1], rightColor[2]);
+                } else {
+                    telem = String.format(Locale.US, "Area Confidence: %s\nAspect Confidence: %s\nSolidarity Confidence: %s\nSide Check Confidence: %s\nHeight Confidence: %s", areaConfidence, aspectConfidence, solidarityConfidence, sideCheckConfidence, heightConfidence);
+                }
+            }
+        }
+
+        return contours.get(highestConfidenceCounter);
+    }
 }

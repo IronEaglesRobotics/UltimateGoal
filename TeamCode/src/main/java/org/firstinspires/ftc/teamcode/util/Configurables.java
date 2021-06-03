@@ -54,7 +54,7 @@ public class Configurables {
     public static double CV_MIN_STARTERSTACK_AREA = 0;
     public static double CV_MIN_STARTERSTACK_SINGLE_AREA = 0.08;
     public static double CV_MIN_STARTERSTACK_QUAD_AREA = 1.3;
-    public static double CV_MIN_GOAL_AREA = 0.01;
+    public static double CV_MIN_GOAL_AREA = 0;
     public static double CV_MAX_GOAL_AREA = 0.3;
     public static double CV_MIN_POWERSHOT_AREA = 0.001;
     public static double CV_MAX_POWERSHOT_AREA = 0.05;
@@ -66,6 +66,8 @@ public class Configurables {
     public static double CV_GOAL_PROPER_AREA = 1.25;
     public static double CV_GOAL_ALLOWABLE_AREA_ERROR = 1;
     public static double CV_GOAL_ALLOWABLE_SOLIDARITY_ERROR = 1;
+    public static double CV_GOAL_CUTOFF_Y_LINE = 80;
+    public static double CV_GOAL_PROPER_HEIGHT = 107;
 
     //old
     public static double CV_GOAL_ALLOWABLE_Y_ERROR = 20;

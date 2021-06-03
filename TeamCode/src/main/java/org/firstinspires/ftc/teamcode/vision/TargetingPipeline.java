@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.vision;
 
 import org.firstinspires.ftc.teamcode.util.OpenCVUtil;
+import org.firstinspires.ftc.teamcode.util.enums.Alliance;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -12,8 +13,6 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_BLUE_GOAL_LOWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_BLUE_GOAL_UPPER;
@@ -25,10 +24,7 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_POWER
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_POWERSHOT_UPPER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_WHITE_LOWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_WHITE_UPPER;
-import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_AREA_ERROR;
-import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_SOLIDARITY_ERROR;
-import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_PROPER_AREA;
-import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_PROPER_ASPECT;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_CUTOFF_Y_LINE;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MAX_GOAL_AREA;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MAX_POWERSHOT_AREA;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MIN_GOAL_AREA;
@@ -39,15 +35,11 @@ import static org.firstinspires.ftc.teamcode.util.Constants.ANCHOR;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLACK;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLUE;
 import static org.firstinspires.ftc.teamcode.util.Constants.ERODE_DILATE_ITERATIONS;
-import static org.firstinspires.ftc.teamcode.util.Constants.GRAY;
-import static org.firstinspires.ftc.teamcode.util.Constants.GREEN;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_POINT;
-import static org.firstinspires.ftc.teamcode.util.Constants.ORANGE;
-import static org.firstinspires.ftc.teamcode.util.Constants.PURPLE;
 import static org.firstinspires.ftc.teamcode.util.Constants.RED;
 import static org.firstinspires.ftc.teamcode.util.Constants.STRUCTURING_ELEMENT;
 import static org.firstinspires.ftc.teamcode.util.Constants.WHITE;
-import static org.firstinspires.ftc.teamcode.util.Constants.YELLOW;
+import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getConfidenceContour;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getHighGoalContour;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getLargestContours;
 
@@ -76,7 +68,11 @@ public class TargetingPipeline extends OpenCvPipeline {
     private PowershotDetection redPowershots;
     private PowershotDetection bluePowershots;
 
-    private String telem = "nothing here";
+    private Alliance alliance;
+
+    public TargetingPipeline(Alliance alliance) {
+        this.alliance = alliance;
+    }
 
     // Init
     @Override
@@ -95,12 +91,16 @@ public class TargetingPipeline extends OpenCvPipeline {
 //        Imgproc.cvtColor(blurred, hsv, Imgproc.COLOR_RGB2HSV);
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
 
-        updateRedNew(input);
-//        updateBlueNew(input);
+        if (this.alliance == Alliance.RED) {
+            updateRedNew(input);
+        } else if (this.alliance == Alliance.BLUE) {
+            updateBlueNew(input);
+        }
 //        updateRed(input);
 //        updateBlue(input);
 //        updateRedPowershots(input);
 //        updateBluePowershots(input);
+        Imgproc.line(input, new Point(0,CV_GOAL_CUTOFF_Y_LINE), new Point(input.width(),CV_GOAL_CUTOFF_Y_LINE), BLACK, 2);
 
         return input;
     }
@@ -110,139 +110,54 @@ public class TargetingPipeline extends OpenCvPipeline {
         Imgproc.erode(whiteMask, whiteMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
         Imgproc.dilate(whiteMask, whiteMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
 
-        ArrayList<MatOfPoint> contoursWhite = new ArrayList<>();
+        ArrayList<MatOfPoint> contoursWhite = new ArrayList<>();//80, 107
         Imgproc.findContours(whiteMask, contoursWhite, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
         for (int i = 0; i < contoursWhite.size(); i++) {
-            Detection newDetection = new Detection(input.size(),0);
-            newDetection.setContour(contoursWhite.get(i));
-            newDetection.draw(input, WHITE);
+            Rect rect = Imgproc.boundingRect(contoursWhite.get(i));
+            if (rect.y < CV_GOAL_CUTOFF_Y_LINE) {
+                contoursWhite.remove(i);
+                i--;
+            } else {
+                Detection newDetection = new Detection(input.size(),0);
+                newDetection.setContour(contoursWhite.get(i));
+                newDetection.draw(input, WHITE);
+            }
         }
-        MatOfPoint contour = getConfidenceContour(contoursWhite, hsv, input);
+        MatOfPoint contour = getConfidenceContour(contoursWhite, hsv, input, Alliance.RED);
         if (contour != null) {
             red.setContour(contour);
         }
 
         // draw the Red Goal detection
-        red.fill(input, GRAY);
+        red.fill(input, RED);
     }
 
-    public MatOfPoint getConfidenceContour(List<MatOfPoint> contours, Mat frame, Mat telemFrame) {
-        if (contours.size() == 0 || frame == null) {
-            return null;
-        }
+    private void updateBlueNew(Mat input) {
+        Core.inRange(hsv , new Scalar(CAMERA_WHITE_LOWER.get()), new Scalar(CAMERA_WHITE_UPPER.get()), whiteMask);
+        Imgproc.erode(whiteMask, whiteMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
+        Imgproc.dilate(whiteMask, whiteMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
 
-        double highestConfidence = 0;
-        int highestConfidenceCounter = 0;
-        String telem = "nothing";
-        for (int i = 0; i < contours.size(); i++) {
-            MatOfPoint contour = contours.get(i);
-
-            double area = (Imgproc.contourArea(contour) / (frame.width()*frame.height()) ) * 100;
-            Rect rect = Imgproc.boundingRect(contour);
-
-            // area check
-            double difference = Math.abs(CV_GOAL_PROPER_AREA - area);
-
-            double areaConfidence;
-            if (difference <= CV_GOAL_ALLOWABLE_AREA_ERROR) {
-                areaConfidence = 1;
+        ArrayList<MatOfPoint> contoursWhite = new ArrayList<>();
+        Imgproc.findContours(whiteMask, contoursWhite, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
+        for (int i = 0; i < contoursWhite.size(); i++) {
+            Rect rect = Imgproc.boundingRect(contoursWhite.get(i));
+            if (rect.y < CV_GOAL_CUTOFF_Y_LINE) {
+                contoursWhite.remove(i);
+                i--;
             } else {
-                areaConfidence = Math.min(area, CV_GOAL_PROPER_AREA)/Math.max(area, CV_GOAL_PROPER_AREA);
-            }
-
-            // aspect check
-            double properAspectRatio = ((double)CV_GOAL_PROPER_ASPECT.height)/((double)CV_GOAL_PROPER_ASPECT.width);
-            double wantedAspectRatio = ((double) rect.height) / ((double) rect.width);
-            double aspectConfidence = 1 - Math.abs(properAspectRatio - wantedAspectRatio) / properAspectRatio;
-
-            // solidarity check
-            double error = Math.abs(area - rect.area());
-            double solidarityConfidence;
-            if (error <= CV_GOAL_ALLOWABLE_SOLIDARITY_ERROR) {
-                solidarityConfidence = 1;
-            } else {
-                solidarityConfidence = area / ((rect.area() / (frame.width()*frame.height())) * 100);
-            }
-
-            // side colors check
-            double inch = rect.width / 11.0;
-            int left = Math.max(0, (int) (rect.x - (3 * inch)));
-            left = Math.min(left, frame.width());
-            int right = Math.max(0, (int) (rect.x + rect.width +  (3 * inch)));
-            right = Math.min(right, frame.width());
-            int yValue = Math.max((int)(rect.y + (rect.height / 2.0)), 0);
-            yValue = Math.min(yValue, frame.height());
-
-            double[] leftColor = frame.get(yValue, left);
-            double[] rightColor = frame.get(yValue, right);
-
-            double sideCheckConfidence = 0;
-            if (leftColor != null && rightColor != null) {
-                if (Math.abs(leftColor[0]-rightColor[0]) < 10 && Math.abs(leftColor[1]-rightColor[1]) < 10 && Math.abs(leftColor[2]-rightColor[2]) < 10) {
-                    sideCheckConfidence = 1;
-                }
-            }
-
-            // calculate confidence
-            Imgproc.circle(telemFrame, new Point(left, yValue), 8, GREEN, 2);
-            Imgproc.circle(telemFrame, new Point(right, yValue), 8, GREEN, 2);
-            Imgproc.rectangle(telemFrame, Imgproc.boundingRect(contour), GREEN, 2);
-
-            double totalConfidence = areaConfidence + aspectConfidence + solidarityConfidence + sideCheckConfidence;
-
-            if (totalConfidence > highestConfidence) {
-                drawTelem(telemFrame, areaConfidence, 0);
-                drawTelem(telemFrame, aspectConfidence, 50);
-                drawTelem(telemFrame, solidarityConfidence, 100);
-                drawTelem(telemFrame, sideCheckConfidence, 150);
-                highestConfidenceCounter = i;
-                highestConfidence = totalConfidence;
-                String telem2 = String.format(Locale.US, "Area Confidence: %s\nAspect Confidence: %s\nSolidarity Confidence: %s\nSide Check Confidence: %s", areaConfidence, aspectConfidence, solidarityConfidence, sideCheckConfidence);
-                setTelemetry(telem2);
+                Detection newDetection = new Detection(input.size(),0);
+                newDetection.setContour(contoursWhite.get(i));
+                newDetection.draw(input, WHITE);
             }
         }
-
-        return contours.get(highestConfidenceCounter);
-    }
-
-    private void drawTelem(Mat frame, double confidence, int xPos) {
-        if (confidence == 0) {
-            Imgproc.rectangle(frame, new Rect(xPos, 0, 50, 50), BLACK, -1);
-        } else if (confidence <= 0.25) {
-            Imgproc.rectangle(frame, new Rect(xPos, 0, 50, 50), RED, -1);
-        } else if (confidence <= 0.5) {
-            Imgproc.rectangle(frame, new Rect(xPos, 0, 50, 50), ORANGE, -1);
-        } else if (confidence <= 0.75) {
-            Imgproc.rectangle(frame, new Rect(xPos, 0, 50, 50), YELLOW, -1);
-        } else if (confidence < 1) {
-            Imgproc.rectangle(frame, new Rect(xPos, 0, 50, 50), GREEN, -1);
-        } else if (confidence == 1) {
-            Imgproc.rectangle(frame, new Rect(xPos, 0, 50, 50), WHITE, -1);
-        } else {
-            Imgproc.rectangle(frame, new Rect(xPos, 0, 50, 50), PURPLE, -1);
+        MatOfPoint contour = getConfidenceContour(contoursWhite, hsv, input, Alliance.BLUE);
+        if (contour != null) {
+            blue.setContour(contour);
         }
-    }
 
-//    private void updateBlueNew(Mat input) {
-//        Core.inRange(hsv , new Scalar(CAMERA_WHITE_LOWER.get()), new Scalar(CAMERA_WHITE_UPPER.get()), whiteMask);
-//        Imgproc.erode(whiteMask, whiteMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
-//        Imgproc.dilate(whiteMask, whiteMask, STRUCTURING_ELEMENT, ANCHOR, ERODE_DILATE_ITERATIONS);
-//
-//        ArrayList<MatOfPoint> contoursWhite = new ArrayList<>();
-//        Imgproc.findContours(whiteMask, contoursWhite, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
-//        for (int i = 0; i < contoursWhite.size(); i++) {
-//            Detection newDetection = new Detection(input.size(),0.01);
-//            newDetection.setContour(contoursWhite.get(i));
-//            newDetection.draw(input, WHITE);
-//        }
-//        MatOfPoint contour = getConfidenceContour(contoursWhite, hsv, Alliance.BLUE);
-//        if (contour != null) {
-//            blue.setContour(contour);
-//        }
-//
-//        // draw the Red Goal detection
-//        blue.fill(input, GRAY);
-//    }
+        // draw the Red Goal detection
+        blue.fill(input, BLUE);
+    }
 
     // Update the Red Goal Detection
     private void updateRed(Mat input) {
@@ -423,12 +338,5 @@ public class TargetingPipeline extends OpenCvPipeline {
     // Get the Powershot Detection
     public PowershotDetection getBluePowershots() {
         return bluePowershots;
-    }
-
-    public void setTelemetry(String telem) {
-        this.telem = telem;
-    }
-    public String getTelemetry() {
-        return telem;
     }
 }

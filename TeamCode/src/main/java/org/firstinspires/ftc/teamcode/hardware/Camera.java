@@ -4,6 +4,8 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.util.OpenCVUtil;
+import org.firstinspires.ftc.teamcode.util.enums.Alliance;
 import org.firstinspires.ftc.teamcode.util.enums.StarterStack;
 import org.firstinspires.ftc.teamcode.vision.Detection;
 import org.firstinspires.ftc.teamcode.vision.PowershotDetection;
@@ -34,13 +36,15 @@ public class Camera {
     private OpenCvCamera targetingCamera;
     private StarterStackPipeline stackPipeline;
     private TargetingPipeline targetingPipeline;
+    private Alliance alliance;
 
     private boolean stackCameraInitialized;
     private boolean targetingCameraInitialized;
 
     // Constructor
-    public Camera(HardwareMap hardwareMap) {
+    public Camera(HardwareMap hardwareMap, Alliance alliance) {
         this.hardwareMap = hardwareMap;
+        this.alliance = alliance;
     }
 
     // Initiate the StarterStack Camera
@@ -67,7 +71,7 @@ public class Camera {
     public void initTargetingCamera() {
         int targetingCameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         this.targetingCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, TARGETING_WEBCAM), targetingCameraMonitorViewId);
-        this.targetingPipeline = new TargetingPipeline();
+        this.targetingPipeline = new TargetingPipeline(this.alliance);
         targetingCamera.setPipeline(targetingPipeline);
         targetingCamera.openCameraDeviceAsync(() -> {
             targetingCamera.startStreaming(WEBCAM_WIDTH, WEBCAM_HEIGHT, WEBCAM_ROTATION);
@@ -137,18 +141,19 @@ public class Camera {
         if (stackCameraInitialized) {
             return String.format(Locale.US, "Stack: %s\nSize: %.4f", checkStack(), getStarterStack().getArea());
         } else if (targetingCameraInitialized) {
-            return String.format(Locale.US, "Red Goal:  Area: %.2f Center: (%.2f,%.2f)\n" +
-                                                    "Blue Goal: Area: %.2f Center: (%.2f,%.2f)\n" +
-                                                    "Red PowerShots: (%.1f,%.1f) (%.1f,%.1f) (%.1f,%.1f)\n" +
-                                                    "BluePowerShots: (%.1f,%.1f) (%.1f,%.1f) (%.1f,%.1f)\n",
-                    targetingPipeline.getRed().getArea(), targetingPipeline.getRed().getCenter().x, targetingPipeline.getRed().getCenter().x,
-                    targetingPipeline.getBlue().getArea(), targetingPipeline.getBlue().getCenter().x, targetingPipeline.getBlue().getCenter().x,
-                    targetingPipeline.getRedPowershots().get(0).getCenter().x, targetingPipeline.getRedPowershots().get(0).getCenter().y,
-                    targetingPipeline.getRedPowershots().get(1).getCenter().x, targetingPipeline.getRedPowershots().get(1).getCenter().y,
-                    targetingPipeline.getRedPowershots().get(2).getCenter().x, targetingPipeline.getRedPowershots().get(2).getCenter().y,
-                    targetingPipeline.getBluePowershots().get(0).getCenter().x, targetingPipeline.getBluePowershots().get(0).getCenter().y,
-                    targetingPipeline.getBluePowershots().get(1).getCenter().x, targetingPipeline.getBluePowershots().get(1).getCenter().y,
-                    targetingPipeline.getBluePowershots().get(2).getCenter().x, targetingPipeline.getBluePowershots().get(2).getCenter().y);
+            return OpenCVUtil.telem;
+//            return String.format(Locale.US, "Red Goal:  Area: %.2f Center: (%.2f,%.2f)\n" +
+//                                                    "Blue Goal: Area: %.2f Center: (%.2f,%.2f)\n" +
+//                                                    "Red PowerShots: (%.1f,%.1f) (%.1f,%.1f) (%.1f,%.1f)\n" +
+//                                                    "BluePowerShots: (%.1f,%.1f) (%.1f,%.1f) (%.1f,%.1f)\n",
+//                    targetingPipeline.getRed().getArea(), targetingPipeline.getRed().getCenter().x, targetingPipeline.getRed().getCenter().x,
+//                    targetingPipeline.getBlue().getArea(), targetingPipeline.getBlue().getCenter().x, targetingPipeline.getBlue().getCenter().x,
+//                    targetingPipeline.getRedPowershots().get(0).getCenter().x, targetingPipeline.getRedPowershots().get(0).getCenter().y,
+//                    targetingPipeline.getRedPowershots().get(1).getCenter().x, targetingPipeline.getRedPowershots().get(1).getCenter().y,
+//                    targetingPipeline.getRedPowershots().get(2).getCenter().x, targetingPipeline.getRedPowershots().get(2).getCenter().y,
+//                    targetingPipeline.getBluePowershots().get(0).getCenter().x, targetingPipeline.getBluePowershots().get(0).getCenter().y,
+//                    targetingPipeline.getBluePowershots().get(1).getCenter().x, targetingPipeline.getBluePowershots().get(1).getCenter().y,
+//                    targetingPipeline.getBluePowershots().get(2).getCenter().x, targetingPipeline.getBluePowershots().get(2).getCenter().y);
         }
         return ("No Camera Initialized");
     }

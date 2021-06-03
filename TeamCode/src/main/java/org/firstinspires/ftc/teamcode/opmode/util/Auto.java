@@ -54,14 +54,14 @@ public abstract class Auto extends LinearOpMode {
         telemetry.addLine("Initializing Robot...");
         telemetry.update();
 
-        robot = new Robot(hardwareMap);
+        setAlliance();
+        setCamera();
+
+        robot = new Robot(hardwareMap, alliance);
         robot.shooter.setPusher(OPEN);
         robot.intake.setShield(UP);
 
         controller = new PIDFController(0, 0, 0, 0);
-
-        setAlliance();
-        setCamera();
 
         if (alliance == Alliance.RED) {
             robot.lights.setPattern(RED_NORMAL);
