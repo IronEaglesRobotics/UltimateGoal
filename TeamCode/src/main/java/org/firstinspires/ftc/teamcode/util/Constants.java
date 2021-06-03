@@ -17,6 +17,9 @@ public class Constants {
     public static Scalar WHITE = new Scalar(255, 255, 255);
     public static Scalar GRAY = new Scalar(80, 80, 80);
     public static Scalar BLACK = new Scalar(0, 0, 0);
+    public static Scalar ORANGE = new Scalar(255, 165, 0);
+    public static Scalar YELLOW = new Scalar(255, 255, 0);
+    public static Scalar PURPLE = new Scalar(128, 0, 128);
 
     // CV Structuring Constants
     public static final Mat STRUCTURING_ELEMENT = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5));

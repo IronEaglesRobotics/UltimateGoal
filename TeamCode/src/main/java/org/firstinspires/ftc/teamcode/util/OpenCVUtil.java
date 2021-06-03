@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.util;
 
 import com.acmerobotics.dashboard.config.Config;
 
-import org.firstinspires.ftc.teamcode.util.enums.Alliance;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
@@ -146,56 +145,56 @@ public class OpenCVUtil {
         }
     }
 
-    public static MatOfPoint getConfidenceContour(List<MatOfPoint> contours, Mat frame, Alliance alliance) {
-        if (contours.size() == 0 || frame == null) {
-            return null;
-        }
-
-        int highestConfidence = 0;
-        int highestConfidenceCounter = 0;
-        for (int i = 0; i < contours.size(); i++) {
-            MatOfPoint contour = contours.get(i);
-            Rect rect = Imgproc.boundingRect(contour);
-
-            double confidence = 0;
-
-            // area check
-            double area = Imgproc.contourArea(contour);
-            confidence += 1 - Math.abs(properArea - area) / properArea;
-            // aspect check
-            double properAspectRatio = ((double)properAspect.height)/((double)properAspect.width);
-            double wantedAspectRatio = ((double) rect.height) / ((double) rect.width);
-            confidence += 1 - Math.abs(properAspectRatio - wantedAspectRatio) / properAspectRatio;
-            // solidarity check
-            double boundingArea = rect.area();
-            double contourArea = Imgproc.contourArea(contour);
-            confidence += 1 - Math.abs(boundingArea - contourArea);
-            // side colors check
-            double inch = rect.width / 11.0;
-            int left = Math.max(0, (int) (rect.x - (3 * inch)));
-            left = Math.min(left, frame.width());
-            int right = Math.max(0, (int) (rect.x + rect.width +  (3 * inch)));
-            right = Math.min(right, frame.width());
-            int yValue = Math.max((int)(rect.y + (rect.height / 2.0)), 0);
-            yValue = Math.min(yValue, frame.height());
-
-            double[] leftColor = frame.get(yValue, left);
-            double[] rightColor = frame.get(yValue, right);
-
-            if (leftColor != null && rightColor != null) {
-                if (Math.abs(leftColor[0]-rightColor[0]) < 10 && Math.abs(leftColor[1]-rightColor[1]) < 10 && Math.abs(leftColor[2]-rightColor[2]) < 10) {
-                    confidence += 1;
-                }
-            }
-
-            confidence = 1;
-
-            if (confidence >= highestConfidence) {
-                highestConfidenceCounter = i;
-                highestConfidence = (int)confidence;
-            }
-        }
-
-        return contours.get(highestConfidenceCounter);
-    }
+//    public static MatOfPoint getConfidenceContour(List<MatOfPoint> contours, Mat frame, Alliance alliance) {
+//        if (contours.size() == 0 || frame == null) {
+//            return null;
+//        }
+//
+//        int highestConfidence = 0;
+//        int highestConfidenceCounter = 0;
+//        for (int i = 0; i < contours.size(); i++) {
+//            MatOfPoint contour = contours.get(i);
+//            Rect rect = Imgproc.boundingRect(contour);
+//
+//            double confidence = 0;
+//
+//            // area check
+//            double area = Imgproc.contourArea(contour);
+//            confidence += 1 - Math.abs(properArea - area) / properArea;
+//            // aspect check
+//            double properAspectRatio = ((double)properAspect.height)/((double)properAspect.width);
+//            double wantedAspectRatio = ((double) rect.height) / ((double) rect.width);
+//            confidence += 1 - Math.abs(properAspectRatio - wantedAspectRatio) / properAspectRatio;
+//            // solidarity check
+//            double boundingArea = rect.area();
+//            double contourArea = Imgproc.contourArea(contour);
+//            confidence += 1 - Math.abs(boundingArea - contourArea);
+//            // side colors check
+//            double inch = rect.width / 11.0;
+//            int left = Math.max(0, (int) (rect.x - (3 * inch)));
+//            left = Math.min(left, frame.width());
+//            int right = Math.max(0, (int) (rect.x + rect.width +  (3 * inch)));
+//            right = Math.min(right, frame.width());
+//            int yValue = Math.max((int)(rect.y + (rect.height / 2.0)), 0);
+//            yValue = Math.min(yValue, frame.height());
+//
+//            double[] leftColor = frame.get(yValue, left);
+//            double[] rightColor = frame.get(yValue, right);
+//
+//            if (leftColor != null && rightColor != null) {
+//                if (Math.abs(leftColor[0]-rightColor[0]) < 10 && Math.abs(leftColor[1]-rightColor[1]) < 10 && Math.abs(leftColor[2]-rightColor[2]) < 10) {
+//                    confidence += 1;
+//                }
+//            }
+//
+//            confidence = 1;
+//
+//            if (confidence >= highestConfidence) {
+//                highestConfidenceCounter = i;
+//                highestConfidence = (int)confidence;
+//            }
+//        }
+//
+//        return contours.get(highestConfidenceCounter);
+//    }
 }

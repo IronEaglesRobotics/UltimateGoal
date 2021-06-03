@@ -61,6 +61,13 @@ public class Configurables {
     public static Rect CV_STARTERSTACK_LOCATION = new Rect(75, 50, 190, 90);
     public static Point CV_POWERSHOT_OFFSET = new Point(-3, -20); // offset from the bottom left of the goal to the top right of the powershot box (for red)
     public static Size CV_POWERSHOT_DIMENSIONS = new Size(100, 50);
+
+    public static Size CV_GOAL_PROPER_ASPECT = new Size(11, 8.5);
+    public static double CV_GOAL_PROPER_AREA = 1.25;
+    public static double CV_GOAL_ALLOWABLE_AREA_ERROR = 1;
+    public static double CV_GOAL_ALLOWABLE_SOLIDARITY_ERROR = 1;
+
+    //old
     public static double CV_GOAL_ALLOWABLE_Y_ERROR = 20;
     public static double CV_GOAL_ALLOWABLE_SIZE_ERROR = 100;
     public static Size CV_GOAL_ASPECT_RATIO = new Size(6.5,15.5);
