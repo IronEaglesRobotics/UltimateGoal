@@ -69,6 +69,8 @@ public class Configurables {
     public static double CV_GOAL_CUTOFF_Y_LINE = 80;
     public static double CV_GOAL_PROPER_HEIGHT = 107;
 
+    public static Color CV_POWERSHOT_OFFSETS = new Color(-40, -30, -20.5);
+
     //old
     public static double CV_GOAL_ALLOWABLE_Y_ERROR = 20;
     public static double CV_GOAL_ALLOWABLE_SIZE_ERROR = 100;

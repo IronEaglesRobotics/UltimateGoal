@@ -17,13 +17,12 @@ import static org.firstinspires.ftc.teamcode.hardware.Lights.RED_AIMING;
 import static org.firstinspires.ftc.teamcode.hardware.Lights.RED_LOCKED_ON;
 import static org.firstinspires.ftc.teamcode.hardware.Lights.RED_NORMAL;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_DEFAULT_POS;
-import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_DOWN_POS;
 import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_SPEED;
-import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_UP_POS;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_ACCEPTABLE_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MIN_POWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_PID;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_POWERSHOT_OFFSETS;
 import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_DOWN;
 import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_SPEED;
 import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_UP;
@@ -48,6 +47,8 @@ public abstract class Tele extends OpMode {
     private double finishTime;
     private boolean checkPusher;
     private boolean zig;
+
+    private boolean isAiming = false;
 
     PIDFController controller;
 
@@ -110,17 +111,32 @@ public abstract class Tele extends OpMode {
         double z = -driver1.getRightStick().getX();
 
         // auto aim
-        boolean isAiming = false;
         Detection red = robot.camera.getRed();
         Detection redPowershot = robot.camera.getRedPowershots().getLeftMost();
         Detection blue = robot.camera.getBlue();
         Detection bluePowershot = robot.camera.getBluePowershots().getLeftMost();
         if (this.alliance == Alliance.RED) {
             // powershots
-            if (driver2.getX().isPressed()) {
+            if (driver2.getDLeft().isPressed()) {
                 isAiming = true;
                 shooterPower = SHOOTER_POWERSHOT_POWER;
-                double targetPos = redPowershot.getCenter().x + AUTO_AIM_OFFSET_X;
+                double targetPos = red.getCenter().x + CV_POWERSHOT_OFFSETS.getH() + AUTO_AIM_OFFSET_X;
+                controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
+                controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
+                double output = -controller.calculate(0, targetPos);
+                z = Math.abs(controller.getPositionError()) <= AUTO_AIM_ACCEPTABLE_ERROR ? 0 : Math.copySign(Math.max(AUTO_AIM_MIN_POWER, Math.abs(output)), output);
+            } else if (driver2.getDUp().isPressed()) {
+                isAiming = true;
+                shooterPower = SHOOTER_POWERSHOT_POWER;
+                double targetPos = red.getCenter().x + CV_POWERSHOT_OFFSETS.getS() + AUTO_AIM_OFFSET_X;
+                controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
+                controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
+                double output = -controller.calculate(0, targetPos);
+                z = Math.abs(controller.getPositionError()) <= AUTO_AIM_ACCEPTABLE_ERROR ? 0 : Math.copySign(Math.max(AUTO_AIM_MIN_POWER, Math.abs(output)), output);
+            } else if (driver2.getDRight().isPressed()) {
+                isAiming = true;
+                shooterPower = SHOOTER_POWERSHOT_POWER;
+                double targetPos = red.getCenter().x + CV_POWERSHOT_OFFSETS.getV() + AUTO_AIM_OFFSET_X;
                 controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
                 controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
                 double output = -controller.calculate(0, targetPos);
@@ -142,10 +158,26 @@ public abstract class Tele extends OpMode {
             }
         } else if (this.alliance == Alliance.BLUE) {
             // powershots
-            if (driver2.getX().isPressed()) {
+            if (driver2.getDLeft().isPressed()) {
                 isAiming = true;
                 shooterPower = SHOOTER_POWERSHOT_POWER;
-                double targetPos = bluePowershot.getCenter().x + AUTO_AIM_OFFSET_X;
+                double targetPos = blue.getCenter().x - CV_POWERSHOT_OFFSETS.getV() + AUTO_AIM_OFFSET_X;
+                controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
+                controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
+                double output = -controller.calculate(0, targetPos);
+                z = Math.abs(controller.getPositionError()) <= AUTO_AIM_ACCEPTABLE_ERROR ? 0 : Math.copySign(Math.max(AUTO_AIM_MIN_POWER, Math.abs(output)), output);
+            } else if (driver2.getDUp().isPressed()) {
+                isAiming = true;
+                shooterPower = SHOOTER_POWERSHOT_POWER;
+                double targetPos = blue.getCenter().x - CV_POWERSHOT_OFFSETS.getS() + AUTO_AIM_OFFSET_X;
+                controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
+                controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
+                double output = -controller.calculate(0, targetPos);
+                z= Math.abs(controller.getPositionError()) <= AUTO_AIM_ACCEPTABLE_ERROR ? 0 : Math.copySign(Math.max(AUTO_AIM_MIN_POWER, Math.abs(output)), output);
+            } else if (driver2.getDRight().isPressed()) {
+                isAiming = true;
+                shooterPower = SHOOTER_POWERSHOT_POWER;
+                double targetPos = blue.getCenter().x - CV_POWERSHOT_OFFSETS.getH() + AUTO_AIM_OFFSET_X;
                 controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
                 controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
                 double output = -controller.calculate(0, targetPos);
@@ -170,10 +202,9 @@ public abstract class Tele extends OpMode {
         robot.drive.update();
 
         //lights!
-        if ((this.alliance == Alliance.RED && (Math.abs(red.getCenter().x + AUTO_AIM_OFFSET_X) <= AUTO_AIM_ACCEPTABLE_ERROR ||
-                Math.abs(redPowershot.getCenter().x + AUTO_AIM_OFFSET_X) <= AUTO_AIM_ACCEPTABLE_ERROR)) ||
+        if ((this.alliance == Alliance.RED && Math.abs(red.getCenter().x + AUTO_AIM_OFFSET_X) <= AUTO_AIM_ACCEPTABLE_ERROR ||
                 (this.alliance == Alliance.BLUE && (Math.abs(blue.getCenter().x + AUTO_AIM_OFFSET_X) <= AUTO_AIM_ACCEPTABLE_ERROR ||
-                Math.abs(bluePowershot.getCenter().x + AUTO_AIM_OFFSET_X) <= AUTO_AIM_ACCEPTABLE_ERROR))) {
+                Math.abs(bluePowershot.getCenter().x + AUTO_AIM_OFFSET_X) <= AUTO_AIM_ACCEPTABLE_ERROR)))) {
             if (Math.abs(robot.shooter.getShooter() - shooterPower) <= 0.01) {
                 if (alliance == Alliance.RED) {
                     robot.lights.setPattern(RED_AIMED_AND_READY);
@@ -205,11 +236,12 @@ public abstract class Tele extends OpMode {
         PoseStorage.currentPose = robot.drive.getPoseEstimate();
 
         // arm
-        if (driver2.getDUp().isJustPressed()) {
-            armPosition = ARM_UP_POS;
-        } else if (driver2.getDDown().isJustPressed()) {
-            armPosition = ARM_DOWN_POS;
-        } else if (Math.abs(driver2.getRightStick().getY()) > 0.1) {
+//        if (driver2.getDUp().isJustPressed()) {
+//            armPosition = ARM_UP_POS;
+//        } else if (driver2.getDDown().isJustPressed()) {
+//            armPosition = ARM_DOWN_POS;
+//        } else
+        if (Math.abs(driver2.getRightStick().getY()) > 0.1) {
             armPosition += driver2.getRightStick().getY()*ARM_SPEED;
         } else {
             armPosition = robot.arm.getArm();

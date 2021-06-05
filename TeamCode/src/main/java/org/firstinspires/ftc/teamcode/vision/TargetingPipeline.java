@@ -31,14 +31,17 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MIN_GOAL_AREA
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MIN_POWERSHOT_AREA;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_POWERSHOT_DIMENSIONS;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_POWERSHOT_OFFSET;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_POWERSHOT_OFFSETS;
 import static org.firstinspires.ftc.teamcode.util.Constants.ANCHOR;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLACK;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLUE;
 import static org.firstinspires.ftc.teamcode.util.Constants.ERODE_DILATE_ITERATIONS;
 import static org.firstinspires.ftc.teamcode.util.Constants.INVALID_POINT;
+import static org.firstinspires.ftc.teamcode.util.Constants.ORANGE;
 import static org.firstinspires.ftc.teamcode.util.Constants.RED;
 import static org.firstinspires.ftc.teamcode.util.Constants.STRUCTURING_ELEMENT;
 import static org.firstinspires.ftc.teamcode.util.Constants.WHITE;
+import static org.firstinspires.ftc.teamcode.util.Constants.YELLOW;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getConfidenceContour;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getHighGoalContour;
 import static org.firstinspires.ftc.teamcode.util.OpenCVUtil.getLargestContours;
@@ -93,6 +96,9 @@ public class TargetingPipeline extends OpenCvPipeline {
 
         if (this.alliance == Alliance.RED) {
             updateRedNew(input);
+            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS.getH()*(input.width()/100.0)),0), new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS.getH()*(input.width()/100.0)), input.height()), RED, 1);
+            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS.getS()*(input.width()/100.0)),0), new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS.getS()*(input.width()/100.0)), input.height()), ORANGE, 1);
+            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS.getV()*(input.width()/100.0)),0), new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS.getV()*(input.width()/100.0)), input.height()), YELLOW, 1);
         } else if (this.alliance == Alliance.BLUE) {
             updateBlueNew(input);
         }

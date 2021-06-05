@@ -209,12 +209,12 @@ public class OpenCVUtil {
                     if ((leftColor[0] < CAMERA_RED_GOAL_UPPER.h || leftColor[0] > CAMERA_RED_GOAL_LOWER.h) &&
                             (CAMERA_RED_GOAL_LOWER.s < leftColor[1] && leftColor[1] < CAMERA_RED_GOAL_UPPER.s) &&
                             (CAMERA_RED_GOAL_LOWER.v < leftColor[2] && leftColor[2] < CAMERA_RED_GOAL_UPPER.v)) {
-                        sideCheckConfidence += 0.5;
+                        sideCheckConfidence += 1;
                     }
                     if ((rightColor[0] < CAMERA_RED_GOAL_UPPER.h || rightColor[0] > CAMERA_RED_GOAL_LOWER.h) &&
                             (CAMERA_RED_GOAL_LOWER.s < rightColor[1] && rightColor[1] < CAMERA_RED_GOAL_UPPER.s) &&
                             (CAMERA_RED_GOAL_LOWER.v < rightColor[2] && rightColor[2] < CAMERA_RED_GOAL_UPPER.v)) {
-                        sideCheckConfidence += 0.5;
+                        sideCheckConfidence += 1;
                     }
                 }
             } else if (alliance == Alliance.BLUE) {
