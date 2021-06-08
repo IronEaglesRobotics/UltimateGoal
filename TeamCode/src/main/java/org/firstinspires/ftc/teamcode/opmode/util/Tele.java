@@ -22,7 +22,8 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_ACCEPTA
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MIN_POWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_PID;
-import static org.firstinspires.ftc.teamcode.util.Configurables.CV_POWERSHOT_OFFSETS;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_POWERSHOT_OFFSETS_BLUE;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_POWERSHOT_OFFSETS_RED;
 import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_DOWN;
 import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_SPEED;
 import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_UP;
@@ -49,6 +50,7 @@ public abstract class Tele extends OpMode {
     private boolean zig;
 
     private boolean isAiming = false;
+    private boolean isAimed = false;
 
     PIDFController controller;
 
@@ -116,85 +118,59 @@ public abstract class Tele extends OpMode {
         Detection blue = robot.camera.getBlue();
         Detection bluePowershot = robot.camera.getBluePowershots().getLeftMost();
         if (this.alliance == Alliance.RED) {
-            // powershots
-            if (driver2.getDLeft().isPressed()) {
+            if (driver2.getDLeft().isPressed() || driver2.getDUp().isPressed() ||
+                    driver2.getDRight().isPressed() || driver2.getY().isPressed()) {
                 isAiming = true;
                 shooterPower = SHOOTER_POWERSHOT_POWER;
-                double targetPos = red.getCenter().x + CV_POWERSHOT_OFFSETS.getH() + AUTO_AIM_OFFSET_X;
+                double targetPos = 0;
+                if (driver2.getDLeft().isPressed()) {
+                    targetPos = red.getCenter().x + CV_POWERSHOT_OFFSETS_RED.getH() + AUTO_AIM_OFFSET_X;
+                } else if (driver2.getDUp().isPressed()) {
+                    targetPos = red.getCenter().x + CV_POWERSHOT_OFFSETS_RED.getS() + AUTO_AIM_OFFSET_X;
+                } else if (driver2.getDRight().isPressed()) {
+                    targetPos = red.getCenter().x + CV_POWERSHOT_OFFSETS_RED.getV() + AUTO_AIM_OFFSET_X;
+                } else if (driver2.getY().isPressed()) {
+                    targetPos = red.getCenter().x + AUTO_AIM_OFFSET_X;
+                    shooterPower = SHOOTER_GOAL_POWER;
+                }
                 controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
                 controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
                 double output = -controller.calculate(0, targetPos);
                 z = Math.abs(controller.getPositionError()) <= AUTO_AIM_ACCEPTABLE_ERROR ? 0 : Math.copySign(Math.max(AUTO_AIM_MIN_POWER, Math.abs(output)), output);
-            } else if (driver2.getDUp().isPressed()) {
-                isAiming = true;
-                shooterPower = SHOOTER_POWERSHOT_POWER;
-                double targetPos = red.getCenter().x + CV_POWERSHOT_OFFSETS.getS() + AUTO_AIM_OFFSET_X;
-                controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
-                controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
-                double output = -controller.calculate(0, targetPos);
-                z = Math.abs(controller.getPositionError()) <= AUTO_AIM_ACCEPTABLE_ERROR ? 0 : Math.copySign(Math.max(AUTO_AIM_MIN_POWER, Math.abs(output)), output);
-            } else if (driver2.getDRight().isPressed()) {
-                isAiming = true;
-                shooterPower = SHOOTER_POWERSHOT_POWER;
-                double targetPos = red.getCenter().x + CV_POWERSHOT_OFFSETS.getV() + AUTO_AIM_OFFSET_X;
-                controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
-                controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
-                double output = -controller.calculate(0, targetPos);
-                z = Math.abs(controller.getPositionError()) <= AUTO_AIM_ACCEPTABLE_ERROR ? 0 : Math.copySign(Math.max(AUTO_AIM_MIN_POWER, Math.abs(output)), output);
-            }
-            // goal
-            else if (driver2.getY().isPressed()) {
-                isAiming = true;
-                shooterPower = SHOOTER_GOAL_POWER;
-                double targetPos = red.getCenter().x + AUTO_AIM_OFFSET_X;
-                controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
-                controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
-                double output = -controller.calculate(0, targetPos);
-                z = Math.abs(controller.getPositionError()) <= AUTO_AIM_ACCEPTABLE_ERROR ? 0 : Math.copySign(Math.max(AUTO_AIM_MIN_POWER, Math.abs(output)), output);
-            }
-            else {
+                if (z == 0) {
+                    isAimed = true;
+                }
+            } else {
                 isAiming = false;
+                isAimed = false;
                 controller.reset();
             }
         } else if (this.alliance == Alliance.BLUE) {
-            // powershots
-            if (driver2.getDLeft().isPressed()) {
+            if (driver2.getDLeft().isPressed() || driver2.getDUp().isPressed() ||
+                    driver2.getDRight().isPressed() || driver2.getY().isPressed()) {
                 isAiming = true;
                 shooterPower = SHOOTER_POWERSHOT_POWER;
-                double targetPos = blue.getCenter().x - CV_POWERSHOT_OFFSETS.getV() + AUTO_AIM_OFFSET_X;
+                double targetPos = 0;
+                if (driver2.getDLeft().isPressed()) {
+                    targetPos = blue.getCenter().x + CV_POWERSHOT_OFFSETS_BLUE.getV() + AUTO_AIM_OFFSET_X;
+                } else if (driver2.getDUp().isPressed()) {
+                    targetPos = blue.getCenter().x + CV_POWERSHOT_OFFSETS_BLUE.getS() + AUTO_AIM_OFFSET_X;
+                } else if (driver2.getDRight().isPressed()) {
+                    targetPos = blue.getCenter().x + CV_POWERSHOT_OFFSETS_BLUE.getH() + AUTO_AIM_OFFSET_X;
+                } else if (driver2.getY().isPressed()) {
+                    targetPos = blue.getCenter().x + AUTO_AIM_OFFSET_X;
+                    shooterPower = SHOOTER_GOAL_POWER;
+                }
                 controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
                 controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
                 double output = -controller.calculate(0, targetPos);
                 z = Math.abs(controller.getPositionError()) <= AUTO_AIM_ACCEPTABLE_ERROR ? 0 : Math.copySign(Math.max(AUTO_AIM_MIN_POWER, Math.abs(output)), output);
-            } else if (driver2.getDUp().isPressed()) {
-                isAiming = true;
-                shooterPower = SHOOTER_POWERSHOT_POWER;
-                double targetPos = blue.getCenter().x - CV_POWERSHOT_OFFSETS.getS() + AUTO_AIM_OFFSET_X;
-                controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
-                controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
-                double output = -controller.calculate(0, targetPos);
-                z= Math.abs(controller.getPositionError()) <= AUTO_AIM_ACCEPTABLE_ERROR ? 0 : Math.copySign(Math.max(AUTO_AIM_MIN_POWER, Math.abs(output)), output);
-            } else if (driver2.getDRight().isPressed()) {
-                isAiming = true;
-                shooterPower = SHOOTER_POWERSHOT_POWER;
-                double targetPos = blue.getCenter().x - CV_POWERSHOT_OFFSETS.getH() + AUTO_AIM_OFFSET_X;
-                controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
-                controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
-                double output = -controller.calculate(0, targetPos);
-                z = Math.abs(controller.getPositionError()) <= AUTO_AIM_ACCEPTABLE_ERROR ? 0 : Math.copySign(Math.max(AUTO_AIM_MIN_POWER, Math.abs(output)), output);
-            }
-            // goal
-            else if (driver2.getY().isPressed()) {
-                isAiming = true;
-                shooterPower = SHOOTER_GOAL_POWER;
-                double targetPos = blue.getCenter().x + AUTO_AIM_OFFSET_X;
-                controller.setPIDF(AUTO_AIM_PID.p, AUTO_AIM_PID.i, AUTO_AIM_PID.d, AUTO_AIM_PID.f);
-                controller.setTolerance(AUTO_AIM_ACCEPTABLE_ERROR);
-                double output = -controller.calculate(0, targetPos);
-                z = Math.abs(controller.getPositionError()) <= AUTO_AIM_ACCEPTABLE_ERROR ? 0 : Math.copySign(Math.max(AUTO_AIM_MIN_POWER, Math.abs(output)), output);
-            }
-            else {
+                if (z == 0) {
+                    isAimed = true;
+                }
+            } else {
                 isAiming = false;
+                isAimed = false;
                 controller.reset();
             }
         }
@@ -202,10 +178,8 @@ public abstract class Tele extends OpMode {
         robot.drive.update();
 
         //lights!
-        if ((this.alliance == Alliance.RED && Math.abs(red.getCenter().x + AUTO_AIM_OFFSET_X) <= AUTO_AIM_ACCEPTABLE_ERROR ||
-                (this.alliance == Alliance.BLUE && (Math.abs(blue.getCenter().x + AUTO_AIM_OFFSET_X) <= AUTO_AIM_ACCEPTABLE_ERROR ||
-                Math.abs(bluePowershot.getCenter().x + AUTO_AIM_OFFSET_X) <= AUTO_AIM_ACCEPTABLE_ERROR)))) {
-            if (Math.abs(robot.shooter.getShooter() - shooterPower) <= 0.01) {
+        if (isAimed) {
+            if (Math.abs(robot.shooter.getShooter() - shooterPower) <= 0.005) {
                 if (alliance == Alliance.RED) {
                     robot.lights.setPattern(RED_AIMED_AND_READY);
                 } else if (alliance == Alliance.BLUE) {

@@ -351,7 +351,13 @@ public abstract class Auto extends LinearOpMode {
                 setTelemetry("\nz: "+z+"\nerror: "+targetPos);
             }
             @Override
-            public void end() {}
+            public void end() {
+                if (alliance == Alliance.RED) {
+                robot.lights.setPattern(RED_NORMAL);
+                } else if (alliance == Alliance.BLUE) {
+                    robot.lights.setPattern(BLUE_NORMAL);
+                }
+            }
             @Override
             public boolean isFinished() {
                 return ringsFired >= ringsToFire;

@@ -26,6 +26,7 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABL
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_SOLIDARITY_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_Y_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ASPECT_RATIO;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_MIN_CONFIDENCE;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_PROPER_AREA;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_PROPER_ASPECT;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_PROPER_HEIGHT;
@@ -248,6 +249,9 @@ public class OpenCVUtil {
             }
         }
 
-        return contours.get(highestConfidenceCounter);
+        if (highestConfidence >= CV_GOAL_MIN_CONFIDENCE) {
+            return contours.get(highestConfidenceCounter);
+        }
+        return null;
     }
 }

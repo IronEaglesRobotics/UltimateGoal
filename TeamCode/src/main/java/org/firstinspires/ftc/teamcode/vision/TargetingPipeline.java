@@ -31,7 +31,8 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MIN_GOAL_AREA
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_MIN_POWERSHOT_AREA;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_POWERSHOT_DIMENSIONS;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_POWERSHOT_OFFSET;
-import static org.firstinspires.ftc.teamcode.util.Configurables.CV_POWERSHOT_OFFSETS;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_POWERSHOT_OFFSETS_BLUE;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_POWERSHOT_OFFSETS_RED;
 import static org.firstinspires.ftc.teamcode.util.Constants.ANCHOR;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLACK;
 import static org.firstinspires.ftc.teamcode.util.Constants.BLUE;
@@ -96,11 +97,14 @@ public class TargetingPipeline extends OpenCvPipeline {
 
         if (this.alliance == Alliance.RED) {
             updateRedNew(input);
-            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS.getH()*(input.width()/100.0)),0), new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS.getH()*(input.width()/100.0)), input.height()), RED, 1);
-            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS.getS()*(input.width()/100.0)),0), new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS.getS()*(input.width()/100.0)), input.height()), ORANGE, 1);
-            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS.getV()*(input.width()/100.0)),0), new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS.getV()*(input.width()/100.0)), input.height()), YELLOW, 1);
+            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getH()*(input.width()/100.0)),0), new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getH()*(input.width()/100.0)), input.height()), RED, 1);
+            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getS()*(input.width()/100.0)),0), new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getS()*(input.width()/100.0)), input.height()), ORANGE, 1);
+            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getV()*(input.width()/100.0)),0), new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getV()*(input.width()/100.0)), input.height()), YELLOW, 1);
         } else if (this.alliance == Alliance.BLUE) {
             updateBlueNew(input);
+            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getH()*(input.width()/100.0)),0), new Point(blue.getCenterPx().x+(CV_POWERSHOT_OFFSETS_BLUE.getH()*(input.width()/100.0)), input.height()), RED, 1);
+            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getS()*(input.width()/100.0)),0), new Point(blue.getCenterPx().x+(CV_POWERSHOT_OFFSETS_BLUE.getS()*(input.width()/100.0)), input.height()), ORANGE, 1);
+            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getV()*(input.width()/100.0)),0), new Point(blue.getCenterPx().x+(CV_POWERSHOT_OFFSETS_BLUE.getV()*(input.width()/100.0)), input.height()), YELLOW, 1);
         }
 //        updateRed(input);
 //        updateBlue(input);

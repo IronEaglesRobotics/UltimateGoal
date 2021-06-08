@@ -68,8 +68,10 @@ public class Configurables {
     public static double CV_GOAL_ALLOWABLE_SOLIDARITY_ERROR = 1;
     public static double CV_GOAL_CUTOFF_Y_LINE = 80;
     public static double CV_GOAL_PROPER_HEIGHT = 107;
+    public static double CV_GOAL_MIN_CONFIDENCE = 3;
 
-    public static Color CV_POWERSHOT_OFFSETS = new Color(-40, -30, -20.5);
+    public static Color CV_POWERSHOT_OFFSETS_RED = new Color(-40, -30, -19);
+    public static Color CV_POWERSHOT_OFFSETS_BLUE = new Color(40, 30, 19);
 
     //old
     public static double CV_GOAL_ALLOWABLE_Y_ERROR = 20;

@@ -65,8 +65,8 @@ import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_FRONT_RIGHT;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(10, 0, 2);// 6 0 0.5 //8 0 2
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(10, 0, 1);// 6 0 0.5 //8 0 1
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 1);// 10 0 2
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(12, 0, 1);// 10 0 1
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -168,6 +168,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
         setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
+//        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
