@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.util.enums.Position;
 
 import java.util.Locale;
 
-import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_CLOSED;
-import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_OPEN;
+import static org.firstinspires.ftc.teamcode.util.Configurables.R_PUSHER_CLOSED;
+import static org.firstinspires.ftc.teamcode.util.Configurables.R_PUSHER_OPEN;
 import static org.firstinspires.ftc.teamcode.util.Constants.PUSHER;
 import static org.firstinspires.ftc.teamcode.util.Constants.SHOOTER;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.CLOSED;
@@ -28,11 +28,11 @@ public class Shooter {
     }
 
     public Position getPusher() {
-        return Math.abs(pusher.getPosition() - PUSHER_OPEN) > Math.abs(pusher.getPosition() - PUSHER_CLOSED) ? OPEN : CLOSED;
+        return Math.abs(pusher.getPosition() - R_PUSHER_OPEN) > Math.abs(pusher.getPosition() - R_PUSHER_CLOSED) ? OPEN : CLOSED;
     }
 
     public void setPusher(Position position) {
-        pusher.setPosition(position == OPEN ? PUSHER_OPEN : PUSHER_CLOSED);
+        pusher.setPosition(position == OPEN ? R_PUSHER_OPEN : R_PUSHER_CLOSED);
     }
 
     public void setShooter(double power) {

@@ -3,18 +3,20 @@ package org.firstinspires.ftc.teamcode.opmode.autonomous;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.opmode.util.Auto;
 import org.firstinspires.ftc.teamcode.util.enums.Alliance;
 import org.firstinspires.ftc.teamcode.util.enums.StarterStack;
 
-@Autonomous(name = "Test Auto", group = "Development", preselectTeleOp = "")
+@Disabled
+@Autonomous(name = "Test Auto", group = "Development")
 public class TestAuto extends Auto {
-    public static Pose2d START_POSE = new Pose2d(0, 0, Math.toRadians(0));
+    public static Pose2d START_POSE = new Pose2d(-48, 24, Math.toRadians(0));
 
     @Override
     public void setAlliance() {
-        this.alliance = Alliance.RED;
+        this.alliance = Alliance.BLUE;
     }
 
     @Override
@@ -27,7 +29,7 @@ public class TestAuto extends Auto {
         robot.drive.setPoseEstimate(START_POSE);
 
         Trajectory move1 = robot.drive.trajectoryBuilder(START_POSE)
-                .forward(48)
+                .lineToLinearHeading(new Pose2d(48, 24, 0), getVelocityConstraint(10), getAccelerationConstraint())
                 .build();
         Trajectory move2 = robot.drive.trajectoryBuilder(move1.end())
                 .strafeLeft(48)
@@ -35,7 +37,7 @@ public class TestAuto extends Auto {
 
         followTrajectory(move1);
         delay(2);
-        followTrajectory(move2);
+//        followTrajectory(move2);
         stopTargetingCamera();
     }
 }

@@ -96,15 +96,17 @@ public class TargetingPipeline extends OpenCvPipeline {
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
 
         if (this.alliance == Alliance.RED) {
+            updateBlueNew(input);
             updateRedNew(input);
             Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getH()*(input.width()/100.0)),0), new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getH()*(input.width()/100.0)), input.height()), RED, 1);
             Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getS()*(input.width()/100.0)),0), new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getS()*(input.width()/100.0)), input.height()), ORANGE, 1);
             Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getV()*(input.width()/100.0)),0), new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getV()*(input.width()/100.0)), input.height()), YELLOW, 1);
         } else if (this.alliance == Alliance.BLUE) {
+            updateRedNew(input);
             updateBlueNew(input);
-            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getH()*(input.width()/100.0)),0), new Point(blue.getCenterPx().x+(CV_POWERSHOT_OFFSETS_BLUE.getH()*(input.width()/100.0)), input.height()), RED, 1);
-            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getS()*(input.width()/100.0)),0), new Point(blue.getCenterPx().x+(CV_POWERSHOT_OFFSETS_BLUE.getS()*(input.width()/100.0)), input.height()), ORANGE, 1);
-            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_RED.getV()*(input.width()/100.0)),0), new Point(blue.getCenterPx().x+(CV_POWERSHOT_OFFSETS_BLUE.getV()*(input.width()/100.0)), input.height()), YELLOW, 1);
+            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_BLUE.getH()*(input.width()/100.0)),0), new Point(blue.getCenterPx().x+(CV_POWERSHOT_OFFSETS_BLUE.getH()*(input.width()/100.0)), input.height()), RED, 1);
+            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_BLUE.getS()*(input.width()/100.0)),0), new Point(blue.getCenterPx().x+(CV_POWERSHOT_OFFSETS_BLUE.getS()*(input.width()/100.0)), input.height()), ORANGE, 1);
+            Imgproc.line(input, new Point(red.getCenterPx().x+(CV_POWERSHOT_OFFSETS_BLUE.getV()*(input.width()/100.0)),0), new Point(blue.getCenterPx().x+(CV_POWERSHOT_OFFSETS_BLUE.getV()*(input.width()/100.0)), input.height()), YELLOW, 1);
         }
 //        updateRed(input);
 //        updateBlue(input);

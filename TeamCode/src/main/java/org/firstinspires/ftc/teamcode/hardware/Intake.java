@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.util.enums.Position;
 
 import java.util.Locale;
 
-import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_DOWN;
-import static org.firstinspires.ftc.teamcode.util.Configurables.INTAKE_SHIELD_UP;
+import static org.firstinspires.ftc.teamcode.util.Configurables.R_INTAKE_SHIELD_DOWN;
+import static org.firstinspires.ftc.teamcode.util.Configurables.R_INTAKE_SHIELD_UP;
 import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE;
 import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SECONDARY;
 import static org.firstinspires.ftc.teamcode.util.Constants.INTAKE_SHIELD;
@@ -39,11 +39,11 @@ public class Intake {
     }
 
     public Position getShield() {
-        return Math.abs(shield.getPosition() - INTAKE_SHIELD_UP) < Math.abs(shield.getPosition() - INTAKE_SHIELD_DOWN) ? UP : DOWN;
+        return Math.abs(shield.getPosition() - R_INTAKE_SHIELD_UP) < Math.abs(shield.getPosition() - R_INTAKE_SHIELD_DOWN) ? UP : DOWN;
     }
 
     public void setShield(Position position) {
-        shield.setPosition(position == UP ? INTAKE_SHIELD_UP : INTAKE_SHIELD_DOWN);
+        shield.setPosition(position == UP ? R_INTAKE_SHIELD_UP : R_INTAKE_SHIELD_DOWN);
     }
 
     public void setShield(double position) {

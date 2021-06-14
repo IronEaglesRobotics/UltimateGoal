@@ -21,11 +21,11 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_BLUE_GOAL
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_GOAL_LOWER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CAMERA_RED_GOAL_UPPER;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_AREA_ERROR;
-import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_ASPECT_ERROR;
-import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_SIZE_ERROR;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_SIDE_ALLOWABLE_ASPECT_ERROR;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_SIDE_ALLOWABLE_SIZE_ERROR;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_SOLIDARITY_ERROR;
-import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ALLOWABLE_Y_ERROR;
-import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_ASPECT_RATIO;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_SIDE_ALLOWABLE_Y_ERROR;
+import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_SIDE_ASPECT_RATIO;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_MIN_CONFIDENCE;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_PROPER_AREA;
 import static org.firstinspires.ftc.teamcode.util.Configurables.CV_GOAL_PROPER_ASPECT;
@@ -117,13 +117,13 @@ public class OpenCVUtil {
             return null;
         }
         // check each contour for touching the top, aspect, and size
-        double properAspect = ((double)CV_GOAL_ASPECT_RATIO.height) / ((double)CV_GOAL_ASPECT_RATIO.width);
+        double properAspect = ((double) CV_GOAL_SIDE_ASPECT_RATIO.height) / ((double) CV_GOAL_SIDE_ASPECT_RATIO.width);
         for (int i = 0; i < contours.size() - 1; i++) {
             MatOfPoint contour = contours.get(i);
             Rect rect = Imgproc.boundingRect(contour);
             double area = Imgproc.contourArea(contour);
             double aspect = ((double) rect.height) / ((double) rect.width);
-            if (rect.y <= -100 || Math.abs(properAspect - aspect) > CV_GOAL_ALLOWABLE_ASPECT_ERROR ||
+            if (rect.y <= -100 || Math.abs(properAspect - aspect) > CV_GOAL_SIDE_ALLOWABLE_ASPECT_ERROR ||
                     area < CV_MIN_GOAL_AREA || area > CV_MAX_GOAL_AREA) {
                 contours.remove(i);
                 i--;
@@ -138,8 +138,8 @@ public class OpenCVUtil {
             Rect rect2 = Imgproc.boundingRect(contour2);
             double area1 = Imgproc.contourArea(contour1);
             double area2 = Imgproc.contourArea(contour2);
-            if (Math.abs(Math.abs(rect1.y) - Math.abs(rect2.y)) < CV_GOAL_ALLOWABLE_Y_ERROR &&
-                    Math.abs(area1 - area2) < CV_GOAL_ALLOWABLE_SIZE_ERROR) {
+            if (Math.abs(Math.abs(rect1.y) - Math.abs(rect2.y)) < CV_GOAL_SIDE_ALLOWABLE_Y_ERROR &&
+                    Math.abs(area1 - area2) < CV_GOAL_SIDE_ALLOWABLE_SIZE_ERROR) {
                 goalCounter = i;
                 break;
             }

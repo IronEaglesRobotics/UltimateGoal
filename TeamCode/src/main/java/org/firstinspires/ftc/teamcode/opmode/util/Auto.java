@@ -29,9 +29,9 @@ import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_MIN_POW
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_OFFSET_X;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_PID;
 import static org.firstinspires.ftc.teamcode.util.Configurables.AUTO_AIM_WAIT;
-import static org.firstinspires.ftc.teamcode.util.Configurables.PUSHER_DELAY;
-import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_GOAL_POWER;
-import static org.firstinspires.ftc.teamcode.util.Configurables.SHOOTER_POWERSHOT_POWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.R_PUSHER_DELAY;
+import static org.firstinspires.ftc.teamcode.util.Configurables.R_SHOOTER_GOAL_POWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.R_SHOOTER_POWERSHOT_POWER;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.CLOSED;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.OPEN;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.UP;
@@ -271,9 +271,9 @@ public abstract class Auto extends LinearOpMode {
                 ringsToFire = rings;
                 powershotsKnockedDown = !shootPowershots;
                 if (shootPowershots) {
-                    robot.shooter.setShooter(SHOOTER_POWERSHOT_POWER);
+                    robot.shooter.setShooter(R_SHOOTER_POWERSHOT_POWER);
                 } else {
-                    robot.shooter.setShooter(SHOOTER_GOAL_POWER);
+                    robot.shooter.setShooter(R_SHOOTER_GOAL_POWER);
                 }
                 shootingDelay = -1;
             }
@@ -291,7 +291,7 @@ public abstract class Auto extends LinearOpMode {
                             targetPos = powershot.getCenter().x + AUTO_AIM_OFFSET_X;
                         } else {
                             powershotsKnockedDown = true;
-                            robot.shooter.setShooter(SHOOTER_GOAL_POWER);
+                            robot.shooter.setShooter(R_SHOOTER_GOAL_POWER);
                         }
                     } else {
                         if (alliance == Alliance.RED) {
@@ -304,7 +304,7 @@ public abstract class Auto extends LinearOpMode {
                         }
                     }
                     // either start firing or move towards target
-                    if (Math.abs(targetPos) <= AUTO_AIM_ACCEPTABLE_ERROR || currentRuntime >= stepTimeout - 2) {
+                    if (Math.abs(targetPos) <= AUTO_AIM_ACCEPTABLE_ERROR || currentRuntime >= stepTimeout - 1) {
                         if (shootingDelay == -1) {
                             shootingDelay = currentRuntime;
                         }
@@ -336,12 +336,12 @@ public abstract class Auto extends LinearOpMode {
                     }
                 } else {
                     // wait while servo is moving
-                    if (zig && currentRuntime > zigTime + PUSHER_DELAY) {
+                    if (zig && currentRuntime > zigTime + R_PUSHER_DELAY) {
                         robot.shooter.setPusher(OPEN);
                         zig = false;
                         zag = true;
                         zagTime = currentRuntime;
-                    } else if (zag && currentRuntime > zagTime + (powershotsKnockedDown ? PUSHER_DELAY : 1)) {
+                    } else if (zag && currentRuntime > zagTime + (powershotsKnockedDown ? R_PUSHER_DELAY : 1)) {
                         firing = false;
                         ringsFired++;
                     }

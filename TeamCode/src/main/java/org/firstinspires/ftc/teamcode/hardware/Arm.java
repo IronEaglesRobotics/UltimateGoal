@@ -8,13 +8,13 @@ import org.firstinspires.ftc.teamcode.util.enums.Position;
 
 import java.util.Locale;
 
-import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_ALMOST_DOWN_POS;
-import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_DEFAULT_POS;
-import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_DOWN_POS;
-import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_POWER;
-import static org.firstinspires.ftc.teamcode.util.Configurables.ARM_UP_POS;
-import static org.firstinspires.ftc.teamcode.util.Configurables.CLAW_CLOSED;
-import static org.firstinspires.ftc.teamcode.util.Configurables.CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.util.Configurables.R_ARM_ALMOST_DOWN_POS;
+import static org.firstinspires.ftc.teamcode.util.Configurables.R_ARM_DEFAULT_POS;
+import static org.firstinspires.ftc.teamcode.util.Configurables.R_ARM_DOWN_POS;
+import static org.firstinspires.ftc.teamcode.util.Configurables.R_ARM_POWER;
+import static org.firstinspires.ftc.teamcode.util.Configurables.R_ARM_UP_POS;
+import static org.firstinspires.ftc.teamcode.util.Configurables.R_CLAW_CLOSED;
+import static org.firstinspires.ftc.teamcode.util.Configurables.R_CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.util.Constants.ARM;
 import static org.firstinspires.ftc.teamcode.util.Constants.CLAW;
 import static org.firstinspires.ftc.teamcode.util.enums.Position.CLOSED;
@@ -42,24 +42,24 @@ public class Arm {
 
     public void setArm(int position) {
         wobbler.setTargetPosition(position);
-        wobbler.setPower(ARM_POWER);
+        wobbler.setPower(R_ARM_POWER);
     }
 
     public void setArm(Position position) {
         switch(position) {
             case BACK:
-                wobbler.setTargetPosition(ARM_DEFAULT_POS);
+                wobbler.setTargetPosition(R_ARM_DEFAULT_POS);
                 break;
             case UP:
-                wobbler.setTargetPosition(ARM_UP_POS);
+                wobbler.setTargetPosition(R_ARM_UP_POS);
                 break;
             case ALMOST_DOWN:
-                wobbler.setTargetPosition(ARM_ALMOST_DOWN_POS);
+                wobbler.setTargetPosition(R_ARM_ALMOST_DOWN_POS);
                 break;
             case DOWN:
-                wobbler.setTargetPosition(ARM_DOWN_POS);
+                wobbler.setTargetPosition(R_ARM_DOWN_POS);
         }
-        wobbler.setPower(ARM_POWER);
+        wobbler.setPower(R_ARM_POWER);
     }
 
     public void resetEncoder() {
@@ -68,11 +68,11 @@ public class Arm {
     }
 
     public Position getClaw() {
-        return Math.abs(claw.getPosition() - CLAW_OPEN) < Math.abs(claw.getPosition() - CLAW_CLOSED) ? OPEN : CLOSED;
+        return Math.abs(claw.getPosition() - R_CLAW_OPEN) < Math.abs(claw.getPosition() - R_CLAW_CLOSED) ? OPEN : CLOSED;
     }
 
     public void setClaw(Position position) {
-        claw.setPosition(position == OPEN ? CLAW_OPEN : CLAW_CLOSED);
+        claw.setPosition(position == OPEN ? R_CLAW_OPEN : R_CLAW_CLOSED);
     }
 
     public String getTelemetry() {

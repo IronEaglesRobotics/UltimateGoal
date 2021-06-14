@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.hardware.drive;
 
 import androidx.annotation.NonNull;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -36,7 +35,7 @@ import static org.firstinspires.ftc.teamcode.util.Constants.WHEEL_FRONT_RIGHT;
  *    \--------------/
  *
  */
-@Config
+//@Config
 public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double TICKS_PER_REV = 8192;
     public static double WHEEL_RADIUS = 0.6889764; // in
