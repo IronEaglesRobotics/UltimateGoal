@@ -17,7 +17,7 @@ public class BlueInside1W extends Auto {
     public static Pose2d START_POSE = new Pose2d(-62.5, 18.9, Math.toRadians(180));
 
     public static Pose2d STRAFE = new Pose2d(-62.5, 11, Math.toRadians(180));
-    public static Pose2d SHOOT = new Pose2d(-6, 11, Math.toRadians(30));
+    public static Pose2d SHOOT = new Pose2d(-3, 11, Math.toRadians(30));
     public static Pose2d DELAY = new Pose2d(52, 17, Math.toRadians(-90));
 
     public static Pose2d NONE_DROP_WOBBLE = new Pose2d(26, 58, Math.toRadians(0));
@@ -85,25 +85,33 @@ public class BlueInside1W extends Auto {
 
         followTrajectory(strafe);
         followTrajectory(shoot);
-        shootRings(5, false, 3);
+        shootRings(7, false, 3);
+//        shootRings(4, false,1);
+//        setPusher(0.4, Position.OPEN);
+//        setPusher(0.4, Position.CLOSED);
+//        setPusher(0.4, Position.OPEN);
+//        setPusher(0.4, Position.CLOSED);
+//        setPusher(0.4, Position.OPEN);
+//        setPusher(0.4, Position.CLOSED);
+//        setPusher(0, Position.OPEN);
         followTrajectory(delay);
         switch(stack) {
             case NONE:
-                delay(7);
+                delay(5);
                 followTrajectory(noneWobble);
                 setIntake(1, 0.5);
                 setIntake(0, 0);
                 followTrajectory(nonePark);
                 break;
             case SINGLE:
-                delay(9);
+                delay(7);
                 followTrajectory(singleWobble);
                 setIntake(1, 0.5);
                 setIntake(0, 0);
                 followTrajectory(singlePark);
                 break;
             case QUAD:
-                delay(9);
+//                delay(7);
                 followTrajectory(quadWobble);
                 setIntake(1, 0.5);
                 setIntake(0, 0);

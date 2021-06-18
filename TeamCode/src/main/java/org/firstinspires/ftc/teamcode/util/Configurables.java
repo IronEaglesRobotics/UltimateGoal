@@ -31,7 +31,7 @@ public class Configurables {
 
     // Auto Aim Constants
     public static double AUTO_AIM_OFFSET_X = 5;
-    public static double AUTO_AIM_WAIT = 0.1;
+    public static double AUTO_AIM_WAIT = 0.2;
     public static PIDFCoefficients AUTO_AIM_PID = new PIDFCoefficients(0.009, 0.3, 0.0019, 0);
     public static double AUTO_AIM_ACCEPTABLE_ERROR = 2;
     public static double AUTO_AIM_MIN_POWER = 0.14;
@@ -47,7 +47,7 @@ public class Configurables {
     public static Color CAMERA_BLUE_POWERSHOT_UPPER = new Color(120, 255, 255);
     public static Color CAMERA_ORANGE_LOWER         = new Color(0, 70, 50);
     public static Color CAMERA_ORANGE_UPPER         = new Color(60, 255, 255);
-    public static Color CAMERA_WHITE_LOWER          = new Color(0, 0, 180);
+    public static Color CAMERA_WHITE_LOWER          = new Color(0, 0, 40);
     public static Color CAMERA_WHITE_UPPER          = new Color(180, 30, 255);
 
     // CV Detection Constants
@@ -66,7 +66,7 @@ public class Configurables {
     public static double CV_GOAL_PROPER_AREA = 1.25;
     public static double CV_GOAL_ALLOWABLE_AREA_ERROR = 1;
     public static double CV_GOAL_ALLOWABLE_SOLIDARITY_ERROR = 1;
-    public static double CV_GOAL_CUTOFF_Y_LINE = 80;
+    public static double CV_GOAL_CUTOFF_Y_LINE = 65;
     public static double CV_GOAL_PROPER_HEIGHT = 107;
     public static double CV_GOAL_MIN_CONFIDENCE = 3;
 

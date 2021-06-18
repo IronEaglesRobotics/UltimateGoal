@@ -17,7 +17,7 @@ public class RedInside1W extends Auto {
     public static Pose2d START_POSE = new Pose2d(-62.5, -18.9, Math.toRadians(180));
 
     public static Pose2d STRAFE = new Pose2d(-62.5, -11, Math.toRadians(180));
-    public static Pose2d SHOOT = new Pose2d(-6, -11, Math.toRadians(-30));
+    public static Pose2d SHOOT = new Pose2d(-3, -11, Math.toRadians(-30));
     public static Pose2d DELAY = new Pose2d(52, -17, Math.toRadians(90));
 
     public static Pose2d NONE_DROP_WOBBLE = new Pose2d(26, -63, Math.toRadians(0));

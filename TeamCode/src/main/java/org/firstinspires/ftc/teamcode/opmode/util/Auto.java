@@ -192,6 +192,23 @@ public abstract class Auto extends LinearOpMode {
         });
     }
 
+    public void setPusher(double timeout, Position position) {
+        steps.add(new Step("Setting pusher " + position, timeout) {
+            @Override
+            public void start() {
+                robot.shooter.setPusher(position);
+            }
+            @Override
+            public void whileRunning() {}
+            @Override
+            public void end() {}
+            @Override
+            public boolean isFinished() {
+                return false;
+            }
+        });
+    }
+
     public void setClaw(double timeout, Position position) {
         steps.add(new Step("Setting arm to " + position, timeout) {
             @Override
@@ -353,7 +370,7 @@ public abstract class Auto extends LinearOpMode {
             @Override
             public void end() {
                 if (alliance == Alliance.RED) {
-                robot.lights.setPattern(RED_NORMAL);
+                    robot.lights.setPattern(RED_NORMAL);
                 } else if (alliance == Alliance.BLUE) {
                     robot.lights.setPattern(BLUE_NORMAL);
                 }
